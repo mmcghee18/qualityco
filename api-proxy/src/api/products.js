@@ -12,26 +12,23 @@ router.get("/", (req, res) => {
   const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
   const response = [];
 
+  const searchTermFormula = searchTerm
+    ? `OR(
+    FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
+    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
+    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0
+  )`
+    : null;
+
   const tagFormula = tags
     ? `AND(${tags
         .map((tag) => `FIND(LOWER("${tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`)
         .join(", ")})`
     : null;
 
-  const formula = tags
-    ? `AND(
-      OR(
-        FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
-        FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-        FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0
-      ),
-      ${tagFormula}
-    )`
-    : `OR(
-      FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
-      FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-      FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0
-    )`;
+  const formula = `AND(${[searchTermFormula, tagFormula]
+    .filter((f) => f)
+    .join(", ")})`;
 
   base("Consumer Products")
     .select({

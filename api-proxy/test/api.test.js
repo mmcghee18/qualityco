@@ -17,6 +17,18 @@ describe("GET /api", () => {
   });
 });
 
+describe("GET /api/products", () => {
+  it("no search term", async (done) => {
+    const response = await request(app).get("/api/products");
+    const records = response.body.records;
+
+    expect(response.status).toBe(200);
+    expect(records).toHaveLength(71);
+
+    done();
+  });
+});
+
 describe("GET /api/products?q=beverages", () => {
   it("getting products using a single search term, checks category", async (done) => {
     const response = await request(app).get("/api/products?q=beverages");
@@ -174,6 +186,21 @@ describe("GET /api/products?q=sofa&tags=['Custom', 'Made in USA']", () => {
         }),
       ])
     );
+
+    done();
+  });
+});
+
+describe("GET /api/products?q=coffee&tags=['abcdwxyz']", () => {
+  it("tag that doesn't exist", async (done) => {
+    const tags = ["abcdwxyz"];
+    const response = await request(app).get(
+      `/api/products?q=coffee&tags=${JSON.stringify(tags)}`
+    );
+    const records = response.body.records;
+
+    expect(response.status).toBe(200);
+    expect(records).toHaveLength(0);
 
     done();
   });
