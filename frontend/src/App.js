@@ -7,7 +7,8 @@ function App() {
 
   useEffect(() => {
     const callApi = async () => {
-      const result = await fetch("http://localhost:5000/api/get-records")
+      const queryParams = ["tea", "bagels", "sausage"];
+      const result = await fetch(`http://localhost:5000/api/products`)
         .then((response) => response.json())
         .then((data) => setItems(data));
     };

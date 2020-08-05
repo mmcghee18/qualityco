@@ -4,16 +4,24 @@ const Airtable = require("airtable");
 const router = express.Router();
 
 router.get("/", (req, res) => {
+  const { q } = req.query;
+  // console.log(req.query);
+  // console.log(JSON.parse(req.query.tags));
+
   const response = [];
 
   var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-    "appop5JmfRum8l0LN"
+    "appop5JmfRum8l0LN" // Consumer Products table
   );
   base("Consumer Products")
     .select({
-      // Selecting the first 3 records in Grid view:
-      maxRecords: 3,
+      pageSize: 10,
       view: "Grid view",
+      filterByFormula: `OR(
+                          FIND(LOWER("${q}"), LOWER(Company)) > 0,
+                          FIND(LOWER("${q}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
+                          FIND(LOWER("${q}"), LOWER(ARRAYJOIN(Category, ","))) > 0
+                        )`,
     })
     .eachPage(
       function page(records, fetchNextPage) {

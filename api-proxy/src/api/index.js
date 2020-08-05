@@ -1,6 +1,6 @@
 const express = require("express");
 
-const getRecords = require("./getRecords");
+const products = require("./products");
 
 const router = express.Router();
 
@@ -10,6 +10,6 @@ router.get("/", (req, res) => {
   });
 });
 
-router.use("/get-records", getRecords);
+router.use("/products", products);
 
 module.exports = router;
