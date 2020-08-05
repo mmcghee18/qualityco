@@ -10,6 +10,7 @@ router.get("/", (req, res) => {
   );
   const searchTerm = req.query.q ? req.query.q : null;
   const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
+  const prices = req.query.prices ? JSON.parse(req.query.prices) : null;
   const response = [];
 
   const searchTermFormula = searchTerm
@@ -19,14 +20,16 @@ router.get("/", (req, res) => {
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0
   )`
     : null;
-
   const tagFormula = tags
     ? `AND(${tags
         .map((tag) => `FIND(LOWER("${tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`)
         .join(", ")})`
     : null;
+  const priceFormula = prices
+    ? `OR(${prices.map((price) => `FIND("${price}", Price) > 0`).join(", ")})`
+    : null;
 
-  const formula = `AND(${[searchTermFormula, tagFormula]
+  const formula = `AND(${[searchTermFormula, tagFormula, priceFormula]
     .filter((f) => f)
     .join(", ")})`;
 

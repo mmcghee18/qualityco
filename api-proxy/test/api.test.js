@@ -23,7 +23,7 @@ describe("GET /api/products", () => {
     const records = response.body.records;
 
     expect(response.status).toBe(200);
-    expect(records).toHaveLength(71);
+    expect(records.length).toBeGreaterThanOrEqual(71);
 
     done();
   });
@@ -35,7 +35,7 @@ describe("GET /api/products?q=beverages", () => {
     const records = response.body.records;
 
     expect(response.status).toBe(200);
-    expect(records).toHaveLength(7);
+    expect(records.length).toBeGreaterThanOrEqual(7);
 
     expect(records).toEqual(
       expect.arrayContaining([
@@ -73,7 +73,7 @@ describe("GET /api/products?q=coffee", () => {
     const records = response.body.records;
 
     expect(response.status).toBe(200);
-    expect(records).toHaveLength(6);
+    expect(records.length).toBeGreaterThanOrEqual(6);
 
     expect(records).toEqual(
       expect.arrayContaining([
@@ -110,7 +110,7 @@ describe("GET /api/products?q=game", () => {
     const records = response.body.records;
 
     expect(response.status).toBe(200);
-    expect(records).toHaveLength(3);
+    expect(records.length).toBeGreaterThanOrEqual(3);
 
     expect(records).toEqual(
       expect.arrayContaining([
@@ -151,7 +151,7 @@ describe("GET /api/products?q=coffee&tags=['Woman-owned']", () => {
     const records = response.body.records;
 
     expect(response.status).toBe(200);
-    expect(records).toHaveLength(1);
+    expect(records.length).toBeGreaterThanOrEqual(1);
 
     expect(records).toEqual(
       expect.arrayContaining([
@@ -174,7 +174,7 @@ describe("GET /api/products?q=sofa&tags=['Custom', 'Made in USA']", () => {
     const records = response.body.records;
 
     expect(response.status).toBe(200);
-    expect(records).toHaveLength(2);
+    expect(records.length).toBeGreaterThanOrEqual(2);
 
     expect(records).toEqual(
       expect.arrayContaining([
@@ -201,6 +201,85 @@ describe("GET /api/products?q=coffee&tags=['abcdwxyz']", () => {
 
     expect(response.status).toBe(200);
     expect(records).toHaveLength(0);
+
+    done();
+  });
+});
+
+describe("GET /api/products?prices=['$$$']", () => {
+  it("single price filter", async (done) => {
+    const prices = ["$$$"];
+    const response = await request(app).get(
+      `/api/products?prices=${JSON.stringify(prices)}`
+    );
+    const records = response.body.records;
+
+    expect(response.status).toBe(200);
+    expect(records.length).toBeGreaterThanOrEqual(3);
+
+    expect(records).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          Company: "Willow",
+        }),
+        expect.objectContaining({
+          Company: "Interior Define",
+        }),
+        expect.objectContaining({
+          Company: "Sarah O. Jewelry",
+        }),
+      ])
+    );
+
+    done();
+  });
+});
+
+describe("GET /api/products?prices=['$', '$$$']", () => {
+  it("multiple price filters", async (done) => {
+    const prices = ["$", "$$$"];
+    const response = await request(app).get(
+      `/api/products?prices=${JSON.stringify(prices)}`
+    );
+    const records = response.body.records;
+
+    expect(response.status).toBe(200);
+    expect(records.length).toBeGreaterThanOrEqual(5);
+
+    expect(records).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          Company: "Terra & Co.",
+        }),
+        expect.objectContaining({
+          Company: "quip",
+        }),
+        expect.objectContaining({
+          Company: "Willow",
+        }),
+        expect.objectContaining({
+          Company: "Interior Define",
+        }),
+        expect.objectContaining({
+          Company: "Sarah O. Jewelry",
+        }),
+      ])
+    );
+
+    done();
+  });
+});
+
+describe("GET /api/products?prices=['not-a-price']", () => {
+  it("invalid price filter", async (done) => {
+    const prices = ["not-a-price"];
+    const response = await request(app).get(
+      `/api/products?prices=${JSON.stringify(prices)}`
+    );
+    const records = response.body.records;
+
+    expect(response.status).toBe(200);
+    expect(records.length).toBeGreaterThanOrEqual(0);
 
     done();
   });
