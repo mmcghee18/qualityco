@@ -118,6 +118,18 @@ describe("GET /api/products?q=game", () => {
   });
 });
 
+describe("GET /api/products?q=abcdwxyz", () => {
+  it("no match for search", async (done) => {
+    const response = await request(app).get("/api/products?q=abcdwxyz");
+    const records = response.body.records;
+
+    expect(response.status).toBe(200);
+    expect(records).toHaveLength(0);
+
+    done();
+  });
+});
+
 describe("GET /api/products?q=coffee&tags=['Woman-owned']", () => {
   it("filtering products with a single tag", async (done) => {
     const tags = ["Woman-owned"];
