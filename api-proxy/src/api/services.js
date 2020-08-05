@@ -10,12 +10,11 @@ router.get("/", (req, res) => {
   );
   const searchTerm = req.query.q ? req.query.q : null;
   const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
-  const prices = req.query.prices ? JSON.parse(req.query.prices) : null;
   const response = [];
 
   const searchTermFormula = searchTerm
     ? `OR(
-    FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
+    FIND(LOWER("${searchTerm}"), LOWER(Name)) > 0,
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0
   )`
@@ -25,15 +24,12 @@ router.get("/", (req, res) => {
         .map((tag) => `FIND(LOWER("${tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`)
         .join(", ")})`
     : null;
-  const priceFormula = prices
-    ? `OR(${prices.map((price) => `FIND("${price}", Price) > 0`).join(", ")})`
-    : null;
 
-  const formula = `AND(${[searchTermFormula, tagFormula, priceFormula]
+  const formula = `AND(${[searchTermFormula, tagFormula]
     .filter((f) => f)
     .join(", ")})`;
 
-  base("Consumer Products")
+  base("Services")
     .select({
       pageSize: 10,
       view: "Grid view",
