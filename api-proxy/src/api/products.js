@@ -1,34 +1,49 @@
 const express = require("express");
 const Airtable = require("airtable");
+const _ = require("lodash");
 
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  const { q } = req.query;
-  // console.log(req.query);
-  // console.log(JSON.parse(req.query.tags));
-
-  const response = [];
-
   var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN" // Consumer Products table
   );
+  const searchTerm = req.query.q ? req.query.q : null;
+  const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
+  const response = [];
+
+  const tagFormula = tags
+    ? `AND(${tags
+        .map((tag) => `FIND(LOWER("${tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`)
+        .join(", ")})`
+    : null;
+
+  const formula = tags
+    ? `AND(
+      OR(
+        FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
+        FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
+        FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0
+      ),
+      ${tagFormula}
+    )`
+    : `OR(
+      FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
+      FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
+      FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0
+    )`;
+
   base("Consumer Products")
     .select({
       pageSize: 10,
       view: "Grid view",
-      filterByFormula: `OR(
-                          FIND(LOWER("${q}"), LOWER(Company)) > 0,
-                          FIND(LOWER("${q}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-                          FIND(LOWER("${q}"), LOWER(ARRAYJOIN(Category, ","))) > 0
-                        )`,
+      filterByFormula: formula,
     })
     .eachPage(
       function page(records, fetchNextPage) {
         // This function (`page`) will get called for each page of records.
 
         records.forEach(function (record) {
-          console.log("Retrieved", record.get("Company"));
           response.push(record.fields);
         });
 

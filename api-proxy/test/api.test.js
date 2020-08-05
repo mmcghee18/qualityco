@@ -17,7 +17,7 @@ describe("GET /api", () => {
   });
 });
 
-describe("GET /api/products", () => {
+describe("GET /api/products?q=beverages", () => {
   it("getting products using a single search term, checks category", async (done) => {
     const response = await request(app).get("/api/products?q=beverages");
     const records = response.body.records;
@@ -55,7 +55,7 @@ describe("GET /api/products", () => {
   });
 });
 
-describe("GET /api/products", () => {
+describe("GET /api/products?q=coffee", () => {
   it("getting products using a single search term, checks products and company name", async (done) => {
     const response = await request(app).get("/api/products?q=coffee");
     const records = response.body.records;
@@ -92,7 +92,7 @@ describe("GET /api/products", () => {
   });
 });
 
-describe("GET /api/products", () => {
+describe("GET /api/products?q=game", () => {
   it("getting products, unexact match for search term", async (done) => {
     const response = await request(app).get("/api/products?q=game");
     const records = response.body.records;
@@ -110,6 +110,55 @@ describe("GET /api/products", () => {
         }),
         expect.objectContaining({
           Company: "Eeboo",
+        }),
+      ])
+    );
+
+    done();
+  });
+});
+
+describe("GET /api/products?q=coffee&tags=['Woman-owned']", () => {
+  it("filtering products with a single tag", async (done) => {
+    const tags = ["Woman-owned"];
+    const response = await request(app).get(
+      `/api/products?q=coffee&tags=${JSON.stringify(tags)}`
+    );
+    const records = response.body.records;
+
+    expect(response.status).toBe(200);
+    expect(records).toHaveLength(1);
+
+    expect(records).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          Company: "Copper Cow Coffee",
+        }),
+      ])
+    );
+
+    done();
+  });
+});
+
+describe("GET /api/products?q=sofa&tags=['Custom', 'Made in USA']", () => {
+  it("filtering products with multiple tags", async (done) => {
+    const tags = ["Custom", "Made in USA"];
+    const response = await request(app).get(
+      `/api/products?q=sofa&tags=${JSON.stringify(tags)}`
+    );
+    const records = response.body.records;
+
+    expect(response.status).toBe(200);
+    expect(records).toHaveLength(2);
+
+    expect(records).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          Company: "Burrow",
+        }),
+        expect.objectContaining({
+          Company: "Inside Weather",
         }),
       ])
     );
