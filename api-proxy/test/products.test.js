@@ -88,24 +88,29 @@ describe("GET /api/products?q=coffee", () => {
   });
 });
 
-describe("GET /api/products?q=game", () => {
-  it("getting products, unexact match for search term", async (done) => {
-    const response = await request(app).get("/api/products?q=game");
+describe("GET /api/products?q=couch", () => {
+  it.only("uses synonyms of the search term", async (done) => {
+    const response = await request(app).get("/api/products?q=couch");
     const records = response.body.records;
 
     expect(response.status).toBe(200);
-    expect(records.length).toBeGreaterThanOrEqual(3);
-
+    expect(records.length).toBeGreaterThanOrEqual(5);
     expect(records).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          Company: "Little Renegades",
+          Company: "Article",
         }),
         expect.objectContaining({
-          Company: "GenerationMindful",
+          Company: "Inside Weather",
         }),
         expect.objectContaining({
-          Company: "Eeboo",
+          Company: "Burrow",
+        }),
+        expect.objectContaining({
+          Company: "Campaign Living",
+        }),
+        expect.objectContaining({
+          Company: "Interior Define",
         }),
       ])
     );

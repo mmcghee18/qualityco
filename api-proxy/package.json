@@ -24,7 +24,8 @@
     "express": "^4.17.1",
     "helmet": "^3.23.3",
     "lodash": "^4.17.19",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "synonyms": "^1.0.1"
   },
   "devDependencies": {
     "eslint": "^7.5.0",

@@ -1,6 +1,7 @@
 const express = require("express");
 const Airtable = require("airtable");
 const _ = require("lodash");
+const synonyms = require("synonyms");
 
 const router = express.Router();
 
@@ -13,13 +14,34 @@ router.get("/", (req, res) => {
   const prices = req.query.prices ? JSON.parse(req.query.prices) : null;
   const response = [];
 
+  // 2. Lookup search term in the dictionary, if not found, AND no records come back, we'll return some suggestions
+  // 1. Also get the search term's top 3-5 synonyms and check them too
+
+  const similarWords = _.take(
+    synonyms(searchTerm).n.filter((word) => word !== searchTerm),
+    5
+  ); // "n" is for nouns
+
   const searchTermFormula = searchTerm
-    ? `OR(
-    FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
+    ? `FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0
-  )`
+    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0,`
     : null;
+  const similarWordsFormula =
+    similarWords && similarWords.length > 0
+      ? similarWords
+          .map(
+            (word) =>
+              `FIND(LOWER("${word}"), LOWER(Company)) > 0,
+              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
+              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Category, ","))) > 0`
+          )
+          .join(", ")
+      : null;
+  const finalSearchFormula = `OR(${[searchTermFormula, similarWordsFormula]
+    .filter((f) => f)
+    .join(" ")})`;
+
   const tagFormula = tags
     ? `AND(${tags
         .map((tag) => `FIND(LOWER("${tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`)
@@ -29,7 +51,7 @@ router.get("/", (req, res) => {
     ? `OR(${prices.map((price) => `FIND("${price}", Price) > 0`).join(", ")})`
     : null;
 
-  const formula = `AND(${[searchTermFormula, tagFormula, priceFormula]
+  const formula = `AND(${[finalSearchFormula, tagFormula, priceFormula]
     .filter((f) => f)
     .join(", ")})`;
 
