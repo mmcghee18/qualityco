@@ -1,7 +1,7 @@
 const express = require("express");
 const Airtable = require("airtable");
 const _ = require("lodash");
-const synonyms = require("synonyms");
+const { getSpellingSuggestions, getSynonyms } = require("./helpers.js");
 
 const router = express.Router();
 
@@ -9,27 +9,29 @@ router.get("/", (req, res) => {
   var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
+  // Extract query params
   const searchTerm = req.query.q ? req.query.q : null;
   const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
   const prices = req.query.prices ? JSON.parse(req.query.prices) : null;
   const response = [];
 
-  // 2. Lookup search term in the dictionary, if not found, AND no records come back, we'll return some suggestions
-  // 1. Also get the search term's top 3-5 synonyms and check them too
+  // Misspellings and synonyms
+  let spellingSuggestions = [];
+  let similarNouns = [];
+  if (searchTerm) {
+    spellingSuggestions = getSpellingSuggestions(searchTerm);
+    similarNouns = getSynonyms(searchTerm);
+  }
 
-  const similarWords = _.take(
-    synonyms(searchTerm).n.filter((word) => word !== searchTerm),
-    5
-  ); // "n" is for nouns
-
+  // Building search formula
   const searchTermFormula = searchTerm
     ? `FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0,`
+    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0`
     : null;
   const similarWordsFormula =
-    similarWords && similarWords.length > 0
-      ? similarWords
+    similarNouns && similarNouns.length > 0
+      ? similarNouns
           .map(
             (word) =>
               `FIND(LOWER("${word}"), LOWER(Company)) > 0,
@@ -38,9 +40,11 @@ router.get("/", (req, res) => {
           )
           .join(", ")
       : null;
-  const finalSearchFormula = `OR(${[searchTermFormula, similarWordsFormula]
-    .filter((f) => f)
-    .join(" ")})`;
+  const finalSearchFormula = searchTerm
+    ? `OR(${[searchTermFormula, similarWordsFormula]
+        .filter((f) => f)
+        .join(", ")})`
+    : null;
 
   const tagFormula = tags
     ? `AND(${tags
@@ -77,6 +81,7 @@ router.get("/", (req, res) => {
       function done(err) {
         res.json({
           records: response,
+          spellingSuggestions,
         });
         if (err) {
           console.error(err);

@@ -36,16 +36,21 @@ describe("GET /api/services?q=therapy", () => {
   });
 });
 
-describe("GET /api/services?q=science", () => {
-  it.only("getting services, unexact match for search term", async (done) => {
-    const response = await request(app).get("/api/services?q=science");
+describe("GET /api/services?q=giving", () => {
+  it("uses synonyms of the search term", async (done) => {
+    const response = await request(app).get("/api/services?q=giving");
     const records = response.body.records;
 
     expect(response.status).toBe(200);
-    expect(records.length).toBeGreaterThanOrEqual(1);
-
+    expect(records.length).toBeGreaterThanOrEqual(3);
     expect(records).toEqual(
       expect.arrayContaining([
+        expect.objectContaining({
+          Name: "Felt App",
+        }),
+        expect.objectContaining({
+          Name: "Greetabl",
+        }),
         expect.objectContaining({
           Name: "KiwiCo",
         }),
@@ -56,14 +61,29 @@ describe("GET /api/services?q=science", () => {
   });
 });
 
-describe("GET /api/services?q=abcdwxyz", () => {
-  it.only("no match for search", async (done) => {
-    const response = await request(app).get("/api/services?q=abcdwxyz");
-    const records = response.body.records;
+describe("GET /api/services?q=therepy", () => {
+  it("spelling mistake returns suggestions", async (done) => {
+    const response = await request(app).get("/api/services?q=therepy");
+    const { records, spellingSuggestions } = response.body;
 
     expect(response.status).toBe(200);
     expect(records).toHaveLength(0);
+    expect(spellingSuggestions).toHaveLength(3);
+    expect(spellingSuggestions).toEqual(
+      expect.arrayContaining(["therapy", "thereby", "whereby"])
+    );
+    done();
+  });
+});
 
+describe("GET /api/services?q=abcdwxyz", () => {
+  it("more severe spelling mistake", async (done) => {
+    const response = await request(app).get("/api/services?q=abcdwxyz");
+    const { records, spellingSuggestions } = response.body;
+
+    expect(response.status).toBe(200);
+    expect(records).toHaveLength(0);
+    expect(spellingSuggestions).toHaveLength(0);
     done();
   });
 });

@@ -89,7 +89,7 @@ describe("GET /api/products?q=coffee", () => {
 });
 
 describe("GET /api/products?q=couch", () => {
-  it.only("uses synonyms of the search term", async (done) => {
+  it("uses synonyms of the search term", async (done) => {
     const response = await request(app).get("/api/products?q=couch");
     const records = response.body.records;
 
@@ -119,14 +119,29 @@ describe("GET /api/products?q=couch", () => {
   });
 });
 
-describe("GET /api/products?q=abcdwxyz", () => {
-  it("no match for search", async (done) => {
-    const response = await request(app).get("/api/products?q=abcdwxyz");
-    const records = response.body.records;
+describe("GET /api/products?q=cowch", () => {
+  it("spelling mistake returns suggestions", async (done) => {
+    const response = await request(app).get("/api/products?q=cowch");
+    const { records, spellingSuggestions } = response.body;
 
     expect(response.status).toBe(200);
     expect(records).toHaveLength(0);
+    expect(spellingSuggestions).toHaveLength(3);
+    expect(spellingSuggestions).toEqual(
+      expect.arrayContaining(["coach", "couch", "conch"])
+    );
+    done();
+  });
+});
 
+describe("GET /api/products?q=abcdwxyz", () => {
+  it("more severe spelling mistake", async (done) => {
+    const response = await request(app).get("/api/products?q=abcdwxyz");
+    const { records, spellingSuggestions } = response.body;
+
+    expect(response.status).toBe(200);
+    expect(records).toHaveLength(0);
+    expect(spellingSuggestions).toHaveLength(0);
     done();
   });
 });
