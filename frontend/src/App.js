@@ -1,39 +1,35 @@
 import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import Mission from "./components/Mission/Mission.jsx";
+import Search from "./components/Search/Search.jsx";
 
 function App() {
-  const [items, setItems] = useState(null);
+  // const [items, setItems] = useState(null);
 
-  useEffect(() => {
-    const callApi = async () => {
-      const queryParams = ["tea", "bagels", "sausage"];
-      const result = await fetch(`http://localhost:5000/api/products`)
-        .then((response) => response.json())
-        .then((data) => setItems(data));
-    };
-    callApi();
-  }, []);
-
-  console.log(items);
+  // useEffect(() => {
+  //   const callApi = async () => {
+  //     const result = await fetch(`http://localhost:5000/api/products`)
+  //       .then((response) => response.json())
+  //       .then((data) => setItems(data));
+  //   };
+  //   callApi();
+  // }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <NavBar />
+        <Switch>
+          <Route path="/our-mission">
+            <Mission />
+          </Route>
+          <Route path="/">
+            <Search />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
