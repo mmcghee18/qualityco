@@ -1,5 +1,18 @@
 import styled, { createGlobalStyle } from "styled-components";
 
+const maxSizes = {
+  mobile: "480px",
+  tablet: "768px",
+  laptop: "1024px",
+  desktop: "2560px",
+};
+const devices = {
+  mobile: `(max-width: ${maxSizes.mobile})`,
+  tablet: `(max-width: ${maxSizes.tablet})`,
+  laptop: `(max-width: ${maxSizes.laptop})`,
+  desktop: `(max-width: ${maxSizes.desktop})`,
+};
+
 export const GlobalStyle = createGlobalStyle`
   body {
     font-family: Rubik, sans-serif;
@@ -28,12 +41,32 @@ export const TopBar = styled.div`
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
-  padding-right: 100px;
+
+  @media ${devices.tablet} {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+export const Links = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  font-weight: bold;
+
+  @media ${devices.tablet} {
+    margin-top: 15px;
+  }
+  @media ${devices.mobile} {
+    font-size: 0.75em;
+  }
 `;
 
 export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
+  font-weight: bold;
 `;
 
 export const SearchContainer = styled.div`
