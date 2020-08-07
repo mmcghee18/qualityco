@@ -17,7 +17,7 @@ const NavBar = () => {
         <Link to="/">Search</Link>
         <Link to="/">Brands</Link>
         <Link to="/">Services</Link>
-        <Link to="/our-mission">Our Mission</Link>
+        <Link to="/">Our Mission</Link>
       </Links>
     </TopBar>
   );

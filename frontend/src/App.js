@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
-import Mission from "./components/Mission/Mission.jsx";
 import Search from "./components/Search/Search.jsx";
+import SearchResults from "./components/SearchResults/SearchResults.jsx";
 
 function App() {
   // const [items, setItems] = useState(null);
@@ -21,12 +21,8 @@ function App() {
       <div>
         <NavBar />
         <Switch>
-          <Route path="/our-mission">
-            <Mission />
-          </Route>
-          <Route path="/">
-            <Search />
-          </Route>
+          <Route exact path="/" component={Search} />
+          <Route exact path="/search" component={SearchResults} />
         </Switch>
       </div>
     </Router>
