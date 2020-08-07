@@ -6,6 +6,9 @@
   .ant-input {
     font-size: 0.7em !important;
   }
+  .ant-select {
+    font-size: 0.8em !important;
+  }
 }
 
 @media screen and (min-width: 1024px) {
