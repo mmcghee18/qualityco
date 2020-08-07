@@ -1,0 +1,9 @@
+.ant-input-search-icon::before {
+  border-left: none !important;
+}
+
+@media screen and (max-width: 480px) {
+  .ant-input {
+    font-size: 0.7em !important;
+  }
+}

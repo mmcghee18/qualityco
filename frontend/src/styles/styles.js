@@ -63,6 +63,20 @@ export const Links = styled.div`
   }
 `;
 
+export const SearchTitle = styled.h1`
+  margin-bottom: 10%;
+  text-align: center;
+  color: #5c6475;
+  font-weight: bold;
+
+  @media ${devices.tablet} {
+    font-size: 1.7em;
+  }
+  @media ${devices.mobile} {
+    font-size: 1em;
+  }
+`;
+
 export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
@@ -73,4 +87,9 @@ export const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 200px;
+
+  @media ${devices.mobile} {
+    margin-top: 100px;
+  }
 `;

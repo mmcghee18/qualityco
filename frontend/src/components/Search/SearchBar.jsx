@@ -1,7 +1,16 @@
 import React from "react";
+import "./SearchBar.css";
+import { Input } from "antd";
+const { Search } = Input;
 
 const SearchBar = () => {
-  return <div>I'm looking for...</div>;
+  return (
+    <Search
+      placeholder="I'm looking for..."
+      onSearch={(value) => console.log(value)}
+      style={{ width: "80%", borderRadius: "5px" }}
+    />
+  );
 };
 
 export default SearchBar;
