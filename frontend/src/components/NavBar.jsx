@@ -6,12 +6,14 @@ import { TopBar, LogoContainer, Links } from "../styles/styles";
 const NavBar = () => {
   return (
     <TopBar>
-      <LogoContainer>
-        <StarOutlined
-          style={{ fontSize: "1.5em", color: "#5c6475", marginRight: "8px" }}
-        />
-        QualityCo
-      </LogoContainer>
+      <Link to="/">
+        <LogoContainer>
+          <StarOutlined
+            style={{ fontSize: "1.5em", color: "#5c6475", marginRight: "8px" }}
+          />
+          QualityCo
+        </LogoContainer>
+      </Link>
 
       <Links>
         <Link to="/">Search</Link>

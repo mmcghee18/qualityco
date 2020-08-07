@@ -5,7 +5,7 @@ import { Input, Select } from "antd";
 const { Search } = Input;
 const { Option } = Select;
 
-const SearchBar = () => {
+const SearchBar = ({ defaultValue }) => {
   const [showResults, setShowResults] = useState(false);
   const [searchTerm, setSearchTerm] = useState(null);
   const [type, setType] = useState("products");
@@ -21,19 +21,20 @@ const SearchBar = () => {
     </Select>
   );
 
-  if (showResults) {
-    return <Redirect to={`/search?type=${type}&q=${searchTerm}`} />;
-  }
   return (
-    <Search
-      addonBefore={selectBefore}
-      placeholder="I'm looking for..."
-      onSearch={(value) => {
-        setSearchTerm(value);
-        setShowResults(true);
-      }}
-      style={{ width: "80%", maxWidth: "650px", borderRadius: "5px" }}
-    />
+    <>
+      {showResults && <Redirect to={`/search?type=${type}&q=${searchTerm}`} />}
+      <Search
+        defaultValue={defaultValue}
+        addonBefore={selectBefore}
+        placeholder="I'm looking for..."
+        onSearch={(value) => {
+          setSearchTerm(value);
+          setShowResults(true);
+        }}
+        style={{ width: "80%", maxWidth: "650px", borderRadius: "5px" }}
+      />
+    </>
   );
 };
 
