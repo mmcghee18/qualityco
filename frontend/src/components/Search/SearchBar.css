@@ -7,3 +7,9 @@
     font-size: 0.7em !important;
   }
 }
+
+@media screen and (min-width: 1024px) {
+  .ant-input-search {
+    width: 650px;
+  }
+}

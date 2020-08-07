@@ -8,7 +8,7 @@ const SearchBar = () => {
     <Search
       placeholder="I'm looking for..."
       onSearch={(value) => console.log(value)}
-      style={{ width: "80%", borderRadius: "5px" }}
+      style={{ width: "80%", maxWidth: "650px", borderRadius: "5px" }}
     />
   );
 };

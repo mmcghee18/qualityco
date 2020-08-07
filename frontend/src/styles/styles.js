@@ -65,7 +65,7 @@ export const Links = styled.div`
 `;
 
 export const SearchTitle = styled.h1`
-  margin-bottom: 10%;
+  margin-bottom: 90px;
   text-align: center;
   color: #5c6475;
   font-weight: bold;
@@ -75,6 +75,7 @@ export const SearchTitle = styled.h1`
   }
   @media ${devices.mobile} {
     font-size: 1em;
+    margin-bottom: 55px;
   }
 `;
 
