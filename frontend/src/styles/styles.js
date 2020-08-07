@@ -53,6 +53,7 @@ export const Links = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  align-items: center;
   font-weight: bold;
 
   @media ${devices.tablet} {
@@ -81,6 +82,7 @@ export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
   font-weight: bold;
+  font-size: 1.4em;
 `;
 
 export const SearchContainer = styled.div`
