@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Checkbox, Collapse, Switch } from "antd";
 import _ from "lodash";
 import "./Filters.css";
@@ -8,7 +8,7 @@ const { Panel } = Collapse;
 
 const Filters = () => {
   return (
-    <div style={{ width: "200px" }}>
+    <div style={{ width: "200px", flexShrink: "0" }}>
       {/* Filters */}
       <Collapse
         defaultActiveKey="1"
@@ -27,15 +27,15 @@ const Filters = () => {
       {/* Shop local */}
       <FilterSection>
         <p>Shop local?</p>
-        <Row>
+        <Row alignItems="center">
           <Switch size="small" />
           <SwitchLabel>Sourced</SwitchLabel>
         </Row>
-        <Row>
+        <Row alignItems="center">
           <Switch size="small" />
           <SwitchLabel>Manufactured</SwitchLabel>
         </Row>
-        <Row>
+        <Row alignItems="center">
           <Switch size="small" />
           <SwitchLabel>Warehoused</SwitchLabel>
         </Row>

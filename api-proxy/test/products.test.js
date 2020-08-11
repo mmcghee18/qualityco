@@ -14,9 +14,11 @@ describe("GET /api/products", () => {
 });
 
 describe("GET /api/products?q=beverages", () => {
-  it("getting products using a single search term, checks category", async (done) => {
+  it.only("getting products using a single search term, checks category", async (done) => {
     const response = await request(app).get("/api/products?q=beverages");
     const records = response.body.records;
+
+    console.log(response.body);
 
     expect(response.status).toBe(200);
     expect(records.length).toBeGreaterThanOrEqual(7);

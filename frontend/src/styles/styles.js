@@ -97,11 +97,13 @@ export const SearchContainer = styled.div`
   }
 `;
 
-export const ResultsWrapper = styled.div`
+export const ResultsBody = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px;
+  flex-direction: row;
+  width: 100%;
+  justify-content: flex-start;
+  align-self: flex-start;
+  margin-top: 30px;
 `;
 
 export const FilterSection = styled.div`
@@ -113,9 +115,46 @@ export const FilterSection = styled.div`
 export const Row = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : null)};
+  align-items: ${(props) => (props.alignItems ? props.alignItems : null)};
+  justify-content: ${(props) =>
+    props.justifyContent ? props.justifyContent : null};
+`;
+
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: ${(props) => (props.alignItems ? props.alignItems : null)};
+  padding: ${(props) => (props.padding ? props.padding : null)};
 `;
 
 export const SwitchLabel = styled.div`
   margin-left: 7px;
+`;
+
+export const ResultContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+  height: 200px;
+`;
+
+export const ResultImage = styled.img`
+  height: 100%;
+`;
+
+export const ResultInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  margin-left: 20px;
+`;
+
+export const Tag = styled.div`
+  border: 2px solid #5c6475;
+  padding: 5px;
+  background-color: lightgrey;
+  margin: 5px;
 `;

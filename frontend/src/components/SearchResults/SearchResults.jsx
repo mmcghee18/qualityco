@@ -1,30 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import queryString from "query-string";
 import SearchBar from "../Search/SearchBar.jsx";
-import { ResultsWrapper } from "../../styles/styles.js";
+import { Column, ResultsBody } from "../../styles/styles.js";
 import Filters from "./Filters.jsx";
 import ResultsList from "./ResultsList.jsx";
+import fakeData from "./fakeData.js";
 
 const SearchResults = ({ location }) => {
   const queryParams = queryString.parse(location.search);
   console.log(queryParams);
 
+  // Get the data from the API
+  // For now, fake data
+
   return (
-    <ResultsWrapper>
+    <Column alignItems="center" padding="40px">
       <SearchBar defaultValue={queryParams.q} />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          alignSelf: "flex-start",
-          marginTop: "30px",
-        }}
-      >
+      <ResultsBody>
         <Filters />
-        <ResultsList />
-      </div>
-    </ResultsWrapper>
+        <ResultsList data={fakeData} />
+      </ResultsBody>
+    </Column>
   );
 };
 
