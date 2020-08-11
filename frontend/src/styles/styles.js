@@ -103,3 +103,19 @@ export const ResultsWrapper = styled.div`
   align-items: center;
   padding: 40px;
 `;
+
+export const FilterSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+
+export const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const SwitchLabel = styled.div`
+  margin-left: 7px;
+`;
