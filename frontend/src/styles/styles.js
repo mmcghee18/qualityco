@@ -136,7 +136,21 @@ export const ResultContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin: 20px;
+  width: 100%;
+  max-width: 1000px;
   height: 200px;
+
+  @media ${devices.laptop} {
+    height: 150px;
+  }
+`;
+
+export const LinksAndTags = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 1em;
 `;
 
 export const ResultImage = styled.img`
@@ -150,6 +164,10 @@ export const ResultInfo = styled.div`
   height: 100%;
   width: 100%;
   margin-left: 20px;
+
+  @media ${devices.laptop} {
+    font-size: 0.8em;
+  }
 `;
 
 export const Tag = styled.div`

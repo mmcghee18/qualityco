@@ -5,21 +5,21 @@ import {
   ResultImage,
   ResultInfo,
   Row,
+  LinksAndTags,
   Tag,
 } from "../../styles/styles.js";
-import sampleImage from "./sampleImage.jpg";
 
 const Result = ({ company, website, tags, image, description }) => {
   return (
     <ResultContainer>
-      <ResultImage src={sampleImage} alt="test" />
+      <ResultImage src={image} alt="test" />
       <ResultInfo>
         <div style={{ overflow: "scroll" }}>
           <h2>{company}</h2>
           <div>{description}</div>
         </div>
 
-        <Row justifyContent="space-between" marginTop="10px">
+        <LinksAndTags>
           <div>
             <a
               href={website}
@@ -35,7 +35,7 @@ const Result = ({ company, website, tags, image, description }) => {
               <Tag>{tag}</Tag>
             ))}
           </Row>
-        </Row>
+        </LinksAndTags>
       </ResultInfo>
     </ResultContainer>
   );
