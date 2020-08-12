@@ -27,7 +27,6 @@ export const GlobalStyle = createGlobalStyle`
       text-decoration: underline;
     }
   }
-
 `;
 
 export const TopBar = styled.div`
@@ -175,4 +174,20 @@ export const Tag = styled.div`
   padding: 5px;
   background-color: lightgrey;
   margin: 5px;
+`;
+
+export const FadedBottom = styled.div`
+  position: sticky;
+  height: 30px;
+  background: linear-gradient(
+    to top,
+    rgb(255 255 255) 0%,
+    rgba(48, 47, 44, 0) 100%
+  );
+  bottom: 0;
+  width: 100%;
+
+  @media ${devices.laptop} {
+    height: 15px;
+  }
 `;

@@ -7,6 +7,7 @@ import {
   Row,
   LinksAndTags,
   Tag,
+  FadedBottom,
 } from "../../styles/styles.js";
 
 const Result = ({ company, website, tags, image, description }) => {
@@ -14,9 +15,10 @@ const Result = ({ company, website, tags, image, description }) => {
     <ResultContainer>
       <ResultImage src={image} alt="test" />
       <ResultInfo>
+        <h2>{company}</h2>
         <div style={{ overflow: "scroll" }}>
-          <h2>{company}</h2>
-          <div>{description}</div>
+          {description}
+          <FadedBottom />
         </div>
 
         <LinksAndTags>
