@@ -2,13 +2,18 @@ import React from "react";
 import { Checkbox, Collapse, Switch } from "antd";
 import _ from "lodash";
 import "./Filters.css";
-import { Row, SwitchLabel, FilterSection } from "../../styles/styles.js";
+import {
+  Row,
+  SwitchLabel,
+  FilterSection,
+  FiltersWrapper,
+} from "../../styles/styles.js";
 import { filters, prices } from "./filters.js";
 const { Panel } = Collapse;
 
-const Filters = () => {
+const Filters = ({ visibleOverride }) => {
   return (
-    <div style={{ width: "200px", flexShrink: "0" }}>
+    <FiltersWrapper visibleOverride={visibleOverride}>
       {/* Filters */}
       <Collapse
         defaultActiveKey="1"
@@ -57,7 +62,7 @@ const Filters = () => {
         <Checkbox>6-10</Checkbox>
         <Checkbox>All</Checkbox>
       </FilterSection>
-    </div>
+    </FiltersWrapper>
   );
 };
 

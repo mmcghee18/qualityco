@@ -1,4 +1,5 @@
 import styled, { createGlobalStyle } from "styled-components";
+import { Button } from "antd";
 
 const maxSizes = {
   mobile: "480px",
@@ -105,6 +106,16 @@ export const ResultsBody = styled.div`
   margin-top: 30px;
 `;
 
+export const FiltersWrapper = styled.div`
+  display: ${(props) => (props.visibleOverride ? "block !important" : "block")};
+  width: 200px;
+  flex-shrink: 0;
+
+  @media ${devices.tablet} {
+    display: none;
+  }
+`;
+
 export const FilterSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -189,5 +200,12 @@ export const FadedBottom = styled.div`
 
   @media ${devices.laptop} {
     height: 15px;
+  }
+`;
+
+export const FiltersButton = styled(Button)`
+  display: none;
+  @media ${devices.tablet} {
+    display: flex;
   }
 `;
