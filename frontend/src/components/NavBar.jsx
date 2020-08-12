@@ -1,16 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { StarOutlined } from "@ant-design/icons";
-import { TopBar, LogoContainer, Links } from "../styles/styles";
+import {
+  TopBar,
+  LogoContainer,
+  Links,
+  MenuIcon,
+  StarIcon,
+} from "../styles/styles";
 
 const NavBar = () => {
   return (
     <TopBar>
+      <MenuIcon />
+
       <Link to="/">
         <LogoContainer>
-          <StarOutlined
-            style={{ fontSize: "1.5em", color: "#5c6475", marginRight: "8px" }}
-          />
+          <StarIcon />
           QualityCo
         </LogoContainer>
       </Link>

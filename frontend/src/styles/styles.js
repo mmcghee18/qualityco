@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle } from "styled-components";
 import { Button } from "antd";
+import { StarOutlined, MenuOutlined } from "@ant-design/icons";
 
 const maxSizes = {
   mobile: "480px",
@@ -36,6 +37,7 @@ export const TopBar = styled.div`
   left: 0;
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
   border-bottom: 2px solid #5c6475;
   padding-top: 10px;
@@ -43,9 +45,25 @@ export const TopBar = styled.div`
   padding-left: 10px;
 
   @media ${devices.tablet} {
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
   }
+`;
+
+export const MenuIcon = styled(MenuOutlined)`
+  position: absolute;
+  left: 20px;
+  font-size: 1.5em;
+  display: none;
+
+  @media ${devices.tablet} {
+    display: block;
+  }
+`;
+
+export const StarIcon = styled(StarOutlined)`
+  font-size: 1.5em;
+  color: #5c6475;
+  margin-right: 8px;
 `;
 
 export const Links = styled.div`
@@ -58,6 +76,7 @@ export const Links = styled.div`
 
   @media ${devices.tablet} {
     margin-top: 15px;
+    display: none;
   }
   @media ${devices.mobile} {
     font-size: 0.75em;
