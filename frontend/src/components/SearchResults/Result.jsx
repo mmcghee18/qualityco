@@ -8,6 +8,7 @@ import {
   LinksAndTags,
   Tag,
   FadedBottom,
+  Description,
 } from "../../styles/styles.js";
 
 const Result = ({ company, website, tags, image, description }) => {
@@ -16,13 +17,13 @@ const Result = ({ company, website, tags, image, description }) => {
       <ResultImage src={image} alt="test" />
       <ResultInfo>
         <h2>{company}</h2>
-        <div style={{ overflow: "scroll" }}>
+        <Description>
           {description}
           <FadedBottom />
-        </div>
+        </Description>
 
         <LinksAndTags>
-          <div>
+          <div style={{ flexShrink: 0 }}>
             <a
               href={website}
               target="_blank"

@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import queryString from "query-string";
 import SearchBar from "../Search/SearchBar.jsx";
-import { Column, ResultsBody, FiltersButton } from "../../styles/styles.js";
+import {
+  SearchResultsWrapper,
+  ResultsBody,
+  FiltersButton,
+} from "../../styles/styles.js";
 import Filters from "./Filters.jsx";
 import ResultsList from "./ResultsList.jsx";
 import fakeData from "./fakeData.js";
@@ -17,16 +21,17 @@ const SearchResults = ({ location }) => {
   // For now, fake data
 
   return (
-    <Column alignItems="center" padding="40px">
+    <SearchResultsWrapper>
       <div
         style={{
           display: "flex",
           justifyContent: "space-evenly",
           width: "100%",
+          alignItems: "center",
         }}
       >
         <FiltersButton onClick={() => setShowDrawer(true)}>
-          Show Filters
+          Filters
         </FiltersButton>
         <SearchBar defaultValue={queryParams.q} />
       </div>
@@ -44,7 +49,7 @@ const SearchResults = ({ location }) => {
 
         <ResultsList data={fakeData} />
       </ResultsBody>
-    </Column>
+    </SearchResultsWrapper>
   );
 };
 

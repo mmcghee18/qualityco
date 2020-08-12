@@ -7,7 +7,7 @@ import pudding from "./pudding.png";
 const ResultsList = ({ data }) => {
   console.log(data);
   return (
-    <Column alignItems="center" style={{ flexGrow: 1 }}>
+    <Column alignItems="center" style={{ flexGrow: 1, width: "100%" }}>
       {data.records.map((result, i) => {
         const { company, website, tags, image, description } = result;
         return (

@@ -33,6 +33,8 @@ export const GlobalStyle = createGlobalStyle`
 
 export const TopBar = styled.div`
   position: sticky;
+  background: white;
+  z-index: 1000;
   top: 0;
   left: 0;
   display: flex;
@@ -90,7 +92,7 @@ export const Links = styled.div`
 export const LinksInDrawer = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 1.5em;
+  font-size: 1.4em;
 `;
 
 export const SearchTitle = styled.h1`
@@ -123,6 +125,17 @@ export const SearchContainer = styled.div`
 
   @media ${devices.mobile} {
     margin-top: 100px;
+  }
+`;
+
+export const SearchResultsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+
+  @media ${devices.mobile} {
+    padding: 20px;
   }
 `;
 
@@ -182,18 +195,28 @@ export const ResultContainer = styled.div`
   @media ${devices.laptop} {
     height: 150px;
   }
+  @media ${devices.mobile} {
+    height: auto;
+    flex-direction: column;
+  }
 `;
 
 export const LinksAndTags = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin-top: 10px;
   font-size: 1em;
 `;
 
 export const ResultImage = styled.img`
   height: 100%;
+
+  @media ${devices.mobile} {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 export const ResultInfo = styled.div`
@@ -207,6 +230,9 @@ export const ResultInfo = styled.div`
   @media ${devices.laptop} {
     font-size: 0.8em;
   }
+  @media ${devices.mobile} {
+    margin-left: 0;
+  }
 `;
 
 export const Tag = styled.div`
@@ -214,6 +240,14 @@ export const Tag = styled.div`
   padding: 5px;
   background-color: lightgrey;
   margin: 5px;
+`;
+
+export const Description = styled.div`
+  overflow: scroll;
+
+  @media ${devices.mobile} {
+    overflow: visible;
+  }
 `;
 
 export const FadedBottom = styled.div`
@@ -234,7 +268,14 @@ export const FadedBottom = styled.div`
 
 export const FiltersButton = styled(Button)`
   display: none;
+
   @media ${devices.tablet} {
     display: flex;
+  }
+  @media ${devices.mobile} {
+    height: 24px;
+    padding: 0px 7px;
+    font-size: 14px;
+    border-radius: 2px;
   }
 `;
