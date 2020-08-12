@@ -50,13 +50,17 @@ export const TopBar = styled.div`
 `;
 
 export const MenuIcon = styled(MenuOutlined)`
-  position: absolute;
-  left: 20px;
-  font-size: 1.5em;
   display: none;
 
   @media ${devices.tablet} {
     display: block;
+    position: absolute;
+    left: 20px;
+    font-size: 1.5em;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 `;
 
@@ -81,6 +85,12 @@ export const Links = styled.div`
   @media ${devices.mobile} {
     font-size: 0.75em;
   }
+`;
+
+export const LinksInDrawer = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5em;
 `;
 
 export const SearchTitle = styled.h1`
