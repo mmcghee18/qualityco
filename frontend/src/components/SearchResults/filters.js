@@ -1,18 +1,13 @@
-export const filters = {
-  SUSTAINABLE: "Sustainable",
-  ORGANIC: "Organic",
-  WOMAN_OWNED: "Woman-owned",
-  POC_OWNED: "POC-owned",
-  FAIR_TRADE: "Fair Trade",
-  LIVING_WAGES: "Living Wages",
-  ZERO_WASTE: "Zero Waste",
-  CARBON_FREE: "Carbon-free",
-  EASY_ASSEMBLE: "Easy-assemble",
-};
+export const tags = [
+  "Sustainable",
+  "Organic",
+  "Woman-owned",
+  "POC-owned",
+  "Fair Trade",
+  "Living Wages",
+  "Zero Waste",
+  "Carbon-free",
+  "Easy-assemble",
+];
 
-export const prices = {
-  ONE: "$",
-  TWO: "$$",
-  THREE: "$$$",
-  FOUR: "$$$$",
-};
+export const price = ["$", "$$", "$$$", "$$$$"];

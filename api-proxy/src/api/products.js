@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
   // Extract query params
   const searchTerm = req.query.q ? req.query.q : null;
   const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
-  const prices = req.query.prices ? JSON.parse(req.query.prices) : null;
+  const price = req.query.price ? JSON.parse(req.query.price) : null;
   const response = [];
 
   // Misspellings and synonyms
@@ -51,8 +51,8 @@ router.get("/", (req, res) => {
         .map((tag) => `FIND(LOWER("${tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`)
         .join(", ")})`
     : null;
-  const priceFormula = prices
-    ? `OR(${prices.map((price) => `FIND("${price}", Price) > 0`).join(", ")})`
+  const priceFormula = price
+    ? `OR(${price.map((price) => `FIND("${price}", Price) > 0`).join(", ")})`
     : null;
 
   const formula = `AND(${[finalSearchFormula, tagFormula, priceFormula]

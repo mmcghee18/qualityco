@@ -3,11 +3,6 @@
   border-bottom: 0 !important;
 }
 
-/* Line up checkboxes */
-.ant-checkbox-wrapper + .ant-checkbox-wrapper {
-  margin: 0 !important;
-}
-
 /* Move "Filters" and arrow to be lined up */
 .ant-collapse-content > .ant-collapse-content-box {
   padding: 0 !important;
@@ -17,4 +12,9 @@
 }
 .ant-collapse > .ant-collapse-item > .ant-collapse-header {
   padding-left: 20px !important;
+}
+
+/* Force checkboxes to be in a column */
+.ant-checkbox-group-item {
+  width: 100%;
 }

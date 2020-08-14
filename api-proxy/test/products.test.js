@@ -210,11 +210,11 @@ describe("GET /api/products?q=coffee&tags=['abcdwxyz']", () => {
   });
 });
 
-describe("GET /api/products?prices=['$$$']", () => {
+describe("GET /api/products?price=['$$$']", () => {
   it("single price filter", async (done) => {
-    const prices = ["$$$"];
+    const price = ["$$$"];
     const response = await request(app).get(
-      `/api/products?prices=${JSON.stringify(prices)}`
+      `/api/products?price=${JSON.stringify(price)}`
     );
     const records = response.body.records;
 
@@ -239,11 +239,11 @@ describe("GET /api/products?prices=['$$$']", () => {
   });
 });
 
-describe("GET /api/products?prices=['$', '$$$']", () => {
+describe("GET /api/products?price=['$', '$$$']", () => {
   it("multiple price filters", async (done) => {
-    const prices = ["$", "$$$"];
+    const price = ["$", "$$$"];
     const response = await request(app).get(
-      `/api/products?prices=${JSON.stringify(prices)}`
+      `/api/products?price=${JSON.stringify(price)}`
     );
     const records = response.body.records;
 
@@ -274,11 +274,11 @@ describe("GET /api/products?prices=['$', '$$$']", () => {
   });
 });
 
-describe("GET /api/products?prices=['not-a-price']", () => {
+describe("GET /api/products?price=['not-a-price']", () => {
   it("invalid price filter", async (done) => {
-    const prices = ["not-a-price"];
+    const price = ["not-a-price"];
     const response = await request(app).get(
-      `/api/products?prices=${JSON.stringify(prices)}`
+      `/api/products?price=${JSON.stringify(price)}`
     );
     const records = response.body.records;
 

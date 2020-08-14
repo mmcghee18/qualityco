@@ -21,11 +21,18 @@ const SearchResults = ({ location }) => {
 
   useDeepCompareEffect(() => {
     const callApi = async () => {
-      const result = await fetch(
-        `http://localhost:5000/api/${queryParams.type ? queryParams.type : ""}${
-          queryParams.q ? `?q=${queryParams.q}` : ""
-        }`
-      )
+      const tags =
+        queryParams.tags && queryParams.tags.length > 0
+          ? queryParams.tags.split(",")
+          : null;
+
+      const url = `http://localhost:5000/api/${
+        queryParams.type ? queryParams.type : ""
+      }${queryParams.q ? `?q=${queryParams.q}` : ""}${
+        tags ? `&tags=[${tags.map((t) => `"${t}"`)}]` : ""
+      }`;
+
+      const result = await fetch(url)
         .then((response) => response.json())
         .then((data) => {
           setItems(data);
@@ -45,7 +52,7 @@ const SearchResults = ({ location }) => {
       </SearchFilterBar>
 
       <ResultsBody>
-        <Filters />
+        <Filters queryParams={queryParams} />
         <Drawer
           placement="left"
           visible={showDrawer}
