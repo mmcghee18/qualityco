@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SearchBar.css";
 import { Redirect } from "react-router-dom";
 import { Input, Select } from "antd";
 const { Search } = Input;
 const { Option } = Select;
 
-const SearchBar = ({ defaultValue }) => {
+const SearchBar = ({ defaultValue, setLoading }) => {
   const [showResults, setShowResults] = useState(false);
   const [searchTerm, setSearchTerm] = useState(null);
   const [type, setType] = useState("products");
@@ -29,6 +29,7 @@ const SearchBar = ({ defaultValue }) => {
         addonBefore={selectBefore}
         placeholder="I'm looking for..."
         onSearch={(value) => {
+          if (setLoading) setLoading(true);
           setSearchTerm(value);
           setShowResults(true);
         }}

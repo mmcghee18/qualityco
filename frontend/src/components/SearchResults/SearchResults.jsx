@@ -9,8 +9,8 @@ import {
 } from "../../styles/styles.js";
 import Filters from "./Filters.jsx";
 import ResultsList from "./ResultsList.jsx";
-import fakeData from "./fakeData.js";
 import { Drawer } from "antd";
+import useDeepCompareEffect from "use-deep-compare-effect";
 
 const SearchResults = ({ location }) => {
   const [items, setItems] = useState(null);
@@ -19,7 +19,7 @@ const SearchResults = ({ location }) => {
 
   const queryParams = queryString.parse(location.search);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const callApi = async () => {
       const result = await fetch(
         `http://localhost:5000/api/${queryParams.type ? queryParams.type : ""}${
@@ -33,9 +33,7 @@ const SearchResults = ({ location }) => {
         });
     };
     callApi();
-  }, []);
-
-  console.log(items);
+  }, [queryParams]);
 
   return (
     <SearchResultsWrapper>
@@ -43,7 +41,7 @@ const SearchResults = ({ location }) => {
         <FiltersButton onClick={() => setShowDrawer(true)}>
           Filters
         </FiltersButton>
-        <SearchBar defaultValue={queryParams.q} />
+        <SearchBar defaultValue={queryParams.q} setLoading={setLoading} />
       </SearchFilterBar>
 
       <ResultsBody>
@@ -57,7 +55,7 @@ const SearchResults = ({ location }) => {
           <Filters visibleOverride={true} />
         </Drawer>
 
-        <ResultsList items={items} />
+        <ResultsList items={items} loading={loading} />
       </ResultsBody>
     </SearchResultsWrapper>
   );
