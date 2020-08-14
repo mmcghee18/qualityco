@@ -57,7 +57,7 @@ const SearchResults = ({ location }) => {
           <Filters visibleOverride={true} />
         </Drawer>
 
-        <ResultsList data={fakeData} />
+        <ResultsList items={items} />
       </ResultsBody>
     </SearchResultsWrapper>
   );

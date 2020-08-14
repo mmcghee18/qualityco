@@ -1,25 +1,33 @@
 import React, { useEffect, useState } from "react";
 import Result from "./Result.jsx";
 import { ListOfResults } from "../../styles/styles.js";
-import michelle from "./michelle.png";
-import pudding from "./pudding.png";
+import blank from "./blank.png";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
-const ResultsList = ({ data }) => {
+const ResultsList = ({ items }) => {
+  const spinIcon = (
+    <LoadingOutlined style={{ fontSize: 60, marginTop: 60 }} spin />
+  );
   return (
     <ListOfResults>
-      {data.records.map((result, i) => {
-        const { company, website, tags, image, description } = result;
-        return (
-          <Result
-            key={i}
-            company={company}
-            website={website}
-            tags={tags}
-            image={i === 0 ? pudding : michelle}
-            description={description}
-          />
-        );
-      })}
+      {items ? (
+        items.records.map((result, i) => {
+          const { company, website, tags, image, description } = result;
+          return (
+            <Result
+              key={i}
+              company={company}
+              website={website}
+              tags={tags}
+              image={blank}
+              description={description}
+            />
+          );
+        })
+      ) : (
+        <Spin indicator={spinIcon} />
+      )}
     </ListOfResults>
   );
 };
