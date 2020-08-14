@@ -5,17 +5,6 @@ import Search from "./components/Search/Search.jsx";
 import SearchResults from "./components/SearchResults/SearchResults.jsx";
 
 function App() {
-  // const [items, setItems] = useState(null);
-
-  // useEffect(() => {
-  //   const callApi = async () => {
-  //     const result = await fetch(`http://localhost:5000/api/products`)
-  //       .then((response) => response.json())
-  //       .then((data) => setItems(data));
-  //   };
-  //   callApi();
-  // }, []);
-
   return (
     <Router>
       <div>

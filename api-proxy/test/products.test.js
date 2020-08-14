@@ -18,33 +18,31 @@ describe("GET /api/products?q=beverages", () => {
     const response = await request(app).get("/api/products?q=beverages");
     const records = response.body.records;
 
-    console.log(response.body);
-
     expect(response.status).toBe(200);
     expect(records.length).toBeGreaterThanOrEqual(7);
 
     expect(records).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          Company: "Steeped Coffee",
+          company: "Steeped Coffee",
         }),
         expect.objectContaining({
-          Company: "Woken Coffee",
+          company: "Woken Coffee",
         }),
         expect.objectContaining({
-          Company: "Jot Coffee",
+          company: "Jot Coffee",
         }),
         expect.objectContaining({
-          Company: "Seedlip",
+          company: "Seedlip",
         }),
         expect.objectContaining({
-          Company: "Copper Cow Coffee",
+          company: "Copper Cow Coffee",
         }),
         expect.objectContaining({
-          Company: "Tea Drops",
+          company: "Tea Drops",
         }),
         expect.objectContaining({
-          Company: "Dona",
+          company: "Dona",
         }),
       ])
     );
@@ -65,23 +63,23 @@ describe("GET /api/products?q=coffee", () => {
       expect.arrayContaining([
         // These match "Coffee" in "Company"
         expect.objectContaining({
-          Company: "Steeped Coffee",
+          company: "Steeped Coffee",
         }),
         expect.objectContaining({
-          Company: "Woken Coffee",
+          company: "Woken Coffee",
         }),
         expect.objectContaining({
-          Company: "Jot Coffee",
+          company: "Jot Coffee",
         }),
         expect.objectContaining({
-          Company: "Copper Cow Coffee",
+          company: "Copper Cow Coffee",
         }),
         // These match "Coffee Table" under "Products"
         expect.objectContaining({
-          Company: "Hitch",
+          company: "Hitch",
         }),
         expect.objectContaining({
-          Company: "Interior Define",
+          company: "Interior Define",
         }),
       ])
     );
@@ -100,19 +98,19 @@ describe("GET /api/products?q=couch", () => {
     expect(records).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          Company: "Article",
+          company: "Article",
         }),
         expect.objectContaining({
-          Company: "Inside Weather",
+          company: "Inside Weather",
         }),
         expect.objectContaining({
-          Company: "Burrow",
+          company: "Burrow",
         }),
         expect.objectContaining({
-          Company: "Campaign Living",
+          company: "Campaign Living",
         }),
         expect.objectContaining({
-          Company: "Interior Define",
+          company: "Interior Define",
         }),
       ])
     );
@@ -162,7 +160,7 @@ describe("GET /api/products?q=coffee&tags=['Woman-owned']", () => {
     expect(records).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          Company: "Copper Cow Coffee",
+          company: "Copper Cow Coffee",
         }),
       ])
     );
@@ -185,10 +183,10 @@ describe("GET /api/products?q=sofa&tags=['Custom', 'Made in USA']", () => {
     expect(records).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          Company: "Burrow",
+          company: "Burrow",
         }),
         expect.objectContaining({
-          Company: "Inside Weather",
+          company: "Inside Weather",
         }),
       ])
     );
@@ -226,13 +224,13 @@ describe("GET /api/products?prices=['$$$']", () => {
     expect(records).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          Company: "Willow",
+          company: "Willow",
         }),
         expect.objectContaining({
-          Company: "Interior Define",
+          company: "Interior Define",
         }),
         expect.objectContaining({
-          Company: "Sarah O. Jewelry",
+          company: "Sarah O. Jewelry",
         }),
       ])
     );
@@ -255,19 +253,19 @@ describe("GET /api/products?prices=['$', '$$$']", () => {
     expect(records).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          Company: "Terra & Co.",
+          company: "Terra & Co.",
         }),
         expect.objectContaining({
-          Company: "quip",
+          company: "quip",
         }),
         expect.objectContaining({
-          Company: "Willow",
+          company: "Willow",
         }),
         expect.objectContaining({
-          Company: "Interior Define",
+          company: "Interior Define",
         }),
         expect.objectContaining({
-          Company: "Sarah O. Jewelry",
+          company: "Sarah O. Jewelry",
         }),
       ])
     );

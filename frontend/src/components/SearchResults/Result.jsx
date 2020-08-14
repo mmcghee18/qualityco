@@ -9,6 +9,7 @@ import {
   Tags,
   LinksAndTags,
   Tag,
+  ShopNow,
   FadedBottom,
   Description,
   PopoverWrapper,
@@ -17,8 +18,8 @@ import {
 const Result = ({ company, website, tags, image, description }) => {
   const popoverContent = (
     <PopoverWrapper>
-      {tags.map((tag) => (
-        <Tag>{tag}</Tag>
+      {tags.map((tag, i) => (
+        <Tag key={`popover-${i}`}>{tag}</Tag>
       ))}
     </PopoverWrapper>
   );
@@ -35,7 +36,7 @@ const Result = ({ company, website, tags, image, description }) => {
         </Description>
 
         <LinksAndTags>
-          <div style={{ flexShrink: 0, width: "20%" }}>
+          <ShopNow>
             <a
               href={website}
               target="_blank"
@@ -44,11 +45,11 @@ const Result = ({ company, website, tags, image, description }) => {
               Shop now
             </a>
             <ArrowRightOutlined />
-          </div>
+          </ShopNow>
           <Tags>
             {/* Max 2 tags */}
-            {_.take(goodLengthTags, 2).map((tag) => (
-              <Tag>{tag}</Tag>
+            {_.take(goodLengthTags, 2).map((tag, i) => (
+              <Tag key={i}>{tag}</Tag>
             ))}
             {/* Elipsis if there are more tags to see */}
             {tags.length > 2 || goodLengthTags.length < tags.length ? (

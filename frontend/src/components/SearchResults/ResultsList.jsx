@@ -5,13 +5,13 @@ import michelle from "./michelle.png";
 import pudding from "./pudding.png";
 
 const ResultsList = ({ data }) => {
-  console.log(data);
   return (
     <ListOfResults>
       {data.records.map((result, i) => {
         const { company, website, tags, image, description } = result;
         return (
           <Result
+            key={i}
             company={company}
             website={website}
             tags={tags}

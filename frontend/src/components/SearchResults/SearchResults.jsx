@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import queryString from "query-string";
 import SearchBar from "../Search/SearchBar.jsx";
 import {
   SearchResultsWrapper,
+  SearchFilterBar,
   ResultsBody,
   FiltersButton,
 } from "../../styles/styles.js";
@@ -12,29 +13,38 @@ import fakeData from "./fakeData.js";
 import { Drawer } from "antd";
 
 const SearchResults = ({ location }) => {
+  const [items, setItems] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [showDrawer, setShowDrawer] = useState(false);
 
   const queryParams = queryString.parse(location.search);
-  console.log(queryParams);
 
-  // Get the data from the API
-  // For now, fake data
+  useEffect(() => {
+    const callApi = async () => {
+      const result = await fetch(
+        `http://localhost:5000/api/${queryParams.type ? queryParams.type : ""}${
+          queryParams.q ? `?q=${queryParams.q}` : ""
+        }`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setItems(data);
+          setLoading(false);
+        });
+    };
+    callApi();
+  }, []);
+
+  console.log(items);
 
   return (
     <SearchResultsWrapper>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-evenly",
-          width: "100%",
-          alignItems: "center",
-        }}
-      >
+      <SearchFilterBar>
         <FiltersButton onClick={() => setShowDrawer(true)}>
           Filters
         </FiltersButton>
         <SearchBar defaultValue={queryParams.q} />
-      </div>
+      </SearchFilterBar>
 
       <ResultsBody>
         <Filters />

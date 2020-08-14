@@ -24,10 +24,10 @@ describe("GET /api/services?q=therapy", () => {
     expect(records).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          Name: "Real",
+          name: "Real",
         }),
         expect.objectContaining({
-          Name: "Alma",
+          name: "Alma",
         }),
       ])
     );
@@ -46,13 +46,13 @@ describe("GET /api/services?q=giving", () => {
     expect(records).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          Name: "Felt App",
+          name: "Felt App",
         }),
         expect.objectContaining({
-          Name: "Greetabl",
+          name: "Greetabl",
         }),
         expect.objectContaining({
-          Name: "KiwiCo",
+          name: "KiwiCo",
         }),
       ])
     );

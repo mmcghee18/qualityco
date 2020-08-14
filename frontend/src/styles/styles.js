@@ -214,6 +214,11 @@ export const Tags = styled.div`
   overflow: scroll;
 `;
 
+export const ShopNow = styled.div`
+  flex-shrink: 0;
+  width: 20%;
+`;
+
 export const LinksAndTags = styled.div`
   display: flex;
   flex-direction: row;
@@ -305,6 +310,13 @@ export const FadedBottom = styled.div`
   @media ${devices.laptop} {
     height: 15px;
   }
+`;
+
+export const SearchFilterBar = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  align-items: center;
 `;
 
 export const FiltersButton = styled(Button)`
