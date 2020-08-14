@@ -3,7 +3,7 @@ import { Checkbox, Collapse, Switch } from "antd";
 import _ from "lodash";
 import "./Filters.css";
 import {
-  Row,
+  SwitchRow,
   SwitchLabel,
   FilterSection,
   FiltersWrapper,
@@ -32,18 +32,18 @@ const Filters = ({ visibleOverride }) => {
       {/* Shop local */}
       <FilterSection>
         <p>Shop local?</p>
-        <Row alignItems="center">
+        <SwitchRow>
           <Switch size="small" />
           <SwitchLabel>Sourced</SwitchLabel>
-        </Row>
-        <Row alignItems="center">
+        </SwitchRow>
+        <SwitchRow>
           <Switch size="small" />
           <SwitchLabel>Manufactured</SwitchLabel>
-        </Row>
-        <Row alignItems="center">
+        </SwitchRow>
+        <SwitchRow>
           <Switch size="small" />
           <SwitchLabel>Warehoused</SwitchLabel>
-        </Row>
+        </SwitchRow>
       </FilterSection>
 
       {/* Price */}

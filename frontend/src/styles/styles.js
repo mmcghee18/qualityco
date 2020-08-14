@@ -151,7 +151,7 @@ export const ResultsBody = styled.div`
 export const FiltersWrapper = styled.div`
   display: ${(props) => (props.visibleOverride ? "block !important" : "block")};
   width: 200px;
-  flex-shrink: 0;
+  position: absolute;
 
   @media ${devices.tablet} {
     display: none;
@@ -164,24 +164,26 @@ export const FilterSection = styled.div`
   margin-bottom: 20px;
 `;
 
-export const Row = styled.div`
+export const SwitchRow = styled.div`
   display: flex;
   flex-direction: row;
-  margin-top: ${(props) => (props.marginTop ? props.marginTop : null)};
-  align-items: ${(props) => (props.alignItems ? props.alignItems : null)};
-  justify-content: ${(props) =>
-    props.justifyContent ? props.justifyContent : null};
-`;
-
-export const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: ${(props) => (props.alignItems ? props.alignItems : null)};
-  padding: ${(props) => (props.padding ? props.padding : null)};
+  align-items: center;
 `;
 
 export const SwitchLabel = styled.div`
   margin-left: 7px;
+`;
+
+export const ListOfResults = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 200px;
+  width: 100%;
+
+  @media ${devices.tablet} {
+    padding-left: 0;
+  }
 `;
 
 export const ResultContainer = styled.div`
@@ -191,14 +193,25 @@ export const ResultContainer = styled.div`
   width: 100%;
   max-width: 1000px;
   height: 200px;
+  position: relative;
 
   @media ${devices.laptop} {
     height: 150px;
   }
   @media ${devices.mobile} {
+    position: static;
     height: auto;
     flex-direction: column;
   }
+`;
+
+export const Tags = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: scroll;
 `;
 
 export const LinksAndTags = styled.div`
@@ -211,9 +224,12 @@ export const LinksAndTags = styled.div`
 `;
 
 export const ResultImage = styled.img`
+  position: absolute;
   height: 100%;
+  width: auto;
 
   @media ${devices.mobile} {
+    position: static;
     width: 100%;
     height: auto;
   }
@@ -226,20 +242,45 @@ export const ResultInfo = styled.div`
   height: 100%;
   width: 100%;
   margin-left: 20px;
+  padding-left: 300px;
 
   @media ${devices.laptop} {
     font-size: 0.8em;
+    padding-left: 230px;
   }
   @media ${devices.mobile} {
     margin-left: 0;
+    padding-left: 0;
   }
 `;
 
 export const Tag = styled.div`
+  height: 50%;
+  flex-shrink: 0;
   border: 2px solid #5c6475;
   padding: 5px;
   background-color: lightgrey;
   margin: 5px;
+  flex-wrap: wrap;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    cursor: ${(props) => (props.clickable ? "pointer" : "default")};
+    background-color: ${(props) =>
+      props.clickable ? "darkgrey" : "lightgrey"};
+  }
+`;
+
+export const PopoverWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 300px;
+
+  @media ${devices.laptop} {
+    font-size: 0.8em;
+    width: 250px;
+  }
 `;
 
 export const Description = styled.div`
