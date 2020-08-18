@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Result from "./Result.jsx";
 import { ListOfResults } from "../../styles/styles.js";
 import blank from "./blank.png";
@@ -20,7 +20,7 @@ const ResultsList = ({ items, loading }) => {
               company={company}
               website={website}
               tags={tags}
-              image={blank}
+              image={image ? image : blank}
               description={description}
             />
           );

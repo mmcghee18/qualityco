@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./SearchBar.css";
 import { Redirect } from "react-router-dom";
 import { Input, Select } from "antd";

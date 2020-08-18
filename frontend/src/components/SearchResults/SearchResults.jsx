@@ -33,7 +33,8 @@ const SearchResults = ({ history, location }) => {
       const baseUrl =
         process.env.NODE_ENV === "production"
           ? "https://qualityco-backend.herokuapp.com"
-          : "https://localhost:5000";
+          : "http://localhost:5000";
+
       const apiUrl = `${baseUrl}/api/${type ? type : ""}${
         searchTerm ? `?q=${searchTerm}` : ""
       }${
