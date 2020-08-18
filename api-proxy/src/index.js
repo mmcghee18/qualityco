@@ -5,8 +5,8 @@ app.listen(port, () => {
   /* eslint-disable no-console */
   const baseUrl =
     process.env.NODE_ENV === "production"
-      ? "http://qualityco-backend.herokuapp.com"
-      : `http://localhost:${port}`;
+      ? "https://qualityco-backend.herokuapp.com"
+      : `https://localhost:${port}`;
   console.log(`Listening: ${baseUrl}`);
   /* eslint-enable no-console */
 });
