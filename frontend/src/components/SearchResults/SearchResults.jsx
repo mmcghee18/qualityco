@@ -30,7 +30,11 @@ const SearchResults = ({ history, location }) => {
 
   useEffect(() => {
     const callApi = async () => {
-      const apiUrl = `http://localhost:5000/api/${type ? type : ""}${
+      const baseUrl =
+        process.env.NODE_ENV === "production"
+          ? "http://qualityco-backend.herokuapp.com"
+          : "http://localhost:5000";
+      const apiUrl = `${baseUrl}/api/${type ? type : ""}${
         searchTerm ? `?q=${searchTerm}` : ""
       }${
         tags && tags.length > 0 ? `&tags=[${tags.map((t) => `"${t}"`)}]` : ""
