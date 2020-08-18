@@ -102,7 +102,11 @@ const SearchResults = ({ history, location }) => {
           />
         </Drawer>
 
-        <ResultsList items={items} loading={loading} />
+        <ResultsList
+          items={items}
+          loading={loading}
+          setSearchTerm={setSearchTerm}
+        />
       </ResultsBody>
     </SearchResultsWrapper>
   );
