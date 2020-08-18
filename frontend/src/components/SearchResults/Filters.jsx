@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Checkbox, Collapse, Switch } from "antd";
-import _ from "lodash";
 import "./Filters.css";
 import {
   SwitchRow,

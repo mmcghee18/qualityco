@@ -13,8 +13,13 @@ const SearchBar = ({
   setType,
 }) => {
   const [redirect, setRedirect] = useState(false);
+  const [searchBarContent, setSearchBarContent] = useState(defaultValue);
   const [q, setQ] = useState(null);
   const [t, setT] = useState("products");
+
+  useEffect(() => {
+    setSearchBarContent(defaultValue);
+  }, [defaultValue]);
 
   const selectBefore = (
     <Select
@@ -37,9 +42,12 @@ const SearchBar = ({
     <>
       {redirect && homePage && <Redirect to={`/search?type=${t}&q=${q}`} />}
       <Search
-        defaultValue={defaultValue}
+        value={searchBarContent}
         addonBefore={selectBefore}
         placeholder="I'm looking for..."
+        onChange={(e) => {
+          setSearchBarContent(e.target.value);
+        }}
         onSearch={(value) => {
           if (setLoading) setLoading(true);
 

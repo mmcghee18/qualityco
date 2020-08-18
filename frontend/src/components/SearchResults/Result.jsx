@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Popover } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import _ from "lodash";
@@ -41,6 +41,7 @@ const Result = ({ company, website, tags, image, description }) => {
               <a
                 href={website}
                 target="_blank"
+                rel="noopener noreferrer"
                 style={{ textDecoration: "underline", marginRight: "5px" }}
               >
                 Shop now

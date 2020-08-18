@@ -1,0 +1,5 @@
+@media screen and (max-width: 480px) {
+  .ant-result-title {
+    font-size: 1em !important;
+  }
+}

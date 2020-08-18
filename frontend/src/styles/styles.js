@@ -186,6 +186,14 @@ export const ListOfResults = styled.div`
   }
 `;
 
+export const Suggestion = styled.span`
+  font-weight: bold;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+`;
+
 export const ResultContainer = styled.div`
   display: flex;
   flex-direction: row;
