@@ -9,7 +9,6 @@ const ResultsList = ({ items, loading }) => {
   const spinIcon = (
     <LoadingOutlined style={{ fontSize: 60, marginTop: 60 }} spin />
   );
-  console.log(items);
   return (
     <ListOfResults>
       {!loading ? (

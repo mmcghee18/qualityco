@@ -6,7 +6,7 @@ const Search = () => {
   return (
     <SearchContainer>
       <SearchTitle>Find the right product for you, instantly.</SearchTitle>
-      <SearchBar />
+      <SearchBar homePage={true} />
     </SearchContainer>
   );
 };

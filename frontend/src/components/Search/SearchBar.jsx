@@ -5,16 +5,28 @@ import { Input, Select } from "antd";
 const { Search } = Input;
 const { Option } = Select;
 
-const SearchBar = ({ defaultValue, setLoading }) => {
-  const [showResults, setShowResults] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(null);
-  const [type, setType] = useState("products");
+const SearchBar = ({
+  homePage,
+  defaultValue,
+  setLoading,
+  setSearchTerm,
+  setType,
+}) => {
+  const [redirect, setRedirect] = useState(false);
+  const [q, setQ] = useState(null);
+  const [t, setT] = useState("products");
 
   const selectBefore = (
     <Select
       defaultValue="Products"
       className="select-before"
-      onChange={(value) => setType(value.toLowerCase())}
+      onChange={(value) => {
+        if (homePage) {
+          setT(value.toLowerCase());
+        } else {
+          setType(value.toLowerCase());
+        }
+      }}
     >
       <Option value="Products">Products</Option>
       <Option value="Services">Services</Option>
@@ -23,15 +35,20 @@ const SearchBar = ({ defaultValue, setLoading }) => {
 
   return (
     <>
-      {showResults && <Redirect to={`/search?type=${type}&q=${searchTerm}`} />}
+      {redirect && homePage && <Redirect to={`/search?type=${t}&q=${q}`} />}
       <Search
         defaultValue={defaultValue}
         addonBefore={selectBefore}
         placeholder="I'm looking for..."
         onSearch={(value) => {
           if (setLoading) setLoading(true);
-          setSearchTerm(value);
-          setShowResults(true);
+
+          if (homePage) {
+            setQ(value);
+            setRedirect(true);
+          } else {
+            setSearchTerm(value);
+          }
         }}
         style={{ width: "80%", maxWidth: "650px", borderRadius: "5px" }}
       />

@@ -10,37 +10,55 @@ import {
 import Filters from "./Filters.jsx";
 import ResultsList from "./ResultsList.jsx";
 import { Drawer } from "antd";
-import useDeepCompareEffect from "use-deep-compare-effect";
 
-const SearchResults = ({ location }) => {
+const SearchResults = ({ history, location }) => {
+  const queryParams = queryString.parse(location.search);
+  const [searchTerm, setSearchTerm] = useState(queryParams.q);
+  const [type, setType] = useState(queryParams.type);
+  const [tags, setTags] = useState(null);
+  const [price, setPrice] = useState(null);
+
   const [items, setItems] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDrawer, setShowDrawer] = useState(false);
 
-  const queryParams = queryString.parse(location.search);
+  // Clear filters on a new search
+  useEffect(() => {
+    setTags(null);
+    setPrice(null);
+  }, [searchTerm]);
 
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     const callApi = async () => {
-      const tags =
-        queryParams.tags && queryParams.tags.length > 0
-          ? queryParams.tags.split(",")
-          : null;
-
-      const url = `http://localhost:5000/api/${
-        queryParams.type ? queryParams.type : ""
-      }${queryParams.q ? `?q=${queryParams.q}` : ""}${
-        tags ? `&tags=[${tags.map((t) => `"${t}"`)}]` : ""
+      const apiUrl = `http://localhost:5000/api/${type ? type : ""}${
+        searchTerm ? `?q=${searchTerm}` : ""
+      }${
+        tags && tags.length > 0 ? `&tags=[${tags.map((t) => `"${t}"`)}]` : ""
+      }${
+        price && price.length > 0
+          ? `&price=[${price.map((p) => `"${p}"`)}]`
+          : ""
       }`;
 
-      const result = await fetch(url)
+      await fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
           setItems(data);
           setLoading(false);
         });
+
+      history.push(
+        `/search?type=${type ? type : ""}&q=${searchTerm ? searchTerm : ""}${
+          tags && tags.length > 0 ? `&tags=[${tags.map((t) => `"${t}"`)}]` : ""
+        }${
+          price && price.length > 0
+            ? `&price=[${price.map((p) => `"${p}"`)}]`
+            : ""
+        }`
+      );
     };
     callApi();
-  }, [queryParams]);
+  }, [searchTerm, type, tags, price]);
 
   return (
     <SearchResultsWrapper>
@@ -48,18 +66,35 @@ const SearchResults = ({ location }) => {
         <FiltersButton onClick={() => setShowDrawer(true)}>
           Filters
         </FiltersButton>
-        <SearchBar defaultValue={queryParams.q} setLoading={setLoading} />
+        <SearchBar
+          homePage={false}
+          defaultValue={searchTerm}
+          setLoading={setLoading}
+          setSearchTerm={setSearchTerm}
+          setType={setType}
+        />
       </SearchFilterBar>
 
       <ResultsBody>
-        <Filters queryParams={queryParams} />
+        <Filters
+          tags={tags}
+          setTags={setTags}
+          price={price}
+          setPrice={setPrice}
+        />
         <Drawer
           placement="left"
           visible={showDrawer}
           closable={false}
           onClose={() => setShowDrawer(false)}
         >
-          <Filters visibleOverride={true} />
+          <Filters
+            tags={tags}
+            setTags={setTags}
+            price={price}
+            setPrice={setPrice}
+            visibleOverride={true}
+          />
         </Drawer>
 
         <ResultsList items={items} loading={loading} />

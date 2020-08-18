@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Checkbox, Collapse, Switch } from "antd";
-import queryString from "query-string";
 import _ from "lodash";
 import "./Filters.css";
 import {
@@ -9,25 +8,12 @@ import {
   FilterSection,
   FiltersWrapper,
 } from "../../styles/styles.js";
-import { Redirect } from "react-router-dom";
-import { tags, price } from "./filters.js";
+import { tags as tagOptions, price as priceOptions } from "./filters.js";
 const { Panel } = Collapse;
 
-const Filters = ({ queryParams, visibleOverride }) => {
-  const [tagsSelected, setTagsSelected] = useState([]);
-  //const [priceSelected, setPriceSelected] = useState([]);
-
-  const [redirect, setRedirect] = useState(false);
-
+const Filters = ({ tags, setTags, price, setPrice, visibleOverride }) => {
   return (
     <>
-      {redirect ? (
-        <Redirect
-          to={`/search?type=${queryParams.type}&q=${queryParams.q}${
-            tagsSelected.length > 0 ? `&tags=${tagsSelected.join()}` : ""
-          }`}
-        />
-      ) : null}
       <FiltersWrapper visibleOverride={visibleOverride}>
         {/* Tags */}
         <Collapse
@@ -38,10 +24,10 @@ const Filters = ({ queryParams, visibleOverride }) => {
           <Panel header="Tags" key="1">
             <FilterSection>
               <Checkbox.Group
-                options={tags}
+                value={tags}
+                options={tagOptions}
                 onChange={(checkedValues) => {
-                  setTagsSelected(checkedValues);
-                  setRedirect(true);
+                  setTags(checkedValues);
                 }}
               />
             </FilterSection>
@@ -69,10 +55,11 @@ const Filters = ({ queryParams, visibleOverride }) => {
         <FilterSection>
           <p>Price</p>
           <Checkbox.Group
-            options={price}
-            // onChange={(checkedValues) => {
-            //   setPriceSelected(checkedValues);
-            // }}
+            value={price}
+            options={priceOptions}
+            onChange={(checkedValues) => {
+              setPrice(checkedValues);
+            }}
           />
         </FilterSection>
 
