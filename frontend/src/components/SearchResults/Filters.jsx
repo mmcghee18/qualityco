@@ -73,15 +73,6 @@ const Filters = ({
             }}
           />
         </FilterSection>
-
-        {/* Number of results */}
-        <FilterSection>
-          <p># Results</p>
-          <Checkbox>1-2</Checkbox>
-          <Checkbox>3-5</Checkbox>
-          <Checkbox>6-10</Checkbox>
-          <Checkbox>All</Checkbox>
-        </FilterSection>
       </FiltersWrapper>
     </>
   );
