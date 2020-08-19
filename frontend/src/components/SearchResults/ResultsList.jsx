@@ -14,13 +14,14 @@ const ResultsList = ({ items, loading, setSearchTerm }) => {
     <ListOfResults>
       {!loading ? (
         items.records.map((result, i) => {
-          const { company, website, tags, image, description } = result;
+          const { company, website, tags, price, image, description } = result;
           return (
             <Result
               key={i}
               company={company}
               website={website}
               tags={tags}
+              price={price}
               image={image ? image : blank}
               description={description}
             />

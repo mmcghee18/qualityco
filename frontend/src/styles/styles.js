@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle } from "styled-components";
-import { Button } from "antd";
+import { Button, Tag as AntTag } from "antd";
 import { StarOutlined, MenuOutlined } from "@ant-design/icons";
 
 const maxSizes = {
@@ -213,6 +213,13 @@ export const ResultContainer = styled.div`
   }
 `;
 
+export const ResultHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const Tags = styled.div`
   display: flex;
   flex-direction: row;
@@ -267,21 +274,12 @@ export const ResultInfo = styled.div`
   }
 `;
 
-export const Tag = styled.div`
-  height: 50%;
-  flex-shrink: 0;
-  border: 2px solid #5c6475;
-  padding: 5px;
-  background-color: lightgrey;
-  margin: 5px;
-  flex-wrap: wrap;
-  max-width: 100%;
-  overflow-wrap: anywhere;
+export const Tag = styled(AntTag)`
+  font-size: 1em;
 
   &:hover {
     cursor: ${(props) => (props.clickable ? "pointer" : "default")};
-    background-color: ${(props) =>
-      props.clickable ? "darkgrey" : "lightgrey"};
+    background-color: ${(props) => (props.clickable ? "darkgrey" : null)};
   }
 `;
 
