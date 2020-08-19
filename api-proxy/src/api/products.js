@@ -1,5 +1,6 @@
 const express = require("express");
 const Airtable = require("airtable");
+const pluralize = require("pluralize");
 const _ = require("lodash");
 const { getSpellingSuggestions, getSynonyms } = require("./helpers.js");
 
@@ -10,7 +11,7 @@ router.get("/", (req, res) => {
     "appop5JmfRum8l0LN"
   );
   // Extract query params
-  const searchTerm = req.query.q ? req.query.q : null;
+  const searchTerm = req.query.q ? pluralize.singular(req.query.q) : null; // singularize
   const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
   const price = req.query.price ? JSON.parse(req.query.price) : null;
   const response = [];
