@@ -278,8 +278,8 @@ export const Tag = styled(AntTag)`
   font-size: 1em;
 
   &:hover {
-    cursor: ${(props) => (props.clickable ? "pointer" : "default")};
-    background-color: ${(props) => (props.clickable ? "darkgrey" : null)};
+    cursor: ${(props) => (props.$clickable ? "pointer" : "default")};
+    background-color: ${(props) => (props.$clickable ? "darkgrey" : null)};
   }
 `;
 

@@ -11,6 +11,7 @@ const SearchBar = ({
   setLoading,
   setSearchTerm,
   setType,
+  setPageNumber,
 }) => {
   const [redirect, setRedirect] = useState(false);
   const [searchBarContent, setSearchBarContent] = useState(defaultValue);
@@ -55,6 +56,7 @@ const SearchBar = ({
             setQ(value);
             setRedirect(true);
           } else {
+            setPageNumber(1);
             setSearchTerm(value);
           }
         }}

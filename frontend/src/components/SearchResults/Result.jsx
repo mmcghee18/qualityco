@@ -63,7 +63,7 @@ const Result = ({ company, website, tags, price, image, description }) => {
               {/* Elipsis if there are more tags to see */}
               {tags.length > 2 || goodLengthTags.length < tags.length ? (
                 <Popover content={popoverContent} placement="bottom">
-                  <Tag clickable={true}>...</Tag>
+                  <Tag $clickable={true}>...</Tag>
                 </Popover>
               ) : null}
             </Tags>

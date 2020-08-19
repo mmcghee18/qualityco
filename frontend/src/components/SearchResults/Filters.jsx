@@ -10,7 +10,15 @@ import {
 import { tags as tagOptions, price as priceOptions } from "./filters.js";
 const { Panel } = Collapse;
 
-const Filters = ({ tags, setTags, price, setPrice, visibleOverride }) => {
+const Filters = ({
+  tags,
+  setTags,
+  price,
+  setPrice,
+  visibleOverride,
+  setLoading,
+  setPageNumber,
+}) => {
   return (
     <>
       <FiltersWrapper visibleOverride={visibleOverride}>
@@ -26,7 +34,9 @@ const Filters = ({ tags, setTags, price, setPrice, visibleOverride }) => {
                 value={tags}
                 options={tagOptions}
                 onChange={(checkedValues) => {
+                  setPageNumber(1);
                   setTags(checkedValues);
+                  setLoading(true);
                 }}
               />
             </FilterSection>
@@ -57,7 +67,9 @@ const Filters = ({ tags, setTags, price, setPrice, visibleOverride }) => {
             value={price}
             options={priceOptions}
             onChange={(checkedValues) => {
+              setPageNumber(1);
               setPrice(checkedValues);
+              setLoading(true);
             }}
           />
         </FilterSection>
