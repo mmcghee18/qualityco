@@ -150,8 +150,11 @@ export const ResultsBody = styled.div`
 
 export const FiltersWrapper = styled.div`
   display: ${(props) => (props.visibleOverride ? "block !important" : "block")};
-  width: 200px;
-  position: absolute;
+  position: sticky;
+  top: 60px;
+  height: 100%;
+  flex-shrink: 0;
+  width: 250px;
 
   @media ${devices.tablet} {
     display: none;
@@ -178,7 +181,6 @@ export const ListOfResults = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-left: 200px;
   width: 100%;
 
   @media ${devices.tablet} {
