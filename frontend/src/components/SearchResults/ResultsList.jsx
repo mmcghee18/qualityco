@@ -2,30 +2,68 @@ import React from "react";
 import Result from "./Result.jsx";
 import { ListOfResults, Suggestion } from "../../styles/styles.js";
 import blank from "./blank.png";
-import { Spin, Result as Notice } from "antd";
+import { Spin, Pagination, Result as Notice } from "antd";
 import { LoadingOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import "./ResultsList.css";
 
-const ResultsList = ({ items, loading, setSearchTerm }) => {
+const ResultsList = ({
+  items,
+  loading,
+  setLoading,
+  setSearchTerm,
+  pageNumber,
+  setPageNumber,
+  pageSize,
+  setPageSize,
+}) => {
+  const pageChange = (page) => {
+    setPageNumber(page);
+    setLoading(true);
+  };
+  const pageSizeChange = (current, size) => {
+    setPageSize(size);
+    setLoading(true);
+  };
+
   const spinIcon = (
     <LoadingOutlined style={{ fontSize: 60, marginTop: 60 }} spin />
   );
   return (
     <ListOfResults>
       {!loading ? (
-        items.records.map((result, i) => {
-          const { company, website, tags, image, description } = result;
-          return (
-            <Result
-              key={i}
-              company={company}
-              website={website}
-              tags={tags}
-              image={image ? image : blank}
-              description={description}
+        <>
+          {items.records.map((result, i) => {
+            const {
+              company,
+              website,
+              tags,
+              price,
+              image,
+              description,
+            } = result;
+            return (
+              <Result
+                key={i}
+                company={company}
+                website={website}
+                tags={tags}
+                price={price}
+                image={image ? image : blank}
+                description={description}
+              />
+            );
+          })}
+          {items.records.length > 0 && (
+            <Pagination
+              defaultCurrent={pageNumber}
+              pageSize={pageSize}
+              total={items.totalNumberOfRecords}
+              onChange={pageChange}
+              onShowSizeChange={pageSizeChange}
+              style={{ marginTop: "40px" }}
             />
-          );
-        })
+          )}
+        </>
       ) : (
         <Spin indicator={spinIcon} />
       )}

@@ -19,6 +19,8 @@ const SearchResults = ({ history, location }) => {
   const [price, setPrice] = useState(null);
 
   const [items, setItems] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
   const [showDrawer, setShowDrawer] = useState(false);
 
@@ -35,8 +37,8 @@ const SearchResults = ({ history, location }) => {
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
 
-      const apiUrl = `${baseUrl}/api/${type ? type : ""}${
-        searchTerm ? `?q=${searchTerm}` : ""
+      const params = `page=${pageNumber}&pageSize=${pageSize}${
+        searchTerm ? `&q=${searchTerm}` : ""
       }${
         tags && tags.length > 0 ? `&tags=[${tags.map((t) => `"${t}"`)}]` : ""
       }${
@@ -44,26 +46,19 @@ const SearchResults = ({ history, location }) => {
           ? `&price=[${price.map((p) => `"${p}"`)}]`
           : ""
       }`;
+      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
+      const pageUrl = `/search?type=${type ? type : ""}&${params}`;
 
+      history.push(pageUrl);
       await fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
           setItems(data);
           setLoading(false);
         });
-
-      history.push(
-        `/search?type=${type ? type : ""}&q=${searchTerm ? searchTerm : ""}${
-          tags && tags.length > 0 ? `&tags=[${tags.map((t) => `"${t}"`)}]` : ""
-        }${
-          price && price.length > 0
-            ? `&price=[${price.map((p) => `"${p}"`)}]`
-            : ""
-        }`
-      );
     };
     callApi();
-  }, [searchTerm, type, tags, price]);
+  }, [searchTerm, type, tags, price, pageNumber, pageSize]);
 
   return (
     <SearchResultsWrapper>
@@ -77,6 +72,7 @@ const SearchResults = ({ history, location }) => {
           setLoading={setLoading}
           setSearchTerm={setSearchTerm}
           setType={setType}
+          setPageNumber={setPageNumber}
         />
       </SearchFilterBar>
 
@@ -86,7 +82,10 @@ const SearchResults = ({ history, location }) => {
           setTags={setTags}
           price={price}
           setPrice={setPrice}
+          setLoading={setLoading}
+          setPageNumber={setPageNumber}
         />
+        {/* For tablet and mobile */}
         <Drawer
           placement="left"
           visible={showDrawer}
@@ -99,13 +98,20 @@ const SearchResults = ({ history, location }) => {
             price={price}
             setPrice={setPrice}
             visibleOverride={true}
+            setLoading={setLoading}
+            setPageNumber={setPageNumber}
           />
         </Drawer>
 
         <ResultsList
           items={items}
           loading={loading}
+          setLoading={setLoading}
           setSearchTerm={setSearchTerm}
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
         />
       </ResultsBody>
     </SearchResultsWrapper>

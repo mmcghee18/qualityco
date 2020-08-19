@@ -4,6 +4,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import {
   ResultContainer,
+  ResultHeader,
   ResultImage,
   ResultInfo,
   Tags,
@@ -15,7 +16,7 @@ import {
   PopoverWrapper,
 } from "../../styles/styles.js";
 
-const Result = ({ company, website, tags, image, description }) => {
+const Result = ({ company, website, tags, price, image, description }) => {
   const popoverContent = tags ? (
     <PopoverWrapper>
       {tags.map((tag, i) => (
@@ -29,7 +30,11 @@ const Result = ({ company, website, tags, image, description }) => {
     <ResultContainer>
       <ResultImage src={image} alt="test" />
       <ResultInfo>
-        <h2>{company ? company : "-"}</h2>
+        <ResultHeader>
+          <h2>{company ? company : "-"}</h2>
+          {price && <Tag color="blue">{price}</Tag>}
+        </ResultHeader>
+
         <Description>
           {description}
           <FadedBottom />
@@ -58,7 +63,7 @@ const Result = ({ company, website, tags, image, description }) => {
               {/* Elipsis if there are more tags to see */}
               {tags.length > 2 || goodLengthTags.length < tags.length ? (
                 <Popover content={popoverContent} placement="bottom">
-                  <Tag clickable={true}>...</Tag>
+                  <Tag $clickable={true}>...</Tag>
                 </Popover>
               ) : null}
             </Tags>
