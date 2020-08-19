@@ -56,7 +56,7 @@ router.get("/", (req, res) => {
         .join(", ")})`
     : null;
   const priceFormula = price
-    ? `OR(${price.map((price) => `FIND("${price}", Price) > 0`).join(", ")})`
+    ? `OR(${price.map((price) => `Price="${price}"`).join(", ")})`
     : null;
 
   const formula = `AND(${[finalSearchFormula, tagFormula, priceFormula]
