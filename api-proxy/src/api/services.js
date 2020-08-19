@@ -13,7 +13,10 @@ router.get("/", (req, res) => {
   // Extract query params
   const searchTerm = req.query.q ? pluralize.singular(req.query.q) : null;
   const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
+  const pageNumber = req.query.page ? parseInt(req.query.page) : null;
+  const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : null;
   const response = [];
+  let totalNumberOfRecords = 0;
 
   // Misspellings and synonyms
   let spellingSuggestions = [];
@@ -56,31 +59,37 @@ router.get("/", (req, res) => {
     .filter((f) => f)
     .join(", ")})`;
 
+  let currentPage = 1;
   base("Services")
     .select({
-      pageSize: 10,
+      pageSize: _.min([100, pageSize]),
       view: "Grid view",
       filterByFormula: formula,
     })
     .eachPage(
+      // This function (`page`) will get called for each page of records.
       function page(records, fetchNextPage) {
-        // This function (`page`) will get called for each page of records.
-
         records.forEach(function (record) {
-          const lowercased = _.mapKeys(record.fields, (value, key) =>
-            key.toLowerCase()
-          );
-          response.push(lowercased);
+          if (currentPage === pageNumber) {
+            // only return the specified page
+            const lowercased = _.mapKeys(record.fields, (value, key) =>
+              key.toLowerCase()
+            );
+            response.push(lowercased);
+          }
+          totalNumberOfRecords += 1;
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
         // If there are more records, `page` will get called again.
         // If there are no more records, `done` will get called.
+        currentPage += 1;
         fetchNextPage();
       },
       function done(err) {
         res.json({
           records: response,
+          totalNumberOfRecords,
           spellingSuggestions,
         });
         if (err) {
