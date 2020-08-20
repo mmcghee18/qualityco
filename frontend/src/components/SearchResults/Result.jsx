@@ -32,7 +32,7 @@ const Result = ({ company, website, tags, price, image, description }) => {
       <ResultInfo>
         <ResultHeader>
           <h2>{company ? company : "-"}</h2>
-          {price && <Tag color="blue">{price}</Tag>}
+          {price && <Tag color="#E65213">{price}</Tag>}
         </ResultHeader>
 
         <Description>
