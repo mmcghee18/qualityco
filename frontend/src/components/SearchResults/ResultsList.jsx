@@ -33,12 +33,12 @@ const ResultsList = ({
       {!loading ? (
         <>
           {items.records.map((result, i) => {
-            const { company, website, tags, price, description } = result;
+            const { company, name, website, tags, price, description } = result;
             const image = result.images ? result.images[0].url : blank;
             return (
               <Result
                 key={i}
-                company={company}
+                company={company ? company : name}
                 website={website}
                 tags={tags}
                 price={price}
