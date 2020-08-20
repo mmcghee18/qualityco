@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import { GlobalStyle } from "./styles/styles";
-import "antd/dist/antd.css";
+import "antd/dist/antd.less";
 
 ReactDOM.render(
   <React.StrictMode>
