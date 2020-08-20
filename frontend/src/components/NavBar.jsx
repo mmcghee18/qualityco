@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   TopBar,
-  LogoContainer,
+  Logo,
   Links,
   LinksInDrawer,
   MenuIcon,
   StarIcon,
 } from "../styles/styles";
+import logo from "../logos/rectangle-transparent.png";
 import { Drawer } from "antd";
 
 const NavBar = () => {
@@ -32,10 +33,7 @@ const NavBar = () => {
       </Drawer>
 
       <Link to="/">
-        <LogoContainer>
-          <StarIcon />
-          QualityCo
-        </LogoContainer>
+        <Logo src={logo} />
       </Link>
 
       <Links>

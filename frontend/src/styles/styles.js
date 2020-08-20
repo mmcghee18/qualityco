@@ -110,11 +110,8 @@ export const SearchTitle = styled.h1`
   }
 `;
 
-export const LogoContainer = styled.div`
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-  font-size: 1.4em;
+export const Logo = styled.img`
+  height: 40px;
 `;
 
 export const SearchContainer = styled.div`
