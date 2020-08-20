@@ -212,6 +212,38 @@ export const ResultContainer = styled.div`
     position: static;
     height: auto;
     flex-direction: column;
+    align-items: center;
+  }
+`;
+
+export const ResultImage = styled.div`
+  flex: 1;
+  background-image: ${(props) => `url(${props.imageUrl})`};
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  @media ${devices.mobile} {
+    width: 90%;
+    height: 250px;
+    flex: none;
+  }
+`;
+
+export const ResultInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  flex: 2;
+  margin-left: 30px;
+
+  @media ${devices.laptop} {
+    font-size: 0.8em;
+  }
+  @media ${devices.mobile} {
+    margin-left: 0;
   }
 `;
 
@@ -243,37 +275,6 @@ export const LinksAndTags = styled.div`
   align-items: center;
   margin-top: 10px;
   font-size: 1em;
-`;
-
-export const ResultImage = styled.img`
-  position: absolute;
-  height: 100%;
-  width: auto;
-
-  @media ${devices.mobile} {
-    position: static;
-    width: 100%;
-    height: auto;
-  }
-`;
-
-export const ResultInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  width: 100%;
-  margin-left: 20px;
-  padding-left: 300px;
-
-  @media ${devices.laptop} {
-    font-size: 0.8em;
-    padding-left: 230px;
-  }
-  @media ${devices.mobile} {
-    margin-left: 0;
-    padding-left: 0;
-  }
 `;
 
 export const Tag = styled(AntTag)`

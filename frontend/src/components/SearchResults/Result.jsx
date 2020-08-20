@@ -28,7 +28,7 @@ const Result = ({ company, website, tags, price, image, description }) => {
 
   return (
     <ResultContainer>
-      <ResultImage src={image} alt="test" />
+      <ResultImage imageUrl={image} />
       <ResultInfo>
         <ResultHeader>
           <h2>{company ? company : "-"}</h2>
