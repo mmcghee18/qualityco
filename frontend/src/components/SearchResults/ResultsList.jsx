@@ -33,6 +33,7 @@ const ResultsList = ({
       {!loading ? (
         <>
           {items.records.map((result, i) => {
+            console.log(result);
             const { company, name, website, tags, price, description } = result;
             const image = result.images ? result.images[0].url : blank;
             return (

@@ -1,5 +1,6 @@
 const request = require("supertest");
 const app = require("../src/app");
+const _ = require("lodash");
 
 describe("GET /api/products", () => {
   it("no search term", async (done) => {
@@ -284,6 +285,22 @@ describe("GET /api/products?price=['not-a-price']", () => {
 
     expect(response.status).toBe(200);
     expect(records.length).toBeGreaterThanOrEqual(0);
+
+    done();
+  });
+});
+
+describe("GET /api/products", () => {
+  it.only("unpacks tag linked objects", async (done) => {
+    const response = await request(app).get("/api/products");
+
+    expect(response.status).toBe(200);
+    _.forEach(response.body.records, (record) => {
+      if (record["tags"] && record["tags"].length > 0) {
+        expect(record["tags"][0]).toHaveProperty("tag");
+        expect(record["tags"][0]).toHaveProperty("type");
+      }
+    });
 
     done();
   });

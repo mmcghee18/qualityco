@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Checkbox, Collapse, Switch } from "antd";
 import "./Filters.css";
 import {
@@ -7,7 +7,6 @@ import {
   FilterSection,
   FiltersWrapper,
 } from "../../styles/styles.js";
-import { tags as tagOptions, price as priceOptions } from "./filters.js";
 const { Panel } = Collapse;
 
 const Filters = ({
@@ -19,6 +18,26 @@ const Filters = ({
   setLoading,
   setPageNumber,
 }) => {
+  const [tagOptions, setTagOptions] = useState(null);
+  const priceOptions = ["$", "$$", "$$$", "$$$$"];
+
+  useEffect(() => {
+    const callApi = async () => {
+      const baseUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://qualityco-backend.herokuapp.com"
+          : "http://localhost:5000";
+      const apiUrl = `${baseUrl}/api/tags`;
+
+      await fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setTagOptions(data.tags);
+        });
+    };
+    callApi();
+  }, []);
+
   return (
     <>
       <FiltersWrapper visibleOverride={visibleOverride}>
@@ -32,7 +51,9 @@ const Filters = ({
             <FilterSection>
               <Checkbox.Group
                 value={tags}
-                options={tagOptions}
+                options={
+                  tagOptions ? tagOptions.map((option) => option.tag) : []
+                }
                 onChange={(checkedValues) => {
                   setPageNumber(1);
                   setTags(checkedValues);
