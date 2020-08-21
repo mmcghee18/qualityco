@@ -70,7 +70,7 @@ router.get("/", (req, res) => {
       // This function (`page`) will get called for each page of records.
       function page(records, fetchNextPage) {
         records.forEach(function (record) {
-          if (currentPage === pageNumber) {
+          if (!pageNumber || currentPage === pageNumber) {
             // only return the specified page
             const lowercased = _.mapKeys(record.fields, (value, key) =>
               key.toLowerCase()
