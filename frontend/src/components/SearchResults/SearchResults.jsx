@@ -4,30 +4,28 @@ import SearchBar from "../Search/SearchBar.jsx";
 import {
   SearchResultsWrapper,
   SearchFilterBar,
-  ResultsBody,
   FiltersButton,
 } from "../../styles/styles.js";
-import Filters from "./Filters.jsx";
+import FilterBar from "./FilterBar.jsx";
 import ResultsList from "./ResultsList.jsx";
-import { Drawer } from "antd";
 
 const SearchResults = ({ history, location }) => {
   const queryParams = queryString.parse(location.search);
   const [searchTerm, setSearchTerm] = useState(queryParams.q);
   const [type, setType] = useState(queryParams.type);
-  const [tags, setTags] = useState(null);
-  const [price, setPrice] = useState(null);
+  const [tags, setTags] = useState([]);
+  const [price, setPrice] = useState([]);
 
   const [items, setItems] = useState(null);
+  const [showDrawer, setShowDrawer] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
-  const [showDrawer, setShowDrawer] = useState(false);
 
   // Clear filters on a new search
   useEffect(() => {
-    setTags(null);
-    setPrice(null);
+    setTags([]);
+    setPrice([]);
   }, [searchTerm]);
 
   useEffect(() => {
@@ -39,9 +37,7 @@ const SearchResults = ({ history, location }) => {
 
       const params = `page=${pageNumber}&pageSize=${pageSize}${
         searchTerm ? `&q=${searchTerm}` : ""
-      }${
-        tags && tags.length > 0 ? `&tags=[${tags.map((t) => `"${t}"`)}]` : ""
-      }${
+      }${tags.length > 0 ? `&tags=[${tags.map((t) => `"${t.tag}"`)}]` : ""}${
         price && price.length > 0
           ? `&price=[${price.map((p) => `"${p}"`)}]`
           : ""
@@ -76,44 +72,27 @@ const SearchResults = ({ history, location }) => {
         />
       </SearchFilterBar>
 
-      <ResultsBody>
-        <Filters
-          tags={tags}
-          setTags={setTags}
-          price={price}
-          setPrice={setPrice}
-          setLoading={setLoading}
-          setPageNumber={setPageNumber}
-        />
-        {/* For tablet and mobile */}
-        <Drawer
-          placement="left"
-          visible={showDrawer}
-          closable={false}
-          onClose={() => setShowDrawer(false)}
-        >
-          <Filters
-            tags={tags}
-            setTags={setTags}
-            price={price}
-            setPrice={setPrice}
-            visibleOverride={true}
-            setLoading={setLoading}
-            setPageNumber={setPageNumber}
-          />
-        </Drawer>
+      <FilterBar
+        tags={tags}
+        setTags={setTags}
+        price={price}
+        setPrice={setPrice}
+        setLoading={setLoading}
+        setPageNumber={setPageNumber}
+        showDrawer={showDrawer}
+        setShowDrawer={setShowDrawer}
+      />
 
-        <ResultsList
-          items={items}
-          loading={loading}
-          setLoading={setLoading}
-          setSearchTerm={setSearchTerm}
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      </ResultsBody>
+      <ResultsList
+        items={items}
+        loading={loading}
+        setLoading={setLoading}
+        setSearchTerm={setSearchTerm}
+        pageNumber={pageNumber}
+        setPageNumber={setPageNumber}
+        pageSize={pageSize}
+        setPageSize={setPageSize}
+      />
     </SearchResultsWrapper>
   );
 };
