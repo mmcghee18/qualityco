@@ -1,3 +1,7 @@
 .svg-inline--fa {
   margin-right: 5px !important;
 }
+
+.ant-select-selector {
+  margin-bottom: 10px !important;
+}

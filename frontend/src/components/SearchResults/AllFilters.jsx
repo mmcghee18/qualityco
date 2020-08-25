@@ -1,7 +1,6 @@
 import React from "react";
 import { Collapse, Button } from "antd";
 import "./AllFilters.css";
-import { FiltersWrapper } from "../../styles/styles.js";
 const { Panel } = Collapse;
 
 const AllFilters = ({
@@ -15,7 +14,7 @@ const AllFilters = ({
 }) => {
   return (
     <>
-      <FiltersWrapper>
+      <div>
         <Button
           onClick={() => {
             setPageNumber(1);
@@ -53,7 +52,7 @@ const AllFilters = ({
             {priceContent}
           </Panel>
         </Collapse>
-      </FiltersWrapper>
+      </div>
     </>
   );
 };

@@ -150,14 +150,8 @@ export const FilterBarContainer = styled.div`
 
 export const FilterPopup = styled.div`
   width: 300px;
-`;
-
-export const FiltersWrapper = styled.div`
-  position: sticky;
-  top: 60px;
-  height: 100%;
-  flex-shrink: 0;
-  width: 250px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const FilterSection = styled.div`
@@ -170,6 +164,7 @@ export const SwitchRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin: 3px;
 `;
 
 export const SwitchLabel = styled.div`
