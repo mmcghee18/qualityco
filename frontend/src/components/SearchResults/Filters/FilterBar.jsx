@@ -19,6 +19,10 @@ const FilterBar = ({
   setPageNumber,
   showDrawer,
   setShowDrawer,
+  places,
+  setPlaces,
+  stages,
+  setStages,
 }) => {
   const [tagOptions, setTagOptions] = useState(null);
   const priceOptions = ["$", "$$", "$$$", "$$$$"];
@@ -74,7 +78,16 @@ const FilterBar = ({
       setLoading={setLoading}
     />
   );
-  const localContent = <Local />;
+  const localContent = (
+    <Local
+      places={places}
+      setPlaces={setPlaces}
+      stages={stages}
+      setStages={setStages}
+      setPageNumber={setPageNumber}
+      setLoading={setLoading}
+    />
+  );
 
   return (
     <FilterBarContainer>
@@ -112,7 +125,17 @@ const FilterBar = ({
         <AllFilters
           peopleContent={peopleContent}
           planetContent={planetContent}
-          localContent={localContent}
+          localContent={
+            <Local
+              places={places}
+              setPlaces={setPlaces}
+              stages={stages}
+              setStages={setStages}
+              setPageNumber={setPageNumber}
+              setLoading={setLoading}
+              overrideWidth={true} // in the sidebar, the width can't be fixed at 300px
+            />
+          }
           priceContent={priceContent}
           setPageNumber={setPageNumber}
           setTags={setTags}

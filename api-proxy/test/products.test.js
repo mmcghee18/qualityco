@@ -391,7 +391,7 @@ describe("GET /api/products?warehoused=['California']", () => {
 });
 
 describe("GET /api/products?companyHQ=['NJ']&designed=['NJ']&manufactured=['CA']&warehoused=['CA']", () => {
-  it.only("combining multiple local filters", async (done) => {
+  it("combining multiple local filters", async (done) => {
     const nj = ["NJ"];
     const ca = ["CA"];
     const response = await request(app).get(

@@ -15,6 +15,8 @@ const SearchResults = ({ history, location }) => {
   const [type, setType] = useState(queryParams.type);
   const [tags, setTags] = useState([]);
   const [price, setPrice] = useState([]);
+  const [places, setPlaces] = useState([]);
+  const [stages, setStages] = useState([]);
 
   const [items, setItems] = useState(null);
   const [showDrawer, setShowDrawer] = useState(false);
@@ -41,6 +43,22 @@ const SearchResults = ({ history, location }) => {
         price && price.length > 0
           ? `&price=[${price.map((p) => `"${p}"`)}]`
           : ""
+      }${
+        places.length > 0 && stages.includes("companyHQ")
+          ? `&companyHQ=[${places.map((p) => `"${p}"`)}]`
+          : ""
+      }${
+        places.length > 0 && stages.includes("designed")
+          ? `&designed=[${places.map((p) => `"${p}"`)}]`
+          : ""
+      }${
+        places.length > 0 && stages.includes("manufactured")
+          ? `&manufactured=[${places.map((p) => `"${p}"`)}]`
+          : ""
+      }${
+        places.length > 0 && stages.includes("warehoused")
+          ? `&warehoused=[${places.map((p) => `"${p}"`)}]`
+          : ""
       }`;
       const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
       const pageUrl = `/search?type=${type ? type : ""}&${params}`;
@@ -49,12 +67,13 @@ const SearchResults = ({ history, location }) => {
       await fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
+          console.log("setting items", apiUrl, loading);
           setItems(data);
           setLoading(false);
         });
     };
     callApi();
-  }, [searchTerm, type, tags, price, pageNumber, pageSize]);
+  }, [searchTerm, type, tags, price, pageNumber, pageSize, places, stages]);
 
   return (
     <SearchResultsWrapper>
@@ -81,6 +100,10 @@ const SearchResults = ({ history, location }) => {
         setPageNumber={setPageNumber}
         showDrawer={showDrawer}
         setShowDrawer={setShowDrawer}
+        places={places}
+        setPlaces={setPlaces}
+        stages={stages}
+        setStages={setStages}
       />
 
       <ResultsList
