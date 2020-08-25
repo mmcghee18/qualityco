@@ -2,7 +2,11 @@ const express = require("express");
 const Airtable = require("airtable");
 const pluralize = require("pluralize");
 const _ = require("lodash");
-const { getSpellingSuggestions, getSynonyms } = require("./helpers.js");
+const {
+  getSpellingSuggestions,
+  getSynonyms,
+  convertState,
+} = require("./helpers.js");
 
 const router = express.Router();
 
@@ -31,6 +35,17 @@ router.get("/", (req, res) => {
   const price = req.query.price ? JSON.parse(req.query.price) : null;
   const pageNumber = req.query.page ? parseInt(req.query.page) : null;
   const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : null;
+  const companyHQ = req.query.companyHQ
+    ? JSON.parse(req.query.companyHQ)
+    : null;
+  const designed = req.query.designed ? JSON.parse(req.query.designed) : null;
+  const manufactured = req.query.manufactured
+    ? JSON.parse(req.query.manufactured)
+    : null;
+  const warehoused = req.query.warehoused
+    ? JSON.parse(req.query.warehoused)
+    : null;
+
   const response = [];
   let totalNumberOfRecords = 0;
 
@@ -74,7 +89,40 @@ router.get("/", (req, res) => {
     ? `OR(${price.map((price) => `Price="${price}"`).join(", ")})`
     : null;
 
-  const formula = `AND(${[finalSearchFormula, tagFormula, priceFormula]
+  const getLocalFormula = (type, states) => {
+    const result = states
+      ? `OR(${states
+          .map((state) => {
+            let otherStateVersion = "";
+            if (state.toUpperCase() === state)
+              otherStateVersion = convertState(state, "to-name");
+            else otherStateVersion = convertState(state, "to-abbreviated");
+
+            if (otherStateVersion) {
+              return `FIND("${state}", {${type}}) > 0, FIND("${otherStateVersion}", {${type}}) > 0`;
+            }
+            return `FIND("${state}", {${type}}) > 0`;
+          })
+          .join(", ")})`
+      : null;
+    return result;
+  };
+
+  const localFormula = `AND(${[
+    getLocalFormula("Company HQ", companyHQ),
+    getLocalFormula("Designed in", designed),
+    getLocalFormula("Manufactured in", manufactured),
+    getLocalFormula("Warehoused in", warehoused),
+  ]
+    .filter((f) => f)
+    .join(", ")})`;
+
+  const formula = `AND(${[
+    finalSearchFormula,
+    tagFormula,
+    priceFormula,
+    localFormula,
+  ]
     .filter((f) => f)
     .join(", ")})`;
 

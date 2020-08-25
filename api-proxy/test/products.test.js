@@ -15,7 +15,7 @@ describe("GET /api/products", () => {
 });
 
 describe("GET /api/products?q=beverages", () => {
-  it.only("getting products using a single search term, checks category", async (done) => {
+  it("getting products using a single search term, checks category", async (done) => {
     const response = await request(app).get("/api/products?q=beverages");
     const records = response.body.records;
 
@@ -291,7 +291,7 @@ describe("GET /api/products?price=['not-a-price']", () => {
 });
 
 describe("GET /api/products", () => {
-  it.only("unpacks tag linked objects", async (done) => {
+  it("unpacks tag linked objects", async (done) => {
     const response = await request(app).get("/api/products");
 
     expect(response.status).toBe(200);
@@ -301,6 +301,109 @@ describe("GET /api/products", () => {
         expect(record["tags"][0]).toHaveProperty("type");
       }
     });
+
+    done();
+  });
+});
+
+describe("GET /api/products?manufactured=['California']", () => {
+  it("manufactured filter, with full state name", async (done) => {
+    const states = ["California"];
+    const response = await request(app).get(
+      `/api/products?manufactured=${JSON.stringify(states)}`
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body.records.length).toBeGreaterThanOrEqual(1);
+
+    done();
+  });
+});
+
+describe("GET /api/products?manufactured=['CA']", () => {
+  it("manufactured filter, with state abbreviations", async (done) => {
+    const states = ["CA"];
+    const response = await request(app).get(
+      `/api/products?manufactured=${JSON.stringify(states)}`
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body.records.length).toBeGreaterThanOrEqual(1);
+
+    done();
+  });
+});
+
+describe("GET /api/products?manufactured=['bogus-name']", () => {
+  it("manufactured filter, with a bad state name", async (done) => {
+    const states = ["bogus-name"];
+    const response = await request(app).get(
+      `/api/products?manufactured=${JSON.stringify(states)}`
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body.records.length).toEqual(0);
+
+    done();
+  });
+});
+
+describe("GET /api/products?companyHQ=['California']", () => {
+  it("company hq filter", async (done) => {
+    const states = ["California"];
+    const response = await request(app).get(
+      `/api/products?companyHQ=${JSON.stringify(states)}`
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body.records.length).toBeGreaterThanOrEqual(1);
+
+    done();
+  });
+});
+
+describe("GET /api/products?designed=['California']", () => {
+  it("designed filter", async (done) => {
+    const states = ["California"];
+    const response = await request(app).get(
+      `/api/products?designed=${JSON.stringify(states)}`
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body.records.length).toBeGreaterThanOrEqual(1);
+
+    done();
+  });
+});
+
+describe("GET /api/products?warehoused=['California']", () => {
+  it("warehoused filter", async (done) => {
+    const states = ["California"];
+    const response = await request(app).get(
+      `/api/products?warehoused=${JSON.stringify(states)}`
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body.records.length).toBeGreaterThanOrEqual(1);
+
+    done();
+  });
+});
+
+describe("GET /api/products?companyHQ=['NJ']&designed=['NJ']&manufactured=['CA']&warehoused=['CA']", () => {
+  it.only("combining multiple local filters", async (done) => {
+    const nj = ["NJ"];
+    const ca = ["CA"];
+    const response = await request(app).get(
+      `/api/products?companyHQ=${JSON.stringify(nj)}&designed=${JSON.stringify(
+        nj
+      )}&manufactured=${JSON.stringify(ca)}&warehoused=${JSON.stringify(ca)}`
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body.records.length).toBeGreaterThanOrEqual(1);
+
+    console.log(response.body.records);
 
     done();
   });

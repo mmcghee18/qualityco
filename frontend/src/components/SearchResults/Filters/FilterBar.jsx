@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  FilterBarContainer,
-  FilterPopup,
-  SwitchRow,
-  SwitchLabel,
-} from "../../../styles/styles.js";
-import { Button, Popover, Checkbox, Drawer, Switch, Select } from "antd";
+import { FilterBarContainer } from "../../../styles/styles.js";
+import { Button, Popover, Drawer } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
 import AllFilters from "./AllFilters.jsx";
