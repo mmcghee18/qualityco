@@ -110,6 +110,8 @@ const FilterBar = ({
             setPageNumber(1);
             setTags([]);
             setPrice([]);
+            setPlaces([]);
+            setStages([]);
             setLoading(true);
           }}
         >
@@ -141,6 +143,8 @@ const FilterBar = ({
           setTags={setTags}
           setPrice={setPrice}
           setLoading={setLoading}
+          setPlaces={setPlaces}
+          setStages={setStages}
         />
       </Drawer>
     </FilterBarContainer>

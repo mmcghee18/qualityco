@@ -12,6 +12,8 @@ const AllFilters = ({
   setTags,
   setPrice,
   setLoading,
+  setPlaces,
+  setStages,
 }) => {
   return (
     <>
@@ -21,6 +23,8 @@ const AllFilters = ({
             setPageNumber(1);
             setTags([]);
             setPrice([]);
+            setPlaces([]);
+            setStages([]);
             setLoading(true);
           }}
         >

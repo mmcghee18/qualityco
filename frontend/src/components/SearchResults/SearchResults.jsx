@@ -9,6 +9,8 @@ import {
 import FilterBar from "./Filters/FilterBar.jsx";
 import ResultsList from "./ResultsList.jsx";
 
+let abortController = new AbortController();
+
 const SearchResults = ({ history, location }) => {
   const queryParams = queryString.parse(location.search);
   const [searchTerm, setSearchTerm] = useState(queryParams.q);
@@ -32,6 +34,9 @@ const SearchResults = ({ history, location }) => {
 
   useEffect(() => {
     const callApi = async () => {
+      abortController.abort(); // cancel previous request
+      abortController = new AbortController();
+
       const baseUrl =
         process.env.NODE_ENV === "production"
           ? "https://qualityco-backend.herokuapp.com"
@@ -64,13 +69,21 @@ const SearchResults = ({ history, location }) => {
       const pageUrl = `/search?type=${type ? type : ""}&${params}`;
 
       history.push(pageUrl);
-      await fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("setting items", apiUrl, loading);
-          setItems(data);
-          setLoading(false);
-        });
+
+      try {
+        await fetch(apiUrl, { signal: abortController.signal })
+          .then((response) => response.json())
+          .then((data) => {
+            setItems(data);
+            setLoading(false);
+          });
+      } catch (err) {
+        if (err.name === "AbortError") {
+          return;
+        } else {
+          console.error(err);
+        }
+      }
     };
     callApi();
   }, [searchTerm, type, tags, price, pageNumber, pageSize, places, stages]);
