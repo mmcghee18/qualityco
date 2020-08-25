@@ -104,7 +104,12 @@ const FilterBar = ({
         <Button icon={<FontAwesomeIcon icon="dollar-sign" />}>Price</Button>
       </Popover>
       <div>
-        <Button onClick={() => setShowDrawer(true)}>All filters</Button>
+        <Button
+          onClick={() => setShowDrawer(true)}
+          style={{ marginRight: "3px" }}
+        >
+          All filters
+        </Button>
         <Button
           onClick={() => {
             setPageNumber(1);

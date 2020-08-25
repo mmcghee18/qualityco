@@ -27,6 +27,7 @@ const AllFilters = ({
             setStages([]);
             setLoading(true);
           }}
+          style={{ marginBottom: "10px" }}
         >
           Clear all
         </Button>
