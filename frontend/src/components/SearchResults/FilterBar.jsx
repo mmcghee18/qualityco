@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { FilterBarContainer, FilterPopup } from "../../styles/styles.js";
 import { Button, Popover, Checkbox, Drawer } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
 import AllFilters from "./AllFilters.jsx";
+import "./FilterBar.css";
 
 const FilterBar = ({
   tags,
@@ -96,14 +98,14 @@ const FilterBar = ({
   return (
     <FilterBarContainer>
       <Popover content={peopleContent} title="People" placement="bottom">
-        <Button icon={<HeartOutlined />}>People</Button>
+        <Button icon={<FontAwesomeIcon icon="heart" />}>People</Button>
       </Popover>
       <Popover content={planetContent} title="Planet" placement="bottom">
-        <Button>Planet</Button>
+        <Button icon={<FontAwesomeIcon icon="leaf" />}>Planet</Button>
       </Popover>
-      <Button>Local</Button>
+      <Button icon={<FontAwesomeIcon icon="map-marker-alt" />}>Local</Button>
       <Popover content={priceContent} title="Price" placement="bottom">
-        <Button>Price</Button>
+        <Button icon={<FontAwesomeIcon icon="dollar-sign" />}>Price</Button>
       </Popover>
 
       <div>
