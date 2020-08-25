@@ -4,15 +4,16 @@ import {
   FilterPopup,
   SwitchRow,
   SwitchLabel,
-} from "../../styles/styles.js";
+} from "../../../styles/styles.js";
 import { Button, Popover, Checkbox, Drawer, Switch, Select } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
 import AllFilters from "./AllFilters.jsx";
 import "./FilterBar.css";
-import states from "./states.js";
-
-const { Option } = Select;
+import People from "./People.jsx";
+import Planet from "./Planet.jsx";
+import Local from "./Local.jsx";
+import Price from "./Price.jsx";
 
 const FilterBar = ({
   tags,
@@ -52,84 +53,33 @@ const FilterBar = ({
     : [];
 
   const peopleContent = (
-    <FilterPopup>
-      <Checkbox.Group
-        value={tags
-          .filter((tag) => tag.type === "People")
-          .map((tag) => tag.tag)}
-        options={peopleTags.map((option) => option.tag)}
-        onChange={(checkedValues) => {
-          setPageNumber(1);
-          setTags([
-            ...tags.filter((tag) => tag.type !== "People"),
-            ...checkedValues.map((value) => ({ tag: value, type: "People" })),
-          ]);
-          setLoading(true);
-        }}
-      ></Checkbox.Group>
-    </FilterPopup>
+    <People
+      tags={tags}
+      tagOptions={peopleTags}
+      setLoading={setLoading}
+      setPageNumber={setPageNumber}
+      setTags={setTags}
+    />
   );
   const planetContent = (
-    <FilterPopup>
-      <Checkbox.Group
-        value={tags
-          .filter((tag) => tag.type === "Planet")
-          .map((tag) => tag.tag)}
-        options={planetTags.map((option) => option.tag)}
-        onChange={(checkedValues) => {
-          setPageNumber(1);
-          setTags([
-            ...tags.filter((tag) => tag.type !== "Planet"),
-            ...checkedValues.map((value) => ({ tag: value, type: "Planet" })),
-          ]);
-          setLoading(true);
-        }}
-      ></Checkbox.Group>
-    </FilterPopup>
+    <Planet
+      tags={tags}
+      tagOptions={planetTags}
+      setLoading={setLoading}
+      setPageNumber={setPageNumber}
+      setTags={setTags}
+    />
   );
-  const localContent = (
-    <FilterPopup>
-      <Select
-        mode="multiple"
-        placeholder="Select state(s)"
-        onChange={(value) => console.log(value)}
-      >
-        {states.map((state, i) => (
-          <Option key={i}>{state}</Option>
-        ))}
-      </Select>
-      <SwitchRow>
-        <Switch size="small" />
-        <SwitchLabel>Designed</SwitchLabel>
-      </SwitchRow>
-      <SwitchRow>
-        <Switch size="small" />
-        <SwitchLabel>Warehoused</SwitchLabel>
-      </SwitchRow>
-      <SwitchRow>
-        <Switch size="small" />
-        <SwitchLabel>Manufactured</SwitchLabel>
-      </SwitchRow>
-      <SwitchRow>
-        <Switch size="small" />
-        <SwitchLabel>Company HQ</SwitchLabel>
-      </SwitchRow>
-    </FilterPopup>
-  );
-
   const priceContent = (
-    <FilterPopup>
-      <Checkbox.Group
-        value={price}
-        options={priceOptions}
-        onChange={(checkedValues) => {
-          setPageNumber(1);
-          setPrice(checkedValues);
-          setLoading(true);
-        }}
-      ></Checkbox.Group>
-    </FilterPopup>
+    <Price
+      price={price}
+      priceOptions={priceOptions}
+      setPageNumber={setPageNumber}
+      setPrice={setPrice}
+      setLoading={setLoading}
+    />
   );
+  const localContent = <Local />;
 
   return (
     <FilterBarContainer>
@@ -145,7 +95,6 @@ const FilterBar = ({
       <Popover content={priceContent} title="Price" placement="bottom">
         <Button icon={<FontAwesomeIcon icon="dollar-sign" />}>Price</Button>
       </Popover>
-
       <div>
         <Button onClick={() => setShowDrawer(true)}>All filters</Button>
         <Button
@@ -159,7 +108,6 @@ const FilterBar = ({
           Clear all
         </Button>
       </div>
-
       <Drawer
         placement="left"
         visible={showDrawer}
@@ -169,6 +117,7 @@ const FilterBar = ({
         <AllFilters
           peopleContent={peopleContent}
           planetContent={planetContent}
+          localContent={localContent}
           priceContent={priceContent}
           setPageNumber={setPageNumber}
           setTags={setTags}

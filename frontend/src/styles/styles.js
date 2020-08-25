@@ -149,7 +149,7 @@ export const FilterBarContainer = styled.div`
 `;
 
 export const FilterPopup = styled.div`
-  width: 300px;
+  width: ${(props) => (props.overrideWidth ? null : "300px")};
   display: flex;
   flex-direction: column;
 `;

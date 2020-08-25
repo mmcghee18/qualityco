@@ -6,7 +6,7 @@ import {
   SearchFilterBar,
   FiltersButton,
 } from "../../styles/styles.js";
-import FilterBar from "./FilterBar.jsx";
+import FilterBar from "./Filters/FilterBar.jsx";
 import ResultsList from "./ResultsList.jsx";
 
 const SearchResults = ({ history, location }) => {
