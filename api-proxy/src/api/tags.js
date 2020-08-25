@@ -21,10 +21,12 @@ router.get("/", (req, res) => {
       // This function (`page`) will get called for each page of records.
       function page(records, fetchNextPage) {
         records.forEach(function (record) {
-          const lowercased = _.mapKeys(record.fields, (value, key) =>
-            key.toLowerCase()
-          );
-          tags.push(lowercased);
+          if (_.keys(record.fields).length > 0) {
+            const lowercased = _.mapKeys(record.fields, (value, key) =>
+              key.toLowerCase()
+            );
+            tags.push(lowercased);
+          }
         });
 
         // To fetch the next page of records, call `fetchNextPage`.

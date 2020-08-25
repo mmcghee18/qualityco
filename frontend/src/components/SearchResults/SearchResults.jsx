@@ -4,34 +4,39 @@ import SearchBar from "../Search/SearchBar.jsx";
 import {
   SearchResultsWrapper,
   SearchFilterBar,
-  ResultsBody,
   FiltersButton,
 } from "../../styles/styles.js";
-import Filters from "./Filters.jsx";
+import FilterBar from "./Filters/FilterBar.jsx";
 import ResultsList from "./ResultsList.jsx";
-import { Drawer } from "antd";
+
+let abortController = new AbortController();
 
 const SearchResults = ({ history, location }) => {
   const queryParams = queryString.parse(location.search);
   const [searchTerm, setSearchTerm] = useState(queryParams.q);
   const [type, setType] = useState(queryParams.type);
-  const [tags, setTags] = useState(null);
-  const [price, setPrice] = useState(null);
+  const [tags, setTags] = useState([]);
+  const [price, setPrice] = useState([]);
+  const [places, setPlaces] = useState([]);
+  const [stages, setStages] = useState([]);
 
   const [items, setItems] = useState(null);
+  const [showDrawer, setShowDrawer] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
-  const [showDrawer, setShowDrawer] = useState(false);
 
   // Clear filters on a new search
   useEffect(() => {
-    setTags(null);
-    setPrice(null);
+    setTags([]);
+    setPrice([]);
   }, [searchTerm]);
 
   useEffect(() => {
     const callApi = async () => {
+      abortController.abort(); // cancel previous request
+      abortController = new AbortController();
+
       const baseUrl =
         process.env.NODE_ENV === "production"
           ? "https://qualityco-backend.herokuapp.com"
@@ -39,26 +44,49 @@ const SearchResults = ({ history, location }) => {
 
       const params = `page=${pageNumber}&pageSize=${pageSize}${
         searchTerm ? `&q=${searchTerm}` : ""
-      }${
-        tags && tags.length > 0 ? `&tags=[${tags.map((t) => `"${t}"`)}]` : ""
-      }${
+      }${tags.length > 0 ? `&tags=[${tags.map((t) => `"${t.tag}"`)}]` : ""}${
         price && price.length > 0
           ? `&price=[${price.map((p) => `"${p}"`)}]`
+          : ""
+      }${
+        places.length > 0 && stages.includes("companyHQ")
+          ? `&companyHQ=[${places.map((p) => `"${p}"`)}]`
+          : ""
+      }${
+        places.length > 0 && stages.includes("designed")
+          ? `&designed=[${places.map((p) => `"${p}"`)}]`
+          : ""
+      }${
+        places.length > 0 && stages.includes("manufactured")
+          ? `&manufactured=[${places.map((p) => `"${p}"`)}]`
+          : ""
+      }${
+        places.length > 0 && stages.includes("warehoused")
+          ? `&warehoused=[${places.map((p) => `"${p}"`)}]`
           : ""
       }`;
       const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
       const pageUrl = `/search?type=${type ? type : ""}&${params}`;
 
       history.push(pageUrl);
-      await fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setItems(data);
-          setLoading(false);
-        });
+
+      try {
+        await fetch(apiUrl, { signal: abortController.signal })
+          .then((response) => response.json())
+          .then((data) => {
+            setItems(data);
+            setLoading(false);
+          });
+      } catch (err) {
+        if (err.name === "AbortError") {
+          return;
+        } else {
+          console.error(err);
+        }
+      }
     };
     callApi();
-  }, [searchTerm, type, tags, price, pageNumber, pageSize]);
+  }, [searchTerm, type, tags, price, pageNumber, pageSize, places, stages]);
 
   return (
     <SearchResultsWrapper>
@@ -76,44 +104,31 @@ const SearchResults = ({ history, location }) => {
         />
       </SearchFilterBar>
 
-      <ResultsBody>
-        <Filters
-          tags={tags}
-          setTags={setTags}
-          price={price}
-          setPrice={setPrice}
-          setLoading={setLoading}
-          setPageNumber={setPageNumber}
-        />
-        {/* For tablet and mobile */}
-        <Drawer
-          placement="left"
-          visible={showDrawer}
-          closable={false}
-          onClose={() => setShowDrawer(false)}
-        >
-          <Filters
-            tags={tags}
-            setTags={setTags}
-            price={price}
-            setPrice={setPrice}
-            visibleOverride={true}
-            setLoading={setLoading}
-            setPageNumber={setPageNumber}
-          />
-        </Drawer>
+      <FilterBar
+        tags={tags}
+        setTags={setTags}
+        price={price}
+        setPrice={setPrice}
+        setLoading={setLoading}
+        setPageNumber={setPageNumber}
+        showDrawer={showDrawer}
+        setShowDrawer={setShowDrawer}
+        places={places}
+        setPlaces={setPlaces}
+        stages={stages}
+        setStages={setStages}
+      />
 
-        <ResultsList
-          items={items}
-          loading={loading}
-          setLoading={setLoading}
-          setSearchTerm={setSearchTerm}
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      </ResultsBody>
+      <ResultsList
+        items={items}
+        loading={loading}
+        setLoading={setLoading}
+        setSearchTerm={setSearchTerm}
+        pageNumber={pageNumber}
+        setPageNumber={setPageNumber}
+        pageSize={pageSize}
+        setPageSize={setPageSize}
+      />
     </SearchResultsWrapper>
   );
 };

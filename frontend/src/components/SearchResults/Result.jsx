@@ -19,12 +19,12 @@ import {
 const Result = ({ company, website, tags, price, image, description }) => {
   const popoverContent = tags ? (
     <PopoverWrapper>
-      {tags.map((tag, i) => (
+      {tags.map(({ tag }, i) => (
         <Tag key={`popover-${i}`}>{tag}</Tag>
       ))}
     </PopoverWrapper>
   ) : null;
-  const goodLengthTags = _.filter(tags, (tag) => tag.length < 30);
+  const goodLengthTags = _.filter(tags, ({ tag }) => tag.length < 30);
 
   return (
     <ResultContainer>
@@ -57,7 +57,7 @@ const Result = ({ company, website, tags, price, image, description }) => {
           {tags ? (
             <Tags>
               {/* Max 2 tags */}
-              {_.take(goodLengthTags, 2).map((tag, i) => (
+              {_.take(goodLengthTags, 2).map(({ tag }, i) => (
                 <Tag key={i}>{tag}</Tag>
               ))}
               {/* Elipsis if there are more tags to see */}

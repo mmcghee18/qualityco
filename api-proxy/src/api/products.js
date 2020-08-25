@@ -2,9 +2,28 @@ const express = require("express");
 const Airtable = require("airtable");
 const pluralize = require("pluralize");
 const _ = require("lodash");
-const { getSpellingSuggestions, getSynonyms } = require("./helpers.js");
+const {
+  getSpellingSuggestions,
+  getSynonyms,
+  convertState,
+} = require("./helpers.js");
 
 const router = express.Router();
+
+const getTagInfo = (id) => {
+  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    "appop5JmfRum8l0LN"
+  );
+  return new Promise((resolve, reject) => {
+    base("Tags").find(id, function (err, record) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(_.pick(record.fields, ["Tag", "Type"]));
+    });
+  });
+};
 
 router.get("/", (req, res) => {
   var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
@@ -16,6 +35,17 @@ router.get("/", (req, res) => {
   const price = req.query.price ? JSON.parse(req.query.price) : null;
   const pageNumber = req.query.page ? parseInt(req.query.page) : null;
   const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : null;
+  const companyHQ = req.query.companyHQ
+    ? JSON.parse(req.query.companyHQ)
+    : null;
+  const designed = req.query.designed ? JSON.parse(req.query.designed) : null;
+  const manufactured = req.query.manufactured
+    ? JSON.parse(req.query.manufactured)
+    : null;
+  const warehoused = req.query.warehoused
+    ? JSON.parse(req.query.warehoused)
+    : null;
+
   const response = [];
   let totalNumberOfRecords = 0;
 
@@ -59,7 +89,40 @@ router.get("/", (req, res) => {
     ? `OR(${price.map((price) => `Price="${price}"`).join(", ")})`
     : null;
 
-  const formula = `AND(${[finalSearchFormula, tagFormula, priceFormula]
+  const getLocalFormula = (type, states) => {
+    const result = states
+      ? `OR(${states
+          .map((state) => {
+            let otherStateVersion = "";
+            if (state.toUpperCase() === state)
+              otherStateVersion = convertState(state, "to-name");
+            else otherStateVersion = convertState(state, "to-abbreviated");
+
+            if (otherStateVersion) {
+              return `FIND("${state}", {${type}}) > 0, FIND("${otherStateVersion}", {${type}}) > 0`;
+            }
+            return `FIND("${state}", {${type}}) > 0`;
+          })
+          .join(", ")})`
+      : null;
+    return result;
+  };
+
+  const localFormula = `AND(${[
+    getLocalFormula("Company HQ", companyHQ),
+    getLocalFormula("Designed in", designed),
+    getLocalFormula("Manufactured in", manufactured),
+    getLocalFormula("Warehoused in", warehoused),
+  ]
+    .filter((f) => f)
+    .join(", ")})`;
+
+  const formula = `AND(${[
+    finalSearchFormula,
+    tagFormula,
+    priceFormula,
+    localFormula,
+  ]
     .filter((f) => f)
     .join(", ")})`;
 
@@ -90,9 +153,28 @@ router.get("/", (req, res) => {
         currentPage += 1;
         fetchNextPage();
       },
-      function done(err) {
+      async function done(err) {
+        // hydrate with tag info
+        let responseWithTagInfo = [];
+        for (const record of response) {
+          if (record["tags"]) {
+            let tags = [];
+            for (const tagId of record["tags"]) {
+              const tagInfo = await getTagInfo(tagId);
+              const lowercaseTagInfo = _.mapKeys(tagInfo, (value, key) =>
+                key.toLowerCase()
+              );
+              tags.push(lowercaseTagInfo);
+            }
+
+            responseWithTagInfo.push(_.set(record, "tags", tags));
+          } else {
+            responseWithTagInfo.push(record);
+          }
+        }
+
         res.json({
-          records: response,
+          records: responseWithTagInfo,
           totalNumberOfRecords,
           spellingSuggestions,
         });

@@ -136,26 +136,22 @@ export const SearchResultsWrapper = styled.div`
   }
 `;
 
-export const ResultsBody = styled.div`
+export const FilterBarContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100%;
-  justify-content: flex-start;
-  align-self: flex-start;
-  margin-top: 30px;
-`;
-
-export const FiltersWrapper = styled.div`
-  display: ${(props) => (props.visibleOverride ? "block !important" : "block")};
-  position: sticky;
-  top: 60px;
-  height: 100%;
-  flex-shrink: 0;
-  width: 250px;
+  justify-content: space-evenly;
+  width: 75%;
+  margin: 30px;
 
   @media ${devices.tablet} {
     display: none;
   }
+`;
+
+export const FilterPopup = styled.div`
+  width: ${(props) => (props.overrideWidth ? null : "300px")};
+  display: flex;
+  flex-direction: column;
 `;
 
 export const FilterSection = styled.div`
@@ -168,6 +164,7 @@ export const SwitchRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin: 3px;
 `;
 
 export const SwitchLabel = styled.div`
@@ -318,13 +315,6 @@ export const FadedBottom = styled.div`
   }
 `;
 
-export const SearchFilterBar = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-  align-items: center;
-`;
-
 export const FiltersButton = styled(Button)`
   display: none;
 
@@ -337,4 +327,11 @@ export const FiltersButton = styled(Button)`
     font-size: 14px;
     border-radius: 2px;
   }
+`;
+
+export const SearchFilterBar = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  align-items: center;
 `;
