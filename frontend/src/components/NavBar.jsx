@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import queryString from "query-string";
+import { Redirect } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import {
   TopBar,
@@ -7,7 +8,8 @@ import {
   Links,
   LinksInDrawer,
   MenuIcon,
-  StarIcon,
+  ProductsPopover,
+  CategoryLabel,
 } from "../styles/styles";
 import logo from "../logos/rectangle-transparent.png";
 import { Drawer, Popover } from "antd";
@@ -15,9 +17,23 @@ import { Drawer, Popover } from "antd";
 const NavBar = () => {
   const [productCategories, setProductCategories] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
+  const [redirectCategory, setRedirectCategory] = useState(null);
   const location = useLocation();
 
-  const productsPopoverContent = <div>hi</div>;
+  const productsPopoverContent = productCategories && (
+    <ProductsPopover>
+      {productCategories.map(({ category }) => (
+        <CategoryLabel
+          key={category}
+          onClick={() => {
+            setRedirectCategory(category);
+          }}
+        >
+          {category}
+        </CategoryLabel>
+      ))}
+    </ProductsPopover>
+  );
 
   useEffect(() => {
     const callApi = async () => {
@@ -38,6 +54,10 @@ const NavBar = () => {
 
   return (
     <TopBar>
+      {redirectCategory && (
+        <Redirect to={`/products?category=${redirectCategory}`} />
+      )}
+
       <MenuIcon onClick={() => setShowDrawer(true)} />
 
       <Link to="/">
@@ -47,27 +67,9 @@ const NavBar = () => {
       <Links>
         <Link to="/">Search</Link>
         <Popover content={productsPopoverContent}>
-          <Link
-            to="/search?type=products"
-            onClick={(e) => {
-              // block redirect if already there
-              const params = queryString.parse(location.search);
-              if (params.type === "products") e.preventDefault();
-            }}
-          >
-            Products
-          </Link>
+          <Link to="/products">Products</Link>
         </Popover>
-        <Link
-          to="/search?type=services"
-          onClick={(e) => {
-            // block redirect if already there
-            const params = queryString.parse(location.search);
-            if (params.type === "services") e.preventDefault();
-          }}
-        >
-          Services
-        </Link>
+        <Link to="/services">Services</Link>
         <Link to="/">Our Mission</Link>
       </Links>
 
@@ -80,8 +82,8 @@ const NavBar = () => {
       >
         <LinksInDrawer>
           <Link to="/">Search</Link>
-          <Link to="/search?type=products">Products</Link>
-          <Link to="/search?type=services">Services</Link>
+          <Link to="/products">Products</Link>
+          <Link to="/services">Services</Link>
           <Link to="/">Our Mission</Link>
         </LinksInDrawer>
       </Drawer>

@@ -1,38 +1,61 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import queryString from "query-string";
-import SearchBar from "../Search/SearchBar.jsx";
 import {
   SearchResultsWrapper,
-  SearchFilterBar,
-  FiltersButton,
+  CategorySearchHeader,
 } from "../../styles/styles.js";
-import FilterBar from "./Filters/FilterBar.jsx";
-import ResultsList from "./ResultsList.jsx";
+import { Menu, Dropdown, Button } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import FilterBar from "../SearchResults/Filters/FilterBar.jsx";
+import ResultsList from "../SearchResults/ResultsList.jsx";
 
 let abortController = new AbortController();
 
-const SearchResults = ({ history, location }) => {
+const Products = ({ location, history }) => {
   const queryParams = queryString.parse(location.search);
-  const [searchTerm, setSearchTerm] = useState(queryParams.q);
-  const [type, setType] = useState(queryParams.type);
   const [tags, setTags] = useState([]);
   const [price, setPrice] = useState([]);
   const [places, setPlaces] = useState([]);
   const [stages, setStages] = useState([]);
+  const [category, setCategory] = useState(
+    queryParams.category ? queryParams.category : null
+  );
+  console.log({ queryParams });
+  console.log({ category });
 
   const [items, setItems] = useState(null);
   const [showDrawer, setShowDrawer] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
-  // Clear filters on a new search
+  // wiring in changes from NavBar's list of categories
   useEffect(() => {
-    setTags([]);
-    setPrice([]);
-  }, [searchTerm]);
+    setPageNumber(1);
+    setCategory(queryParams.category);
+    setLoading(true);
+  }, [queryParams.category]);
 
   useEffect(() => {
+    const callApi = async () => {
+      const baseUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://qualityco-backend.herokuapp.com"
+          : "http://localhost:5000";
+      const apiUrl = `${baseUrl}/api/categories`;
+
+      await fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setCategoryOptions(data.categories.map((c) => c.category));
+        });
+    };
+    callApi();
+  }, []);
+
+  useEffect(() => {
+    console.log("effect");
     const callApi = async () => {
       abortController.abort(); // cancel previous request
       abortController = new AbortController();
@@ -43,8 +66,8 @@ const SearchResults = ({ history, location }) => {
           : "http://localhost:5000";
 
       const params = `page=${pageNumber}&pageSize=${pageSize}${
-        searchTerm ? `&q=${searchTerm}` : ""
-      }${tags.length > 0 ? `&tags=[${tags.map((t) => `"${t.tag}"`)}]` : ""}${
+        tags.length > 0 ? `&tags=[${tags.map((t) => `"${t.tag}"`)}]` : ""
+      }${
         price && price.length > 0
           ? `&price=[${price.map((p) => `"${p}"`)}]`
           : ""
@@ -64,10 +87,10 @@ const SearchResults = ({ history, location }) => {
         places.length > 0 && stages.includes("warehoused")
           ? `&warehoused=[${places.map((p) => `"${p}"`)}]`
           : ""
-      }`;
+      }${category ? `&category=${category}` : ""}`;
 
-      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
-      const pageUrl = `/search?type=${type ? type : ""}&${params}`;
+      const apiUrl = `${baseUrl}/api/products?${params}`;
+      const pageUrl = `/products?${params}`;
       history.push(pageUrl);
 
       try {
@@ -86,24 +109,37 @@ const SearchResults = ({ history, location }) => {
       }
     };
     callApi();
-  }, [searchTerm, type, tags, price, pageNumber, pageSize, places, stages]);
+  }, [tags, price, pageNumber, pageSize, places, stages, category]);
 
   return (
     <SearchResultsWrapper>
-      <SearchFilterBar>
-        <FiltersButton onClick={() => setShowDrawer(true)}>
-          Filters
-        </FiltersButton>
-        <SearchBar
-          homePage={false}
-          defaultValue={searchTerm}
-          setLoading={setLoading}
-          setSearchTerm={setSearchTerm}
-          setType={setType}
-          setPageNumber={setPageNumber}
-        />
-      </SearchFilterBar>
-
+      <CategorySearchHeader>
+        <h1 style={{ marginBottom: "0px", marginRight: "50px" }}>
+          Browse All Products
+        </h1>
+        <Dropdown
+          overlay={
+            <Menu>
+              {categoryOptions.map((option, i) => (
+                <Menu.Item
+                  key={i}
+                  onClick={() => {
+                    setPageNumber(1);
+                    setCategory(option);
+                    setLoading(true);
+                  }}
+                >
+                  {option}
+                </Menu.Item>
+              ))}
+            </Menu>
+          }
+        >
+          <Button>
+            {category ? category : "Choose Category"} <DownOutlined />
+          </Button>
+        </Dropdown>
+      </CategorySearchHeader>
       <FilterBar
         tags={tags}
         setTags={setTags}
@@ -123,7 +159,6 @@ const SearchResults = ({ history, location }) => {
         items={items}
         loading={loading}
         setLoading={setLoading}
-        setSearchTerm={setSearchTerm}
         pageNumber={pageNumber}
         setPageNumber={setPageNumber}
         pageSize={pageSize}
@@ -133,4 +168,4 @@ const SearchResults = ({ history, location }) => {
   );
 };
 
-export default SearchResults;
+export default Products;

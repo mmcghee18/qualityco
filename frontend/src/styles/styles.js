@@ -22,6 +22,11 @@ export const GlobalStyle = createGlobalStyle`
     color: #5c6475;
   }
 
+  h1 {
+    color: inherit;
+    font-weight: bold;
+  }
+
   a {
     text-decoration: none;
     color: inherit;
@@ -333,5 +338,24 @@ export const SearchFilterBar = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;
+  align-items: center;
+`;
+
+export const ProductsPopover = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 400px;
+  flex-wrap: wrap;
+  overflow: scroll;
+`;
+
+export const CategoryLabel = styled.div`
+  margin: 10px;
+`;
+
+export const CategorySearchHeader = styled.div`
+  display: flex;
+  flex-direction: row;
   align-items: center;
 `;

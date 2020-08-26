@@ -59,6 +59,7 @@ router.get("/", (req, res) => {
   const warehoused = req.query.warehoused
     ? JSON.parse(req.query.warehoused)
     : null;
+  const category = req.query.category ? req.query.category : null;
 
   const response = [];
   let totalNumberOfRecords = 0;
@@ -134,11 +135,18 @@ router.get("/", (req, res) => {
           .join(", ")})`
       : null;
 
+  const categoryFormula = category
+    ? `FIND("${category}", ARRAYJOIN(Categories, ","))`
+    : null;
+
+  console.log({ categoryFormula });
+
   const formula = `AND(${[
     finalSearchFormula,
     tagFormula,
     priceFormula,
     localFormula,
+    categoryFormula,
   ]
     .filter((f) => f)
     .join(", ")})`;
