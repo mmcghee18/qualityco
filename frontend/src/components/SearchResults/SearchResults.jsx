@@ -32,6 +32,15 @@ const SearchResults = ({ history, location }) => {
     setPrice([]);
   }, [searchTerm]);
 
+  // When 'Products' or 'Services' is clicked
+  useEffect(() => {
+    const newType = queryString.parse(location.search).type;
+    if (newType !== type) {
+      setType(newType);
+      setLoading(true);
+    }
+  }, [location.search]);
+
   useEffect(() => {
     const callApi = async () => {
       abortController.abort(); // cancel previous request
@@ -65,9 +74,9 @@ const SearchResults = ({ history, location }) => {
           ? `&warehoused=[${places.map((p) => `"${p}"`)}]`
           : ""
       }`;
+
       const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
       const pageUrl = `/search?type=${type ? type : ""}&${params}`;
-
       history.push(pageUrl);
 
       try {

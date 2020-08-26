@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import queryString from "query-string";
+import { Link, useLocation } from "react-router-dom";
 import {
   TopBar,
   Logo,
@@ -13,6 +14,7 @@ import { Drawer } from "antd";
 
 const NavBar = () => {
   const [showDrawer, setShowDrawer] = useState(false);
+  const location = useLocation();
 
   return (
     <TopBar>
@@ -26,8 +28,8 @@ const NavBar = () => {
       >
         <LinksInDrawer>
           <Link to="/">Search</Link>
-          <Link to="/">Brands</Link>
-          <Link to="/">Services</Link>
+          <Link to="/search?type=products">Products</Link>
+          <Link to="/search?type=services">Services</Link>
           <Link to="/">Our Mission</Link>
         </LinksInDrawer>
       </Drawer>
@@ -38,8 +40,24 @@ const NavBar = () => {
 
       <Links>
         <Link to="/">Search</Link>
-        <Link to="/">Brands</Link>
-        <Link to="/">Services</Link>
+        <Link
+          to="/search?type=products"
+          onClick={(e) => {
+            const params = queryString.parse(location.search);
+            if (params.type === "products") e.preventDefault();
+          }}
+        >
+          Products
+        </Link>
+        <Link
+          to="/search?type=services"
+          onClick={(e) => {
+            const params = queryString.parse(location.search);
+            if (params.type === "services") e.preventDefault();
+          }}
+        >
+          Services
+        </Link>
         <Link to="/">Our Mission</Link>
       </Links>
     </TopBar>
