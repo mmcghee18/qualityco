@@ -12,6 +12,7 @@ import ResultsList from "./ResultsList.jsx";
 let abortController = new AbortController();
 
 const SearchResults = ({ history, location }) => {
+  // We get redirected here from <SearchBar/> who passes query params
   const queryParams = queryString.parse(location.search);
   const [searchTerm, setSearchTerm] = useState(queryParams.q);
   const [type, setType] = useState(queryParams.type);

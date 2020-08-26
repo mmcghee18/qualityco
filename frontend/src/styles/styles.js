@@ -358,4 +358,37 @@ export const CategorySearchHeader = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  @media ${devices.tablet} {
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+`;
+
+export const BrowseAllTitle = styled.h1`
+  margin-bottom: 0px;
+  margin-right: 50px;
+  text-align: center;
+
+  @media ${devices.tablet} {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 1.6em;
+  }
+  @media ${devices.mobile} {
+    margin-left: 15px;
+    margin-right: 15px;
+    font-size: 1.4em;
+  }
+`;
+
+export const CategoryDropdown = styled(Button)`
+  @media ${devices.mobile} {
+    height: 24px;
+    padding: 0px 7px;
+    font-size: 14px;
+    border-radius: 2px;
+  }
 `;

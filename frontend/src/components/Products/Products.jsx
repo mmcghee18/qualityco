@@ -3,6 +3,9 @@ import queryString from "query-string";
 import {
   SearchResultsWrapper,
   CategorySearchHeader,
+  FiltersButton,
+  BrowseAllTitle,
+  CategoryDropdown,
 } from "../../styles/styles.js";
 import { Menu, Dropdown, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
@@ -20,8 +23,6 @@ const Products = ({ location, history }) => {
   const [category, setCategory] = useState(
     queryParams.category ? queryParams.category : null
   );
-  console.log({ queryParams });
-  console.log({ category });
 
   const [items, setItems] = useState(null);
   const [showDrawer, setShowDrawer] = useState(false);
@@ -30,7 +31,7 @@ const Products = ({ location, history }) => {
   const [loading, setLoading] = useState(true);
   const [categoryOptions, setCategoryOptions] = useState([]);
 
-  // wiring in changes from NavBar's list of categories
+  // If we get redirected here from <NavBar/>, handle those updates
   useEffect(() => {
     setPageNumber(1);
     setCategory(queryParams.category);
@@ -55,7 +56,6 @@ const Products = ({ location, history }) => {
   }, []);
 
   useEffect(() => {
-    console.log("effect");
     const callApi = async () => {
       abortController.abort(); // cancel previous request
       abortController = new AbortController();
@@ -114,9 +114,10 @@ const Products = ({ location, history }) => {
   return (
     <SearchResultsWrapper>
       <CategorySearchHeader>
-        <h1 style={{ marginBottom: "0px", marginRight: "50px" }}>
-          Browse All Products
-        </h1>
+        <FiltersButton onClick={() => setShowDrawer(true)}>
+          Filters
+        </FiltersButton>
+        <BrowseAllTitle>Browse All Products</BrowseAllTitle>
         <Dropdown
           overlay={
             <Menu>
@@ -135,9 +136,9 @@ const Products = ({ location, history }) => {
             </Menu>
           }
         >
-          <Button>
+          <CategoryDropdown>
             {category ? category : "Choose Category"} <DownOutlined />
-          </Button>
+          </CategoryDropdown>
         </Dropdown>
       </CategorySearchHeader>
       <FilterBar
