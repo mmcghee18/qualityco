@@ -29,7 +29,7 @@ const getCategoryInfo = (id) => {
     "appop5JmfRum8l0LN"
   );
   return new Promise((resolve, reject) => {
-    base("Categories").find(id, function (err, record) {
+    base("Categories (Products)").find(id, function (err, record) {
       if (err) {
         reject(err);
         return;

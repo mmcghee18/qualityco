@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import queryString from "query-string";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -13,10 +13,28 @@ import logo from "../logos/rectangle-transparent.png";
 import { Drawer, Popover } from "antd";
 
 const NavBar = () => {
+  const [productCategories, setProductCategories] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
   const location = useLocation();
 
   const productsPopoverContent = <div>hi</div>;
+
+  useEffect(() => {
+    const callApi = async () => {
+      const baseUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://qualityco-backend.herokuapp.com"
+          : "http://localhost:5000";
+      const apiUrl = `${baseUrl}/api/categories`;
+
+      await fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setProductCategories(data.categories);
+        });
+    };
+    callApi();
+  }, []);
 
   return (
     <TopBar>
