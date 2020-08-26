@@ -56,6 +56,7 @@ router.get("/", (req, res) => {
     spellingSuggestions = getSpellingSuggestions(searchTerm);
     similarNouns = getSynonyms(searchTerm);
   }
+  console.log({ similarNouns });
 
   // Building search formula
   const searchTermFormula = searchTerm
@@ -108,14 +109,17 @@ router.get("/", (req, res) => {
     return result;
   };
 
-  const localFormula = `AND(${[
-    getLocalFormula("Company HQ", companyHQ),
-    getLocalFormula("Designed in", designed),
-    getLocalFormula("Manufactured in", manufactured),
-    getLocalFormula("Warehoused in", warehoused),
-  ]
-    .filter((f) => f)
-    .join(", ")})`;
+  const localFormula =
+    companyHQ || designed || manufactured || warehoused
+      ? `AND(${[
+          getLocalFormula("Company HQ", companyHQ),
+          getLocalFormula("Designed in", designed),
+          getLocalFormula("Manufactured in", manufactured),
+          getLocalFormula("Warehoused in", warehoused),
+        ]
+          .filter((f) => f)
+          .join(", ")})`
+      : null;
 
   const formula = `AND(${[
     finalSearchFormula,
