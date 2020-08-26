@@ -24,6 +24,20 @@ const getTagInfo = (id) => {
     });
   });
 };
+const getCategoryInfo = (id) => {
+  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    "appop5JmfRum8l0LN"
+  );
+  return new Promise((resolve, reject) => {
+    base("Categories").find(id, function (err, record) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(_.pick(record.fields, ["Category"]));
+    });
+  });
+};
 
 router.get("/", (req, res) => {
   var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
@@ -33,8 +47,8 @@ router.get("/", (req, res) => {
   const searchTerm = req.query.q ? pluralize.singular(req.query.q) : null; // singularize
   const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
   const price = req.query.price ? JSON.parse(req.query.price) : null;
-  const pageNumber = req.query.page ? parseInt(req.query.page) : null;
-  const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : null;
+  const pageNumber = req.query.page ? parseInt(req.query.page) : 1;
+  const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
   const companyHQ = req.query.companyHQ
     ? JSON.parse(req.query.companyHQ)
     : null;
@@ -56,13 +70,12 @@ router.get("/", (req, res) => {
     spellingSuggestions = getSpellingSuggestions(searchTerm);
     similarNouns = getSynonyms(searchTerm);
   }
-  console.log({ similarNouns });
 
   // Building search formula
   const searchTermFormula = searchTerm
     ? `FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0`
+    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
     : null;
   const similarWordsFormula =
     similarNouns && similarNouns.length > 0
@@ -71,7 +84,7 @@ router.get("/", (req, res) => {
             (word) =>
               `FIND(LOWER("${word}"), LOWER(Company)) > 0,
               FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Category, ","))) > 0`
+              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
           )
           .join(", ")
       : null;
@@ -158,8 +171,8 @@ router.get("/", (req, res) => {
         fetchNextPage();
       },
       async function done(err) {
-        // hydrate with tag info
-        let responseWithTagInfo = [];
+        // Hydrate with tag and category info
+        let hydratedResponse = [];
         for (const record of response) {
           if (record["tags"]) {
             let tags = [];
@@ -170,15 +183,25 @@ router.get("/", (req, res) => {
               );
               tags.push(lowercaseTagInfo);
             }
-
-            responseWithTagInfo.push(_.set(record, "tags", tags));
-          } else {
-            responseWithTagInfo.push(record);
+            _.set(record, "tags", tags);
           }
+          if (record["categories"]) {
+            let categories = [];
+            for (const categoryId of record["categories"]) {
+              const categoryInfo = await getCategoryInfo(categoryId);
+              const lowercaseCategoryInfo = _.mapKeys(
+                categoryInfo,
+                (value, key) => key.toLowerCase()
+              );
+              categories.push(lowercaseCategoryInfo);
+            }
+            _.set(record, "categories", categories);
+          }
+          hydratedResponse.push(record);
         }
 
         res.json({
-          records: responseWithTagInfo,
+          records: hydratedResponse,
           totalNumberOfRecords,
           spellingSuggestions,
         });

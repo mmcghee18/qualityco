@@ -30,7 +30,7 @@ router.get("/", (req, res) => {
   const searchTermFormula = searchTerm
     ? `FIND(LOWER("${searchTerm}"), LOWER(Name)) > 0,
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0`
+    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
     : null;
   const similarWordsFormula =
     similarNouns && similarNouns.length > 0
@@ -39,7 +39,7 @@ router.get("/", (req, res) => {
             (word) =>
               `FIND(LOWER("${word}"), LOWER(Name)) > 0,
               FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Category, ","))) > 0`
+              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
           )
           .join(", ")
       : null;

@@ -26,6 +26,7 @@ const SearchResults = ({ history, location }) => {
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
 
+  console.log({ items });
   // Clear filters on a new search
   useEffect(() => {
     setTags([]);
