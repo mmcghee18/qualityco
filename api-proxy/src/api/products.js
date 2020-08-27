@@ -46,13 +46,15 @@ router.get("/", (req, res) => {
   );
   // Extract query params
   const searchTerm = req.query.q ? pluralize.singular(req.query.q) : null; // singularize
+  const pageNumber = req.query.page ? parseInt(req.query.page) : 1;
+  const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+  const category = req.query.category ? req.query.category : null;
+
+  // Array query params - if they only contain 1 item, they need to be made into arrays
   let tags = req.query.tags ? req.query.tags : null;
   if (tags && !_.isArray(tags)) tags = [tags];
   let price = req.query.price ? req.query.price : null;
   if (price && !_.isArray(price)) price = [price];
-  const pageNumber = req.query.page ? parseInt(req.query.page) : 1;
-  const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
-
   let companyHQ = req.query.companyHQ ? req.query.companyHQ : null;
   if (companyHQ && !_.isArray(companyHQ)) companyHQ = [companyHQ];
   let designed = req.query.designed ? req.query.designed : null;
@@ -61,7 +63,6 @@ router.get("/", (req, res) => {
   if (manufactured && !_.isArray(manufactured)) manufactured = [manufactured];
   let warehoused = req.query.warehoused ? req.query.warehoused : null;
   if (warehoused && !_.isArray(warehoused)) warehoused = [warehoused];
-  const category = req.query.category ? req.query.category : null;
 
   const response = [];
   let totalNumberOfRecords = 0;
@@ -152,7 +153,7 @@ router.get("/", (req, res) => {
     .join(", ")})`;
 
   let currentPage = 1;
-  base("Consumer Products")
+  base("Products")
     .select({
       pageSize: _.min([100, pageSize]),
       view: "Grid view",
