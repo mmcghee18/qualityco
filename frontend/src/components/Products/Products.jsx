@@ -65,7 +65,7 @@ const Products = ({ location, history }) => {
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
 
-      const params = queryString.stringify({
+      let params = {
         page: pageNumber,
         pageSize,
         tags: tags.map((t) => t.tag),
@@ -78,8 +78,12 @@ const Products = ({ location, history }) => {
           places.length > 0 && stages.includes("manufactured") ? places : [],
         warehoused:
           places.length > 0 && stages.includes("warehoused") ? places : [],
-        category,
-      });
+      };
+      if (category) {
+        // if category is null, we don't want to include it
+        params = { ...params, category };
+      }
+      params = queryString.stringify(params);
 
       const apiUrl = `${baseUrl}/api/products?${params}`;
       const pageUrl = `/products?${params}`;
