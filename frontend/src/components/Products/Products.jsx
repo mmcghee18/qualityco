@@ -1,37 +1,59 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import queryString from "query-string";
-import SearchBar from "../Search/SearchBar.jsx";
 import {
   SearchResultsWrapper,
-  SearchFilterBar,
+  CategorySearchHeader,
   FiltersButton,
+  BrowseAllTitle,
+  CategoryDropdown,
 } from "../../styles/styles.js";
-import FilterBar from "./Filters/FilterBar.jsx";
-import ResultsList from "./ResultsList.jsx";
+import { Menu, Dropdown, Button } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import FilterBar from "../SearchResults/Filters/FilterBar.jsx";
+import ResultsList from "../SearchResults/ResultsList.jsx";
 
 let abortController = new AbortController();
 
-const SearchResults = ({ history, location }) => {
-  // We get redirected here from <SearchBar/> who passes query params
+const Products = ({ location, history }) => {
   const queryParams = queryString.parse(location.search);
-  const [searchTerm, setSearchTerm] = useState(queryParams.q);
-  const [type, setType] = useState(queryParams.type);
   const [tags, setTags] = useState([]);
   const [price, setPrice] = useState([]);
   const [places, setPlaces] = useState([]);
   const [stages, setStages] = useState([]);
+  const [category, setCategory] = useState(
+    queryParams.category ? queryParams.category : null
+  );
 
   const [items, setItems] = useState(null);
   const [showDrawer, setShowDrawer] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
-  // Clear filters on a new search
+  // If we get redirected here from <NavBar/>, handle those updates
   useEffect(() => {
-    setTags([]);
-    setPrice([]);
-  }, [searchTerm]);
+    setPageNumber(1);
+    setCategory(queryParams.category);
+    setLoading(true);
+  }, [queryParams.category]);
+
+  useEffect(() => {
+    const callApi = async () => {
+      const baseUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://qualityco-backend.herokuapp.com"
+          : "http://localhost:5000";
+      const apiUrl = `${baseUrl}/api/categories`;
+
+      await fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setCategoryOptions(data.categories.map((c) => c.category));
+        });
+    };
+    callApi();
+  }, []);
 
   useEffect(() => {
     const callApi = async () => {
@@ -43,34 +65,9 @@ const SearchResults = ({ history, location }) => {
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
 
-      const params = `page=${pageNumber}&pageSize=${pageSize}${
-        searchTerm ? `&q=${searchTerm}` : ""
-      }${tags.length > 0 ? `&tags=[${tags.map((t) => `"${t.tag}"`)}]` : ""}${
-        price && price.length > 0
-          ? `&price=[${price.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("companyHQ")
-          ? `&companyHQ=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("designed")
-          ? `&designed=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("manufactured")
-          ? `&manufactured=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("warehoused")
-          ? `&warehoused=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }`;
-
-      const testParams = queryString.stringify({
+      let params = {
         page: pageNumber,
         pageSize,
-        q: searchTerm,
         tags: tags.map((t) => t.tag),
         price,
         companyHQ:
@@ -81,10 +78,15 @@ const SearchResults = ({ history, location }) => {
           places.length > 0 && stages.includes("manufactured") ? places : [],
         warehoused:
           places.length > 0 && stages.includes("warehoused") ? places : [],
-      });
+      };
+      if (category) {
+        // if category is null, we don't want to include it
+        params = { ...params, category };
+      }
+      params = queryString.stringify(params);
 
-      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${testParams}`;
-      const pageUrl = `/search?type=${type ? type : ""}&${testParams}`;
+      const apiUrl = `${baseUrl}/api/products?${params}`;
+      const pageUrl = `/products?${params}`;
       history.push(pageUrl);
 
       try {
@@ -103,24 +105,38 @@ const SearchResults = ({ history, location }) => {
       }
     };
     callApi();
-  }, [searchTerm, type, tags, price, pageNumber, pageSize, places, stages]);
+  }, [tags, price, pageNumber, pageSize, places, stages, category]);
 
   return (
     <SearchResultsWrapper>
-      <SearchFilterBar>
+      <CategorySearchHeader>
         <FiltersButton onClick={() => setShowDrawer(true)}>
           Filters
         </FiltersButton>
-        <SearchBar
-          homePage={false}
-          defaultValue={searchTerm}
-          setLoading={setLoading}
-          setSearchTerm={setSearchTerm}
-          setType={setType}
-          setPageNumber={setPageNumber}
-        />
-      </SearchFilterBar>
-
+        <BrowseAllTitle>Browse All Products</BrowseAllTitle>
+        <Dropdown
+          overlay={
+            <Menu>
+              {categoryOptions.map((option, i) => (
+                <Menu.Item
+                  key={i}
+                  onClick={() => {
+                    setPageNumber(1);
+                    setCategory(option);
+                    setLoading(true);
+                  }}
+                >
+                  {option}
+                </Menu.Item>
+              ))}
+            </Menu>
+          }
+        >
+          <CategoryDropdown>
+            {category ? category : "Choose Category"} <DownOutlined />
+          </CategoryDropdown>
+        </Dropdown>
+      </CategorySearchHeader>
       <FilterBar
         tags={tags}
         setTags={setTags}
@@ -140,7 +156,6 @@ const SearchResults = ({ history, location }) => {
         items={items}
         loading={loading}
         setLoading={setLoading}
-        setSearchTerm={setSearchTerm}
         pageNumber={pageNumber}
         setPageNumber={setPageNumber}
         pageSize={pageSize}
@@ -150,4 +165,4 @@ const SearchResults = ({ history, location }) => {
   );
 };
 
-export default SearchResults;
+export default Products;

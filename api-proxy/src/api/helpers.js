@@ -20,10 +20,11 @@ const getSpellingSuggestions = (searchTerm) => {
 const getSynonyms = (searchTerm) => {
   let similarNouns = [];
   const syn = synonyms(searchTerm);
+
   similarNouns =
     syn && syn.n
       ? _.take(
-          syn.n.filter((word) => word !== searchTerm),
+          syn.n.filter((word) => word !== searchTerm && word.length > 1),
           5
         )
       : [];

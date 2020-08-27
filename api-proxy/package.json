@@ -26,6 +26,7 @@
     "lodash": "^4.17.19",
     "morgan": "^1.10.0",
     "pluralize": "^8.0.0",
+    "query-string": "^6.13.1",
     "spelling": "^2.0.2",
     "synonyms": "^1.0.1"
   },

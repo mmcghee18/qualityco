@@ -1,5 +1,6 @@
 const express = require("express");
 const Airtable = require("airtable");
+const queryString = require("query-string");
 const pluralize = require("pluralize");
 const _ = require("lodash");
 const {
@@ -24,6 +25,20 @@ const getTagInfo = (id) => {
     });
   });
 };
+const getCategoryInfo = (id) => {
+  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    "appop5JmfRum8l0LN"
+  );
+  return new Promise((resolve, reject) => {
+    base("Categories (Products)").find(id, function (err, record) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(_.pick(record.fields, ["Category"]));
+    });
+  });
+};
 
 router.get("/", (req, res) => {
   var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
@@ -31,20 +46,23 @@ router.get("/", (req, res) => {
   );
   // Extract query params
   const searchTerm = req.query.q ? pluralize.singular(req.query.q) : null; // singularize
-  const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
-  const price = req.query.price ? JSON.parse(req.query.price) : null;
-  const pageNumber = req.query.page ? parseInt(req.query.page) : null;
-  const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : null;
-  const companyHQ = req.query.companyHQ
-    ? JSON.parse(req.query.companyHQ)
-    : null;
-  const designed = req.query.designed ? JSON.parse(req.query.designed) : null;
-  const manufactured = req.query.manufactured
-    ? JSON.parse(req.query.manufactured)
-    : null;
-  const warehoused = req.query.warehoused
-    ? JSON.parse(req.query.warehoused)
-    : null;
+  const pageNumber = req.query.page ? parseInt(req.query.page) : 1;
+  const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+  const category = req.query.category ? req.query.category : null;
+
+  // Array query params - if they only contain 1 item, they need to be made into arrays
+  let tags = req.query.tags ? req.query.tags : null;
+  if (tags && !_.isArray(tags)) tags = [tags];
+  let price = req.query.price ? req.query.price : null;
+  if (price && !_.isArray(price)) price = [price];
+  let companyHQ = req.query.companyHQ ? req.query.companyHQ : null;
+  if (companyHQ && !_.isArray(companyHQ)) companyHQ = [companyHQ];
+  let designed = req.query.designed ? req.query.designed : null;
+  if (designed && !_.isArray(designed)) designed = [designed];
+  let manufactured = req.query.manufactured ? req.query.manufactured : null;
+  if (manufactured && !_.isArray(manufactured)) manufactured = [manufactured];
+  let warehoused = req.query.warehoused ? req.query.warehoused : null;
+  if (warehoused && !_.isArray(warehoused)) warehoused = [warehoused];
 
   const response = [];
   let totalNumberOfRecords = 0;
@@ -61,7 +79,7 @@ router.get("/", (req, res) => {
   const searchTermFormula = searchTerm
     ? `FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Category, ","))) > 0`
+    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
     : null;
   const similarWordsFormula =
     similarNouns && similarNouns.length > 0
@@ -70,7 +88,7 @@ router.get("/", (req, res) => {
             (word) =>
               `FIND(LOWER("${word}"), LOWER(Company)) > 0,
               FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Category, ","))) > 0`
+              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
           )
           .join(", ")
       : null;
@@ -108,26 +126,34 @@ router.get("/", (req, res) => {
     return result;
   };
 
-  const localFormula = `AND(${[
-    getLocalFormula("Company HQ", companyHQ),
-    getLocalFormula("Designed in", designed),
-    getLocalFormula("Manufactured in", manufactured),
-    getLocalFormula("Warehoused in", warehoused),
-  ]
-    .filter((f) => f)
-    .join(", ")})`;
+  const localFormula =
+    companyHQ || designed || manufactured || warehoused
+      ? `AND(${[
+          getLocalFormula("Company HQ", companyHQ),
+          getLocalFormula("Designed in", designed),
+          getLocalFormula("Made in", manufactured),
+          getLocalFormula("Warehoused in", warehoused),
+        ]
+          .filter((f) => f)
+          .join(", ")})`
+      : null;
+
+  const categoryFormula = category
+    ? `FIND("${category}", ARRAYJOIN(Categories, ","))`
+    : null;
 
   const formula = `AND(${[
     finalSearchFormula,
     tagFormula,
     priceFormula,
     localFormula,
+    categoryFormula,
   ]
     .filter((f) => f)
     .join(", ")})`;
 
   let currentPage = 1;
-  base("Consumer Products")
+  base("Products")
     .select({
       pageSize: _.min([100, pageSize]),
       view: "Grid view",
@@ -154,8 +180,8 @@ router.get("/", (req, res) => {
         fetchNextPage();
       },
       async function done(err) {
-        // hydrate with tag info
-        let responseWithTagInfo = [];
+        // Hydrate with tag and category info
+        let hydratedResponse = [];
         for (const record of response) {
           if (record["tags"]) {
             let tags = [];
@@ -166,15 +192,25 @@ router.get("/", (req, res) => {
               );
               tags.push(lowercaseTagInfo);
             }
-
-            responseWithTagInfo.push(_.set(record, "tags", tags));
-          } else {
-            responseWithTagInfo.push(record);
+            _.set(record, "tags", tags);
           }
+          if (record["categories"]) {
+            let categories = [];
+            for (const categoryId of record["categories"]) {
+              const categoryInfo = await getCategoryInfo(categoryId);
+              const lowercaseCategoryInfo = _.mapKeys(
+                categoryInfo,
+                (value, key) => key.toLowerCase()
+              );
+              categories.push(lowercaseCategoryInfo);
+            }
+            _.set(record, "categories", categories);
+          }
+          hydratedResponse.push(record);
         }
 
         res.json({
-          records: responseWithTagInfo,
+          records: hydratedResponse,
           totalNumberOfRecords,
           spellingSuggestions,
         });

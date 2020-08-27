@@ -8,9 +8,9 @@ router.get("/", (req, res) => {
   var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
-  const tags = [];
+  const categories = [];
 
-  base("Tags")
+  base("Categories (Products)")
     .select({
       pageSize: 10,
       view: "Grid view",
@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
             const lowercased = _.mapKeys(record.fields, (value, key) =>
               key.toLowerCase()
             );
-            tags.push(lowercased);
+            categories.push(lowercased);
           }
         });
 
@@ -34,7 +34,7 @@ router.get("/", (req, res) => {
       },
       function done(err) {
         res.json({
-          tags,
+          categories,
         });
         if (err) {
           console.error(err);
