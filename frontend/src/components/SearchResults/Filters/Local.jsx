@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  FilterBarContainer,
-  FilterPopup,
-  SwitchRow,
-  SwitchLabel,
-} from "../../../styles/styles.js";
+import React from "react";
+import { FilterPopup, SwitchRow, SwitchLabel } from "../../../styles/styles.js";
 import { Switch, Select } from "antd";
 import _ from "lodash";
 import states from "./states.js";
@@ -52,34 +47,18 @@ const Local = ({
       <SwitchRow>
         <Switch
           size="small"
-          checked={stages.includes("designed")}
-          onChange={(checked) => switchChange("designed", checked)}
+          checked={stages.includes("designedIn")}
+          onChange={(checked) => switchChange("designedIn", checked)}
         />
-        <SwitchLabel>Designed</SwitchLabel>
+        <SwitchLabel>Designed in</SwitchLabel>
       </SwitchRow>
       <SwitchRow>
         <Switch
           size="small"
-          checked={stages.includes("warehoused")}
-          onChange={(checked) => switchChange("warehoused", checked)}
+          checked={stages.includes("madeIn")}
+          onChange={(checked) => switchChange("madeIn", checked)}
         />
-        <SwitchLabel>Warehoused</SwitchLabel>
-      </SwitchRow>
-      <SwitchRow>
-        <Switch
-          size="small"
-          checked={stages.includes("manufactured")}
-          onChange={(checked) => switchChange("manufactured", checked)}
-        />
-        <SwitchLabel>Manufactured</SwitchLabel>
-      </SwitchRow>
-      <SwitchRow>
-        <Switch
-          size="small"
-          checked={stages.includes("companyHQ")}
-          onChange={(checked) => switchChange("companyHQ", checked)}
-        />
-        <SwitchLabel>Company HQ</SwitchLabel>
+        <SwitchLabel>Made in</SwitchLabel>
       </SwitchRow>
     </FilterPopup>
   );

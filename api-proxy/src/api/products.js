@@ -55,14 +55,10 @@ router.get("/", (req, res) => {
   if (tags && !_.isArray(tags)) tags = [tags];
   let price = req.query.price ? req.query.price : null;
   if (price && !_.isArray(price)) price = [price];
-  let companyHQ = req.query.companyHQ ? req.query.companyHQ : null;
-  if (companyHQ && !_.isArray(companyHQ)) companyHQ = [companyHQ];
-  let designed = req.query.designed ? req.query.designed : null;
-  if (designed && !_.isArray(designed)) designed = [designed];
-  let manufactured = req.query.manufactured ? req.query.manufactured : null;
-  if (manufactured && !_.isArray(manufactured)) manufactured = [manufactured];
-  let warehoused = req.query.warehoused ? req.query.warehoused : null;
-  if (warehoused && !_.isArray(warehoused)) warehoused = [warehoused];
+  let designedIn = req.query.designedIn ? req.query.designedIn : null;
+  if (designedIn && !_.isArray(designedIn)) designedIn = [designedIn];
+  let madeIn = req.query.madeIn ? req.query.madeIn : null;
+  if (madeIn && !_.isArray(madeIn)) madeIn = [madeIn];
 
   const response = [];
   let totalNumberOfRecords = 0;
@@ -127,12 +123,10 @@ router.get("/", (req, res) => {
   };
 
   const localFormula =
-    companyHQ || designed || manufactured || warehoused
+    designedIn || madeIn
       ? `AND(${[
-          getLocalFormula("Company HQ", companyHQ),
-          getLocalFormula("Designed in", designed),
-          getLocalFormula("Made in", manufactured),
-          getLocalFormula("Warehoused in", warehoused),
+          getLocalFormula("Designed in", designedIn),
+          getLocalFormula("Made in", madeIn),
         ]
           .filter((f) => f)
           .join(", ")})`

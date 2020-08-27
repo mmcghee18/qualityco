@@ -43,48 +43,19 @@ const SearchResults = ({ history, location }) => {
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
 
-      const params = `page=${pageNumber}&pageSize=${pageSize}${
-        searchTerm ? `&q=${searchTerm}` : ""
-      }${tags.length > 0 ? `&tags=[${tags.map((t) => `"${t.tag}"`)}]` : ""}${
-        price && price.length > 0
-          ? `&price=[${price.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("companyHQ")
-          ? `&companyHQ=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("designed")
-          ? `&designed=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("manufactured")
-          ? `&manufactured=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("warehoused")
-          ? `&warehoused=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }`;
-
-      const testParams = queryString.stringify({
+      const params = queryString.stringify({
         page: pageNumber,
         pageSize,
         q: searchTerm,
         tags: tags.map((t) => t.tag),
         price,
-        companyHQ:
-          places.length > 0 && stages.includes("companyHQ") ? places : [],
-        designed:
-          places.length > 0 && stages.includes("designed") ? places : [],
-        manufactured:
-          places.length > 0 && stages.includes("manufactured") ? places : [],
-        warehoused:
-          places.length > 0 && stages.includes("warehoused") ? places : [],
+        designedIn:
+          places.length > 0 && stages.includes("designedIn") ? places : [],
+        madeIn: places.length > 0 && stages.includes("madeIn") ? places : [],
       });
 
-      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${testParams}`;
-      const pageUrl = `/search?type=${type ? type : ""}&${testParams}`;
+      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
+      const pageUrl = `/search?type=${type ? type : ""}&${params}`;
       history.push(pageUrl);
 
       try {

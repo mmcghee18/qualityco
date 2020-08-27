@@ -70,14 +70,9 @@ const Products = ({ location, history }) => {
         pageSize,
         tags: tags.map((t) => t.tag),
         price,
-        companyHQ:
-          places.length > 0 && stages.includes("companyHQ") ? places : [],
-        designed:
-          places.length > 0 && stages.includes("designed") ? places : [],
-        manufactured:
-          places.length > 0 && stages.includes("manufactured") ? places : [],
-        warehoused:
-          places.length > 0 && stages.includes("warehoused") ? places : [],
+        designedIn:
+          places.length > 0 && stages.includes("designedIn") ? places : [],
+        madeIn: places.length > 0 && stages.includes("madeIn") ? places : [],
       };
       if (category) {
         // if category is null, we don't want to include it
