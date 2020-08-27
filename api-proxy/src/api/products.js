@@ -1,5 +1,6 @@
 const express = require("express");
 const Airtable = require("airtable");
+const queryString = require("query-string");
 const pluralize = require("pluralize");
 const _ = require("lodash");
 const {
@@ -45,20 +46,21 @@ router.get("/", (req, res) => {
   );
   // Extract query params
   const searchTerm = req.query.q ? pluralize.singular(req.query.q) : null; // singularize
-  const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
-  const price = req.query.price ? JSON.parse(req.query.price) : null;
+  let tags = req.query.tags ? req.query.tags : null;
+  if (tags && !_.isArray(tags)) tags = [tags];
+  let price = req.query.price ? req.query.price : null;
+  if (price && !_.isArray(price)) price = [price];
   const pageNumber = req.query.page ? parseInt(req.query.page) : 1;
   const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
-  const companyHQ = req.query.companyHQ
-    ? JSON.parse(req.query.companyHQ)
-    : null;
-  const designed = req.query.designed ? JSON.parse(req.query.designed) : null;
-  const manufactured = req.query.manufactured
-    ? JSON.parse(req.query.manufactured)
-    : null;
-  const warehoused = req.query.warehoused
-    ? JSON.parse(req.query.warehoused)
-    : null;
+
+  let companyHQ = req.query.companyHQ ? req.query.companyHQ : null;
+  if (companyHQ && !_.isArray(companyHQ)) companyHQ = [companyHQ];
+  let designed = req.query.designed ? req.query.designed : null;
+  if (designed && !_.isArray(designed)) designed = [designed];
+  let manufactured = req.query.manufactured ? req.query.manufactured : null;
+  if (manufactured && !_.isArray(manufactured)) manufactured = [manufactured];
+  let warehoused = req.query.warehoused ? req.query.warehoused : null;
+  if (warehoused && !_.isArray(warehoused)) warehoused = [warehoused];
   const category = req.query.category ? req.query.category : null;
 
   const response = [];
@@ -128,7 +130,7 @@ router.get("/", (req, res) => {
       ? `AND(${[
           getLocalFormula("Company HQ", companyHQ),
           getLocalFormula("Designed in", designed),
-          getLocalFormula("Manufactured in", manufactured),
+          getLocalFormula("Made in", manufactured),
           getLocalFormula("Warehoused in", warehoused),
         ]
           .filter((f) => f)
@@ -138,8 +140,6 @@ router.get("/", (req, res) => {
   const categoryFormula = category
     ? `FIND("${category}", ARRAYJOIN(Categories, ","))`
     : null;
-
-  console.log({ categoryFormula });
 
   const formula = `AND(${[
     finalSearchFormula,

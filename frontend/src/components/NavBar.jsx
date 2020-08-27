@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import queryString from "query-string";
 import { Redirect } from "react-router-dom";
-import { Link, useLocation } from "react-router-dom";
+import queryString from "query-string";
+import { Link } from "react-router-dom";
 import {
   TopBar,
   Logo,
@@ -18,7 +18,6 @@ const NavBar = () => {
   const [productCategories, setProductCategories] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
   const [redirectCategory, setRedirectCategory] = useState(null);
-  const location = useLocation();
 
   const productsPopoverContent = productCategories && (
     <ProductsPopover>
@@ -54,8 +53,13 @@ const NavBar = () => {
 
   return (
     <TopBar>
+      {/* Redirect to products page with a category */}
       {redirectCategory && (
-        <Redirect to={`/products?category=${redirectCategory}`} />
+        <Redirect
+          to={`/products?${queryString.stringify({
+            category: redirectCategory,
+          })}`}
+        />
       )}
 
       <MenuIcon onClick={() => setShowDrawer(true)} />

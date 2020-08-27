@@ -65,29 +65,21 @@ const Products = ({ location, history }) => {
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
 
-      const params = `page=${pageNumber}&pageSize=${pageSize}${
-        tags.length > 0 ? `&tags=[${tags.map((t) => `"${t.tag}"`)}]` : ""
-      }${
-        price && price.length > 0
-          ? `&price=[${price.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("companyHQ")
-          ? `&companyHQ=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("designed")
-          ? `&designed=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("manufactured")
-          ? `&manufactured=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${
-        places.length > 0 && stages.includes("warehoused")
-          ? `&warehoused=[${places.map((p) => `"${p}"`)}]`
-          : ""
-      }${category ? `&category=${category}` : ""}`;
+      const params = queryString.stringify({
+        page: pageNumber,
+        pageSize,
+        tags: tags.map((t) => t.tag),
+        price,
+        companyHQ:
+          places.length > 0 && stages.includes("companyHQ") ? places : [],
+        designed:
+          places.length > 0 && stages.includes("designed") ? places : [],
+        manufactured:
+          places.length > 0 && stages.includes("manufactured") ? places : [],
+        warehoused:
+          places.length > 0 && stages.includes("warehoused") ? places : [],
+        category,
+      });
 
       const apiUrl = `${baseUrl}/api/products?${params}`;
       const pageUrl = `/products?${params}`;

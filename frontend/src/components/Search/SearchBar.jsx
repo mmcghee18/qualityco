@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import queryString from "query-string";
 import "./SearchBar.css";
 import { Redirect } from "react-router-dom";
 import { Input, Select, Tooltip } from "antd";
@@ -42,7 +43,9 @@ const SearchBar = ({
 
   return (
     <>
-      {redirect && homePage && <Redirect to={`/search?type=${t}&q=${q}`} />}
+      {redirect && homePage && (
+        <Redirect to={`/search?${queryString.stringify({ type: t, q })}`} />
+      )}
       <Tooltip
         title="Please include a search term."
         placement="bottom"

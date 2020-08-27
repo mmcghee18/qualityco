@@ -67,8 +67,24 @@ const SearchResults = ({ history, location }) => {
           : ""
       }`;
 
-      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
-      const pageUrl = `/search?type=${type ? type : ""}&${params}`;
+      const testParams = queryString.stringify({
+        page: pageNumber,
+        pageSize,
+        q: searchTerm,
+        tags: tags.map((t) => t.tag),
+        price,
+        companyHQ:
+          places.length > 0 && stages.includes("companyHQ") ? places : [],
+        designed:
+          places.length > 0 && stages.includes("designed") ? places : [],
+        manufactured:
+          places.length > 0 && stages.includes("manufactured") ? places : [],
+        warehoused:
+          places.length > 0 && stages.includes("warehoused") ? places : [],
+      });
+
+      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${testParams}`;
+      const pageUrl = `/search?type=${type ? type : ""}&${testParams}`;
       history.push(pageUrl);
 
       try {

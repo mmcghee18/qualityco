@@ -344,13 +344,14 @@ export const SearchFilterBar = styled.div`
 export const ProductsPopover = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 400px;
   height: 400px;
   flex-wrap: wrap;
   overflow: scroll;
 `;
 
-export const CategoryLabel = styled.div`
+export const CategoryLabel = styled.a`
   margin: 10px;
 `;
 
