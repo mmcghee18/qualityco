@@ -1,6 +1,8 @@
 import styled, { createGlobalStyle } from "styled-components";
-import { Button, Tag as AntTag } from "antd";
+import { Button, Tag as AntTag, Input } from "antd";
+import { Link } from "react-router-dom";
 import { StarOutlined, MenuOutlined } from "@ant-design/icons";
+const { Search } = Input;
 
 const maxSizes = {
   mobile: "480px",
@@ -49,21 +51,28 @@ export const TopBar = styled.div`
   border-bottom: 2px solid #5c6475;
   padding-top: 10px;
   padding-bottom: 10px;
-  padding-left: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 70px;
 
   @media ${devices.tablet} {
     justify-content: center;
   }
 `;
 
+export const NavLink = styled(Link)`
+  margin-left: 10px;
+  margin-right: 10px;
+`;
+
 export const MenuIcon = styled(MenuOutlined)`
   display: none;
 
   @media ${devices.tablet} {
-    display: block;
     position: absolute;
-    left: 20px;
+    left: 15px;
     font-size: 1.5em;
+    display: block;
 
     &:hover {
       cursor: pointer;
@@ -77,11 +86,23 @@ export const StarIcon = styled(StarOutlined)`
   margin-right: 8px;
 `;
 
-export const Links = styled.div`
-  width: 100%;
+export const LogoAndSearch = styled.div`
+  width: 60%;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  align-items: center;
+
+  @media ${devices.tablet} {
+    width: 100%;
+    justify-content: center;
+  }
+`;
+
+export const Links = styled.div`
+  width: 40%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
   font-weight: bold;
 
@@ -91,6 +112,19 @@ export const Links = styled.div`
   }
   @media ${devices.mobile} {
     font-size: 0.75em;
+  }
+`;
+
+export const CollapsableSearchBar = styled(Search)`
+  width: 70%;
+  border-radius: 5px;
+  transition: width 0.3s;
+
+  @media ${devices.tablet} {
+    width: ${(props) => (props.navBar && !props.expandBar ? "15%" : "70%")};
+    position: ${(props) =>
+      props.navBar && !props.expandBar ? "absolute" : "static"};
+    right: ${(props) => (props.navBar ? "15px" : "0px")};
   }
 `;
 
@@ -391,5 +425,14 @@ export const CategoryDropdown = styled(Button)`
     padding: 0px 7px;
     font-size: 14px;
     border-radius: 2px;
+  }
+`;
+
+export const LogoLink = styled(Link)`
+  margin-right: 20px;
+
+  @media ${devices.tablet} {
+    margin: 0px;
+    display: ${(props) => (props.expandBar ? "none" : "flex")};
   }
 `;

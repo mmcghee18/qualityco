@@ -30,7 +30,7 @@ const ResultsList = ({
   );
   return (
     <ListOfResults>
-      {!loading ? (
+      {items && !loading ? (
         <>
           {items.records.map((result, i) => {
             const { company, name, website, tags, price, description } = result;

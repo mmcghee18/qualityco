@@ -1,0 +1,44 @@
+.ant-input-search-icon::before {
+  border-left: none !important;
+}
+
+@media screen and (max-width: 768px) {
+  /* Collapse the dropdown */
+  .collapsable-search .ant-input-group-addon {
+    display: none !important;
+  }
+
+  /* Don't apply the styles on the inner piece of the search bar */
+  .collapsable-search .ant-input-affix-wrapper {
+    width: 100%;
+    position: static;
+  }
+
+  /* Keep rounded edges */
+  .collapsable-search
+    .ant-input-group
+    .ant-input-affix-wrapper:not(:first-child) {
+    border-top-left-radius: 5px !important;
+    border-bottom-left-radius: 5px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .ant-input {
+    font-size: 0.9em !important;
+  }
+  .ant-select {
+    font-size: 0.9em !important;
+  }
+  /* Give the button its size=small styles */
+  .ant-input-search .ant-input-affix-wrapper {
+    padding: 0px 7px !important;
+  }
+  .ant-select-selector {
+    padding: 0px 7px !important;
+    height: 24px !important;
+  }
+  .ant-select-arrow {
+    top: 68% !important;
+  }
+}

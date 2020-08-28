@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import queryString from "query-string";
+import _ from "lodash";
+import { withRouter } from "react-router-dom";
 import {
   SearchResultsWrapper,
   CategorySearchHeader,
@@ -14,29 +16,29 @@ import ResultsList from "../SearchResults/ResultsList.jsx";
 
 let abortController = new AbortController();
 
-const Products = ({ location, history }) => {
-  const queryParams = queryString.parse(location.search);
+const Products = ({
+  location,
+  history,
+  category,
+  setCategory,
+  loading,
+  setLoading,
+}) => {
   const [tags, setTags] = useState([]);
   const [price, setPrice] = useState([]);
   const [places, setPlaces] = useState([]);
   const [stages, setStages] = useState([]);
-  const [category, setCategory] = useState(
-    queryParams.category ? queryParams.category : null
-  );
 
   const [items, setItems] = useState(null);
   const [showDrawer, setShowDrawer] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [loading, setLoading] = useState(true);
   const [categoryOptions, setCategoryOptions] = useState([]);
 
-  // If we get redirected here from <NavBar/>, handle those updates
+  // On category switch
   useEffect(() => {
     setPageNumber(1);
-    setCategory(queryParams.category);
-    setLoading(true);
-  }, [queryParams.category]);
+  }, [category]);
 
   useEffect(() => {
     const callApi = async () => {
@@ -65,20 +67,22 @@ const Products = ({ location, history }) => {
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
 
-      let params = {
-        page: pageNumber,
-        pageSize,
-        tags: tags.map((t) => t.tag),
-        price,
-        designedIn:
-          places.length > 0 && stages.includes("designedIn") ? places : [],
-        madeIn: places.length > 0 && stages.includes("madeIn") ? places : [],
-      };
-      if (category) {
-        // if category is null, we don't want to include it
-        params = { ...params, category };
-      }
-      params = queryString.stringify(params);
+      const params = queryString.stringify(
+        _.pickBy(
+          {
+            page: pageNumber,
+            pageSize,
+            tags: tags.map((t) => t.tag),
+            price,
+            designedIn:
+              places.length > 0 && stages.includes("designedIn") ? places : [],
+            madeIn:
+              places.length > 0 && stages.includes("madeIn") ? places : [],
+            category,
+          },
+          (value, key) => value
+        )
+      );
 
       const apiUrl = `${baseUrl}/api/products?${params}`;
       const pageUrl = `/products?${params}`;
@@ -160,4 +164,4 @@ const Products = ({ location, history }) => {
   );
 };
 
-export default Products;
+export default withRouter(Products);

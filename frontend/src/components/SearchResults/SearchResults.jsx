@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import queryString from "query-string";
-import SearchBar from "../Search/SearchBar.jsx";
+import _ from "lodash";
+import { withRouter } from "react-router-dom";
 import {
   SearchResultsWrapper,
   SearchFilterBar,
@@ -11,11 +12,15 @@ import ResultsList from "./ResultsList.jsx";
 
 let abortController = new AbortController();
 
-const SearchResults = ({ history, location }) => {
-  // We get redirected here from <SearchBar/> who passes query params
-  const queryParams = queryString.parse(location.search);
-  const [searchTerm, setSearchTerm] = useState(queryParams.q);
-  const [type, setType] = useState(queryParams.type);
+const SearchResults = ({
+  history,
+  location,
+  setSearchTerm,
+  searchTerm,
+  type,
+  loading,
+  setLoading,
+}) => {
   const [tags, setTags] = useState([]);
   const [price, setPrice] = useState([]);
   const [places, setPlaces] = useState([]);
@@ -25,13 +30,11 @@ const SearchResults = ({ history, location }) => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [loading, setLoading] = useState(true);
 
-  // Clear filters on a new search
+  // On a new search
   useEffect(() => {
-    setTags([]);
-    setPrice([]);
-  }, [searchTerm]);
+    setPageNumber(1);
+  }, [searchTerm, type]);
 
   useEffect(() => {
     const callApi = async () => {
@@ -43,16 +46,22 @@ const SearchResults = ({ history, location }) => {
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
 
-      const params = queryString.stringify({
-        page: pageNumber,
-        pageSize,
-        q: searchTerm,
-        tags: tags.map((t) => t.tag),
-        price,
-        designedIn:
-          places.length > 0 && stages.includes("designedIn") ? places : [],
-        madeIn: places.length > 0 && stages.includes("madeIn") ? places : [],
-      });
+      const params = queryString.stringify(
+        _.pickBy(
+          {
+            page: pageNumber,
+            pageSize,
+            q: searchTerm,
+            tags: tags.map((t) => t.tag),
+            price,
+            designedIn:
+              places.length > 0 && stages.includes("designedIn") ? places : [],
+            madeIn:
+              places.length > 0 && stages.includes("madeIn") ? places : [],
+          },
+          (value, key) => value
+        )
+      );
 
       const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
       const pageUrl = `/search?type=${type ? type : ""}&${params}`;
@@ -78,19 +87,7 @@ const SearchResults = ({ history, location }) => {
 
   return (
     <SearchResultsWrapper>
-      <SearchFilterBar>
-        <FiltersButton onClick={() => setShowDrawer(true)}>
-          Filters
-        </FiltersButton>
-        <SearchBar
-          homePage={false}
-          defaultValue={searchTerm}
-          setLoading={setLoading}
-          setSearchTerm={setSearchTerm}
-          setType={setType}
-          setPageNumber={setPageNumber}
-        />
-      </SearchFilterBar>
+      <FiltersButton onClick={() => setShowDrawer(true)}>Filters</FiltersButton>
 
       <FilterBar
         tags={tags}
@@ -121,4 +118,4 @@ const SearchResults = ({ history, location }) => {
   );
 };
 
-export default SearchResults;
+export default withRouter(SearchResults);
