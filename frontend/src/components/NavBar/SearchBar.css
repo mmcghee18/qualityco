@@ -2,6 +2,19 @@
   border-left: none !important;
 }
 
+@media screen and (max-width: 768px) {
+  .select-before-hidden {
+    display: none !important;
+  }
+
+  /* Don't apply the styles on the inner piece of the search bar */
+  .collapsable-search .ant-input-affix-wrapper {
+    width: 100%;
+    position: static;
+    right: 0px;
+  }
+}
+
 @media screen and (max-width: 480px) {
   .ant-input {
     font-size: 0.9em !important;
