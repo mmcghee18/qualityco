@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import "./SearchBar.css";
 import { Input, Select, Tooltip } from "antd";
 import { CollapsableSearch } from "../../styles/styles.js";
-const { Search } = Input;
+import _ from "lodash";
 const { Option } = Select;
 
 const CollapsableSearchBar = ({
   searchTerm,
   setSearchTerm,
+  type,
   setType,
   setLoading,
   expandBar,
@@ -22,7 +23,7 @@ const CollapsableSearchBar = ({
 
   const selectBefore = (
     <Select
-      defaultValue="Products"
+      value={_.upperFirst(type)}
       className={expandBar ? "select-before-visible" : "select-before-hidden"}
       onChange={(value) => {
         setLoading(true);
@@ -53,7 +54,6 @@ const CollapsableSearchBar = ({
             setSearchBarContent(e.target.value);
           }}
           onSearch={(value) => {
-            console.log("onSearch");
             if (value.length === 0) {
               setTooltipVisible(true);
             } else {

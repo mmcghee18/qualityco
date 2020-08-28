@@ -34,6 +34,10 @@ const SearchResults = ({
   // On a new search
   useEffect(() => {
     setPageNumber(1);
+    setTags([]);
+    setPrice([]);
+    setStages([]);
+    setPlaces([]);
   }, [searchTerm, type]);
 
   useEffect(() => {

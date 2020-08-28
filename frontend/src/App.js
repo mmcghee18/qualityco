@@ -16,28 +16,22 @@ function App() {
   const [type, setType] = useState("products");
   const [category, setCategory] = useState(null);
   const [redirectSearch, setRedirectSearch] = useState(false);
-  const [redirectCategory, setRedirectCategory] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (searchTerm) setRedirectSearch(true);
     else setRedirectSearch(false);
   }, [searchTerm]);
-  useEffect(() => {
-    if (category) setRedirectCategory(true);
-    else setRedirectCategory(false);
-  }, [category]);
 
   return (
     <Router>
       <div>
-        {/* Redirects */}
         {redirectSearch && <Redirect to="/search" />}
-        {redirectCategory && <Redirect to="/products" />}
 
         <NavBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
+          type={type}
           setType={setType}
           setCategory={setCategory}
           setLoading={setLoading}
@@ -46,6 +40,7 @@ function App() {
           <Route exact path="/">
             <Home
               setSearchTerm={setSearchTerm}
+              type={type}
               setType={setType}
               setLoading={setLoading}
             />

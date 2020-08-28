@@ -385,7 +385,7 @@ export const ProductsPopover = styled.div`
   overflow: scroll;
 `;
 
-export const CategoryLabel = styled.a`
+export const CategoryLabel = styled(Link)`
   margin: 10px;
 `;
 

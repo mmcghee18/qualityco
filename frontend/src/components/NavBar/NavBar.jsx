@@ -20,6 +20,7 @@ import { Drawer, Popover } from "antd";
 const NavBar = ({
   searchTerm,
   setSearchTerm,
+  type,
   setType,
   setCategory,
   setLoading,
@@ -33,8 +34,8 @@ const NavBar = ({
       {productCategories.map(({ category }) => (
         <CategoryLabel
           key={category}
+          to="/products"
           onClick={() => {
-            console.log("new category", category);
             setLoading(true);
             setCategory(category);
           }}
@@ -69,7 +70,11 @@ const NavBar = ({
 
         <LogoLink
           to="/"
-          onClick={() => setSearchTerm(null)}
+          onClick={() => {
+            setType("products");
+            setCategory(null);
+            setSearchTerm(null);
+          }}
           expandBar={expandBar}
         >
           <Logo src={logo} />
@@ -77,6 +82,7 @@ const NavBar = ({
         <CollapsableSearchBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
+          type={type}
           setType={setType}
           setLoading={setLoading}
           expandBar={expandBar}
