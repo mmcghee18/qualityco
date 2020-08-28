@@ -3,11 +3,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* Collapse the dropdown */
-  /* .collapsable-search .ant-input-group-addon {
-    display: none !important;
-  } */
-
   .select-before-hidden {
     display: none !important;
   }
@@ -18,14 +13,6 @@
     position: static;
     right: 0px;
   }
-
-  /* Keep rounded edges */
-  /* .collapsable-search
-    .ant-input-group
-    .ant-input-affix-wrapper:not(:first-child) {
-    border-top-left-radius: 5px !important;
-    border-bottom-left-radius: 5px !important;
-  } */
 }
 
 @media screen and (max-width: 480px) {
