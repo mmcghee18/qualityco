@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./SearchBar.css";
+import { withRouter } from "react-router-dom";
 import { Input, Select, Tooltip } from "antd";
 import _ from "lodash";
 const { Search } = Input;
 const { Option } = Select;
 
 const SearchBar = ({
+  history,
   searchTerm,
   setSearchTerm,
   type,
@@ -54,6 +56,7 @@ const SearchBar = ({
             } else {
               setLoading(true);
               setSearchTerm(value);
+              history.push("/search");
             }
           }}
           style={{ width: "60%", borderRadius: "5px" }}
@@ -63,4 +66,4 @@ const SearchBar = ({
   );
 };
 
-export default SearchBar;
+export default withRouter(SearchBar);

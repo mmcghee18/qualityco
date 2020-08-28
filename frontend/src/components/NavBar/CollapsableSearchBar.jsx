@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./SearchBar.css";
-import { Input, Select, Tooltip } from "antd";
+import { withRouter } from "react-router-dom";
+import { Select, Tooltip } from "antd";
 import { CollapsableSearch } from "../../styles/styles.js";
 import _ from "lodash";
 const { Option } = Select;
 
 const CollapsableSearchBar = ({
+  history,
   searchTerm,
   setSearchTerm,
   type,
@@ -59,6 +61,7 @@ const CollapsableSearchBar = ({
             } else {
               setLoading(true);
               setSearchTerm(value);
+              history.push("/search");
             }
           }}
           onFocus={() => setExpandBar(true)}
@@ -70,4 +73,4 @@ const CollapsableSearchBar = ({
   );
 };
 
-export default CollapsableSearchBar;
+export default withRouter(CollapsableSearchBar);

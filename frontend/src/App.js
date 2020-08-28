@@ -15,19 +15,11 @@ function App() {
   const [searchTerm, setSearchTerm] = useState(null);
   const [type, setType] = useState("products");
   const [category, setCategory] = useState(null);
-  const [redirectSearch, setRedirectSearch] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (searchTerm) setRedirectSearch(true);
-    else setRedirectSearch(false);
-  }, [searchTerm]);
 
   return (
     <Router>
       <div>
-        {redirectSearch && <Redirect to="/search" />}
-
         <NavBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}

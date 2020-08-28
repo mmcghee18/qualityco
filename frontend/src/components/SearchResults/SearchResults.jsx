@@ -40,6 +40,14 @@ const SearchResults = ({
     setPlaces([]);
   }, [searchTerm, type]);
 
+  // Preserve search term on refresh
+  useEffect(() => {
+    const searchTermBeforeRefresh = queryString.parse(location.search).q;
+    if (searchTermBeforeRefresh) {
+      setSearchTerm(searchTermBeforeRefresh);
+    }
+  }, []);
+
   useEffect(() => {
     const callApi = async () => {
       abortController.abort(); // cancel previous request
@@ -67,9 +75,9 @@ const SearchResults = ({
         )
       );
 
-      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
       const pageUrl = `/search?type=${type ? type : ""}&${params}`;
       history.push(pageUrl);
+      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
 
       try {
         await fetch(apiUrl, { signal: abortController.signal })
