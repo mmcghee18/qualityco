@@ -1,3 +1,4 @@
+import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { Button, Tag as AntTag, Input } from "antd";
 import { Link } from "react-router-dom";
@@ -115,17 +116,16 @@ export const Links = styled.div`
   }
 `;
 
-export const CollapsableSearchBar = styled(Search)`
+export const CollapsableSearch = styled(({ expandBar, ...otherProps }) => (
+  <Search {...otherProps} />
+))`
   width: 70%;
-  border-radius: 5px;
   transition: width 0.3s;
 
   @media ${devices.tablet} {
-    width: ${(props) => (props.navBar && !props.expandBar ? "15%" : "70%")};
-    position: ${(props) =>
-      props.navBar && !props.expandBar ? "absolute" : "static"};
-    right: ${(props) => (props.navBar ? "15px" : "0px")};
-  }
+    width: ${(props) => (!props.expandBar ? "15%" : "70%")};
+    position: ${(props) => (!props.expandBar ? "absolute" : "static")};
+    right: 40px;
 `;
 
 export const LinksInDrawer = styled.div`
@@ -428,7 +428,9 @@ export const CategoryDropdown = styled(Button)`
   }
 `;
 
-export const LogoLink = styled(Link)`
+export const LogoLink = styled(({ expandBar, ...otherProps }) => (
+  <Link {...otherProps} />
+))`
   margin-right: 20px;
 
   @media ${devices.tablet} {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar.jsx";
+import CollapsableSearchBar from "./CollapsableSearchBar.jsx";
 import {
   TopBar,
   NavLink,
@@ -73,8 +74,7 @@ const NavBar = ({
         >
           <Logo src={logo} />
         </LogoLink>
-        <SearchBar
-          navBar={true}
+        <CollapsableSearchBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           setType={setType}

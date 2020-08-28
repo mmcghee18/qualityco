@@ -5,7 +5,7 @@ import { CollapsableSearch } from "../../styles/styles.js";
 const { Search } = Input;
 const { Option } = Select;
 
-const SearchBar = ({
+const CollapsableSearchBar = ({
   searchTerm,
   setSearchTerm,
   setType,
@@ -23,11 +23,13 @@ const SearchBar = ({
   const selectBefore = (
     <Select
       defaultValue="Products"
-      className="select-before"
+      className={expandBar ? "select-before-visible" : "select-before-hidden"}
       onChange={(value) => {
         setLoading(true);
         setType(value.toLowerCase());
       }}
+      onFocus={() => setExpandBar(true)}
+      onBlur={() => setExpandBar(false)}
     >
       <Option value="Products">Products</Option>
       <Option value="Services">Services</Option>
@@ -41,7 +43,8 @@ const SearchBar = ({
         placement="bottom"
         visible={tooltipVisible}
       >
-        <Search
+        <CollapsableSearch
+          className="collapsable-search"
           value={searchBarContent}
           addonBefore={selectBefore}
           placeholder="I'm looking for..."
@@ -50,6 +53,7 @@ const SearchBar = ({
             setSearchBarContent(e.target.value);
           }}
           onSearch={(value) => {
+            console.log("onSearch");
             if (value.length === 0) {
               setTooltipVisible(true);
             } else {
@@ -57,11 +61,13 @@ const SearchBar = ({
               setSearchTerm(value);
             }
           }}
-          style={{ width: "60%", borderRadius: "5px" }}
+          onFocus={() => setExpandBar(true)}
+          onBlur={() => setExpandBar(false)}
+          expandBar={expandBar}
         />
       </Tooltip>
     </>
   );
 };
 
-export default SearchBar;
+export default CollapsableSearchBar;
