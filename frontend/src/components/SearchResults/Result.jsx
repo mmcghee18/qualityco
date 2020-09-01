@@ -28,7 +28,14 @@ const Result = ({ company, website, tags, price, image, description }) => {
 
   return (
     <ResultContainer>
-      <ResultImage imageUrl={image} />
+      <a
+        href={website}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ flex: 1 }}
+      >
+        <ResultImage imageUrl={image} />
+      </a>
       <ResultInfo>
         <ResultHeader>
           <h2>{company ? company : "-"}</h2>

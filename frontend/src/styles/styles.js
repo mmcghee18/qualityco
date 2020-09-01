@@ -251,6 +251,7 @@ export const ResultContainer = styled.div`
 
 export const ResultImage = styled.div`
   flex: 1;
+  height: 100%;
   background-image: ${(props) => `url(${props.imageUrl})`};
   background-size: contain;
   background-repeat: no-repeat;
