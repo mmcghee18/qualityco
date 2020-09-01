@@ -44,6 +44,7 @@ const ResultsList = ({
                 price={price}
                 image={image}
                 description={description}
+                madeIn={result["made in"]}
               />
             );
           })}

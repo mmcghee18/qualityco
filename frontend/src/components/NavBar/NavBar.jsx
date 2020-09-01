@@ -13,7 +13,7 @@ import {
   ProductsPopover,
   CategoryLabel,
 } from "../../styles/styles";
-import logo from "../../logos/rectangle-transparent.png";
+import logo from "../../logos/full-logo.png";
 import { Drawer, Popover } from "antd";
 
 const NavBar = ({

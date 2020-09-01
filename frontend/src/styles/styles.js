@@ -150,7 +150,7 @@ export const SearchTitle = styled.h1`
 `;
 
 export const Logo = styled.img`
-  height: 40px;
+  height: 28px;
 `;
 
 export const SearchContainer = styled.div`
@@ -185,6 +185,13 @@ export const FilterBarContainer = styled.div`
   @media ${devices.tablet} {
     display: none;
   }
+`;
+
+export const FilterHeaderWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: #5c6475;
 `;
 
 export const FilterPopup = styled.div`
@@ -232,7 +239,7 @@ export const Suggestion = styled.span`
 export const ResultContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 20px;
+  margin: 30px;
   width: 100%;
   max-width: 1000px;
   height: 200px;
@@ -249,8 +256,17 @@ export const ResultContainer = styled.div`
   }
 `;
 
+export const ResultImageLink = styled.a`
+  flex: 1;
+
+  @media ${devices.mobile} {
+    width: 100%;
+  }
+`;
+
 export const ResultImage = styled.div`
   flex: 1;
+  height: 100%;
   background-image: ${(props) => `url(${props.imageUrl})`};
   background-size: contain;
   background-repeat: no-repeat;
@@ -397,25 +413,25 @@ export const CategorySearchHeader = styled.div`
   width: 100%;
 
   @media ${devices.tablet} {
-    justify-content: space-between;
+    justify-content: space-evenly;
     margin-bottom: 30px;
   }
 `;
 
 export const BrowseAllTitle = styled.h1`
   margin-bottom: 0px;
-  margin-right: 50px;
+  margin-right: ${(props) => (props.noMargin ? "0px" : "50px")};
   text-align: center;
 
   @media ${devices.tablet} {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: ${(props) => (props.noMargin ? "0px" : "20px")};
+    margin-right: ${(props) => (props.noMargin ? "0px" : "20px")};
     font-size: 1.6em;
   }
   @media ${devices.mobile} {
-    margin-left: 15px;
-    margin-right: 15px;
-    font-size: 1.4em;
+    margin-left: ${(props) => (props.noMargin ? "0px" : "15px")};
+    margin-right: ${(props) => (props.noMargin ? "0px" : "15px")};
+    font-size: 1.2em;
   }
 `;
 

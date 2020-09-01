@@ -51,7 +51,7 @@ router.get("/", (req, res) => {
   const category = req.query.category ? req.query.category : null;
 
   // Array query params - if they only contain 1 item, they need to be made into arrays
-  let tags = req.query.tags ? req.query.tags : null;
+  let tags = req.query.tags ? JSON.parse(req.query.tags) : null;
   if (tags && !_.isArray(tags)) tags = [tags];
   let price = req.query.price ? req.query.price : null;
   if (price && !_.isArray(price)) price = [price];
@@ -60,6 +60,7 @@ router.get("/", (req, res) => {
   let madeIn = req.query.madeIn ? req.query.madeIn : null;
   if (madeIn && !_.isArray(madeIn)) madeIn = [madeIn];
 
+  // What we will return at the end
   const response = [];
   let totalNumberOfRecords = 0;
 
@@ -71,7 +72,7 @@ router.get("/", (req, res) => {
     similarNouns = getSynonyms(searchTerm);
   }
 
-  // Building search formula
+  // Building formulas
   const searchTermFormula = searchTerm
     ? `FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
@@ -94,11 +95,27 @@ router.get("/", (req, res) => {
         .join(", ")})`
     : null;
 
-  const tagFormula = tags
-    ? `AND(${tags
-        .map((tag) => `FIND(LOWER("${tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`)
-        .join(", ")})`
-    : null;
+  const peopleTags = tags ? tags.filter((tag) => tag.type === "People") : null;
+  const planetTags = tags ? tags.filter((tag) => tag.type === "Planet") : null;
+  const peopleTagFormula =
+    tags && peopleTags.length > 0
+      ? `OR(${peopleTags
+          .map(
+            (tag) =>
+              `FIND(LOWER("${tag.tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`
+          )
+          .join(", ")})`
+      : null;
+  const planetTagFormula =
+    tags && planetTags.length > 0
+      ? `OR(${planetTags
+          .map(
+            (tag) =>
+              `FIND(LOWER("${tag.tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`
+          )
+          .join(", ")})`
+      : null;
+
   const priceFormula = price
     ? `OR(${price.map((price) => `Price="${price}"`).join(", ")})`
     : null;
@@ -121,10 +138,9 @@ router.get("/", (req, res) => {
       : null;
     return result;
   };
-
   const localFormula =
     designedIn || madeIn
-      ? `AND(${[
+      ? `OR(${[
           getLocalFormula("Designed in", designedIn),
           getLocalFormula("Made in", madeIn),
         ]
@@ -136,9 +152,11 @@ router.get("/", (req, res) => {
     ? `FIND("${category}", ARRAYJOIN(Categories, ","))`
     : null;
 
+  // The ultimate formula
   const formula = `AND(${[
     finalSearchFormula,
-    tagFormula,
+    peopleTagFormula,
+    planetTagFormula,
     priceFormula,
     localFormula,
     categoryFormula,

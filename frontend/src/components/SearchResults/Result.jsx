@@ -4,6 +4,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import {
   ResultContainer,
+  ResultImageLink,
   ResultHeader,
   ResultImage,
   ResultInfo,
@@ -16,7 +17,15 @@ import {
   PopoverWrapper,
 } from "../../styles/styles.js";
 
-const Result = ({ company, website, tags, price, image, description }) => {
+const Result = ({
+  company,
+  website,
+  tags,
+  price,
+  image,
+  description,
+  madeIn,
+}) => {
   const popoverContent = tags ? (
     <PopoverWrapper>
       {tags.map(({ tag }, i) => (
@@ -28,11 +37,21 @@ const Result = ({ company, website, tags, price, image, description }) => {
 
   return (
     <ResultContainer>
-      <ResultImage imageUrl={image} />
+      <ResultImageLink href={website} target="_blank" rel="noopener noreferrer">
+        <ResultImage imageUrl={image} />
+      </ResultImageLink>
       <ResultInfo>
         <ResultHeader>
           <h2>{company ? company : "-"}</h2>
-          {price && <Tag color="#E65213">{price}</Tag>}
+          <div style={{ display: "flex" }}>
+            {madeIn &&
+              madeIn.map((place, i) => (
+                <Tag color="#f7946a" key={i}>
+                  Made in {place}
+                </Tag>
+              ))}
+            {price && <Tag color="#E65213">{price}</Tag>}
+          </div>
         </ResultHeader>
 
         <Description>

@@ -72,7 +72,7 @@ const Products = ({
           {
             page: pageNumber,
             pageSize,
-            tags: tags.map((t) => t.tag),
+            tags: JSON.stringify(tags),
             price,
             designedIn:
               places.length > 0 && stages.includes("designedIn") ? places : [],
@@ -116,12 +116,13 @@ const Products = ({
         <Dropdown
           overlay={
             <Menu>
-              {categoryOptions.map((option, i) => (
+              {["All categories", ...categoryOptions].map((option, i) => (
                 <Menu.Item
                   key={i}
                   onClick={() => {
                     setPageNumber(1);
-                    setCategory(option);
+                    if (option === "All categories") setCategory(null);
+                    else setCategory(option);
                     setLoading(true);
                   }}
                 >
