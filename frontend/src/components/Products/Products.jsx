@@ -72,7 +72,7 @@ const Products = ({
           {
             page: pageNumber,
             pageSize,
-            tags: tags.map((t) => t.tag),
+            tags: JSON.stringify(tags),
             price,
             designedIn:
               places.length > 0 && stages.includes("designedIn") ? places : [],
