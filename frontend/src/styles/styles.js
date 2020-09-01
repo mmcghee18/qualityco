@@ -187,6 +187,13 @@ export const FilterBarContainer = styled.div`
   }
 `;
 
+export const FilterHeaderWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: #5c6475;
+`;
+
 export const FilterPopup = styled.div`
   width: ${(props) => (props.overrideWidth ? null : "300px")};
   display: flex;

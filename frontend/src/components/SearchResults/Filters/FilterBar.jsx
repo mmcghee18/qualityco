@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
 import AllFilters from "./AllFilters.jsx";
 import "./FilterBar.css";
+import FilterHeader from "./FilterHeader.jsx";
 import People from "./People.jsx";
 import Planet from "./Planet.jsx";
 import Local from "./Local.jsx";
@@ -38,7 +39,7 @@ const FilterBar = ({
       await fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
-          setTagOptions(data.tags);
+          setTagOptions(data.tags.map((tag) => _.pick(tag, ["tag", "type"])));
         });
     };
     callApi();
@@ -91,17 +92,94 @@ const FilterBar = ({
 
   return (
     <FilterBarContainer>
-      <Popover content={peopleContent} title="People" placement="bottom">
-        <Button icon={<FontAwesomeIcon icon="heart" />}>People</Button>
+      <Popover
+        content={peopleContent}
+        title={<FilterHeader title="People" />}
+        placement="bottom"
+      >
+        <Button
+          icon={<FontAwesomeIcon icon="heart" />}
+          onClick={() => {
+            setPageNumber(1);
+            if (
+              _.isEqual(
+                tags.filter((tag) => tag.type === "People"),
+                tagOptions.filter((tag) => tag.type === "People")
+              )
+            ) {
+              // uncheck all
+              setTags([...tags.filter((tag) => tag.type !== "People")]);
+            } else {
+              // check all
+              setTags([
+                ...tags.filter((tag) => tag.type !== "People"),
+                ...tagOptions.filter((tag) => tag.type === "People"),
+              ]);
+            }
+            setLoading(true);
+          }}
+        >
+          People
+        </Button>
       </Popover>
-      <Popover content={planetContent} title="Planet" placement="bottom">
-        <Button icon={<FontAwesomeIcon icon="leaf" />}>Planet</Button>
+      <Popover
+        content={planetContent}
+        title={<FilterHeader title="Planet" />}
+        placement="bottom"
+      >
+        <Button
+          icon={<FontAwesomeIcon icon="leaf" />}
+          onClick={() => {
+            setPageNumber(1);
+            if (
+              _.isEqual(
+                tags.filter((tag) => tag.type === "Planet"),
+                tagOptions.filter((tag) => tag.type === "Planet")
+              )
+            ) {
+              // uncheck all
+              setTags([...tags.filter((tag) => tag.type !== "Planet")]);
+            } else {
+              // check all
+              setTags([
+                ...tags.filter((tag) => tag.type !== "Planet"),
+                ...tagOptions.filter((tag) => tag.type === "Planet"),
+              ]);
+            }
+            setLoading(true);
+          }}
+        >
+          Planet
+        </Button>
       </Popover>
-      <Popover content={localContent} title="Local" placement="bottom">
+      <Popover
+        content={localContent}
+        title={<FilterHeader title="Local" />}
+        placement="bottom"
+      >
         <Button icon={<FontAwesomeIcon icon="map-marker-alt" />}>Local</Button>
       </Popover>
-      <Popover content={priceContent} title="Price" placement="bottom">
-        <Button icon={<FontAwesomeIcon icon="dollar-sign" />}>Price</Button>
+      <Popover
+        content={priceContent}
+        title={<FilterHeader title="Price" />}
+        placement="bottom"
+      >
+        <Button
+          icon={<FontAwesomeIcon icon="dollar-sign" />}
+          onClick={() => {
+            setPageNumber(1);
+            if (_.isEqual(price, priceOptions)) {
+              // uncheck all
+              setPrice([]);
+            } else {
+              // check all
+              setPrice(priceOptions);
+            }
+            setLoading(true);
+          }}
+        >
+          Price
+        </Button>
       </Popover>
       <div>
         <Button

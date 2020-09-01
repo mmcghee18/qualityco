@@ -49,9 +49,13 @@ router.get("/", (req, res) => {
   const pageNumber = req.query.page ? parseInt(req.query.page) : 1;
   const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
   const category = req.query.category ? req.query.category : null;
+  const andOrPreferences = req.query.andOrPreferences
+    ? JSON.parse(req.query.andOrPreferences)
+    : {};
 
   // Array query params - if they only contain 1 item, they need to be made into arrays
-  let tags = req.query.tags ? req.query.tags : null;
+  let tags = req.query.tags ? JSON.parse(req.query.tags) : null;
+  if (tags.length === 0) tags = null;
   if (tags && !_.isArray(tags)) tags = [tags];
   let price = req.query.price ? req.query.price : null;
   if (price && !_.isArray(price)) price = [price];
@@ -60,6 +64,9 @@ router.get("/", (req, res) => {
   let madeIn = req.query.madeIn ? req.query.madeIn : null;
   if (madeIn && !_.isArray(madeIn)) madeIn = [madeIn];
 
+  console.log({ tags });
+
+  // What we will return at the end
   const response = [];
   let totalNumberOfRecords = 0;
 
@@ -71,7 +78,7 @@ router.get("/", (req, res) => {
     similarNouns = getSynonyms(searchTerm);
   }
 
-  // Building search formula
+  // Building formulas
   const searchTermFormula = searchTerm
     ? `FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
     FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
@@ -94,13 +101,40 @@ router.get("/", (req, res) => {
         .join(", ")})`
     : null;
 
+  const peopleTags = tags ? tags.filter((tag) => tag.type === "People") : null;
+  const planetTags = tags ? tags.filter((tag) => tag.type === "Planet") : null;
+  const peopleTagFormula =
+    tags && peopleTags.length > 0
+      ? `${
+          andOrPreferences.people ? andOrPreferences.people : "OR"
+        }(${peopleTags
+          .map(
+            (tag) =>
+              `FIND(LOWER("${tag.tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`
+          )
+          .join(", ")})`
+      : null;
+  const planetTagFormula =
+    tags && planetTags.length > 0
+      ? `${
+          andOrPreferences.planet ? andOrPreferences.planet : "OR"
+        }(${planetTags
+          .map(
+            (tag) =>
+              `FIND(LOWER("${tag.tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`
+          )
+          .join(", ")})`
+      : null;
   const tagFormula = tags
-    ? `AND(${tags
-        .map((tag) => `FIND(LOWER("${tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`)
-        .join(", ")})`
+    ? `OR(${[peopleTagFormula, planetTagFormula].filter((f) => f).join(", ")})`
     : null;
+
+  console.log({ tagFormula });
+
   const priceFormula = price
-    ? `OR(${price.map((price) => `Price="${price}"`).join(", ")})`
+    ? `${andOrPreferences.price ? andOrPreferences.price : "OR"}(${price
+        .map((price) => `Price="${price}"`)
+        .join(", ")})`
     : null;
 
   const getLocalFormula = (type, states) => {
@@ -121,10 +155,9 @@ router.get("/", (req, res) => {
       : null;
     return result;
   };
-
   const localFormula =
     designedIn || madeIn
-      ? `AND(${[
+      ? `${andOrPreferences.local ? andOrPreferences.local : "OR"}(${[
           getLocalFormula("Designed in", designedIn),
           getLocalFormula("Made in", madeIn),
         ]
@@ -136,6 +169,7 @@ router.get("/", (req, res) => {
     ? `FIND("${category}", ARRAYJOIN(Categories, ","))`
     : null;
 
+  // The ultimate formula
   const formula = `AND(${[
     finalSearchFormula,
     tagFormula,
