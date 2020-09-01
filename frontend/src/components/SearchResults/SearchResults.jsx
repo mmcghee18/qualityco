@@ -26,14 +26,6 @@ const SearchResults = ({
   const [price, setPrice] = useState([]);
   const [places, setPlaces] = useState([]);
   const [stages, setStages] = useState([]);
-  const [andOrPreferences, setAndOrPreferences] = useState({
-    people: "OR",
-    planet: "OR",
-    price: "OR",
-    local: "OR",
-  });
-
-  console.log(tags);
 
   const [items, setItems] = useState(null);
   const [showDrawer, setShowDrawer] = useState(false);
@@ -67,23 +59,7 @@ const SearchResults = ({
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
 
-      const pageParams = queryString.stringify(
-        _.pickBy(
-          {
-            page: pageNumber,
-            pageSize,
-            q: searchTerm,
-            tags: tags.map((tag) => tag.tag),
-            price,
-            designedIn:
-              places.length > 0 && stages.includes("designedIn") ? places : [],
-            madeIn:
-              places.length > 0 && stages.includes("madeIn") ? places : [],
-          },
-          (value, key) => value
-        )
-      );
-      const apiParams = queryString.stringify(
+      const params = queryString.stringify(
         _.pickBy(
           {
             page: pageNumber,
@@ -95,15 +71,14 @@ const SearchResults = ({
               places.length > 0 && stages.includes("designedIn") ? places : [],
             madeIn:
               places.length > 0 && stages.includes("madeIn") ? places : [],
-            andOrPreferences: JSON.stringify(andOrPreferences),
           },
           (value, key) => value
         )
       );
 
-      const pageUrl = `/search?type=${type ? type : ""}&${pageParams}`;
+      const pageUrl = `/search?type=${type ? type : ""}&${params}`;
       history.push(pageUrl);
-      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${apiParams}`;
+      const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
 
       try {
         await fetch(apiUrl, { signal: abortController.signal })

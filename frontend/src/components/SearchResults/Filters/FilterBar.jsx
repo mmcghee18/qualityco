@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
 import AllFilters from "./AllFilters.jsx";
 import "./FilterBar.css";
-import FilterHeader from "./FilterHeader.jsx";
 import People from "./People.jsx";
 import Planet from "./Planet.jsx";
 import Local from "./Local.jsx";
@@ -92,11 +91,7 @@ const FilterBar = ({
 
   return (
     <FilterBarContainer>
-      <Popover
-        content={peopleContent}
-        title={<FilterHeader title="People" />}
-        placement="bottom"
-      >
+      <Popover content={peopleContent} title="People" placement="bottom">
         <Button
           icon={<FontAwesomeIcon icon="heart" />}
           onClick={() => {
@@ -122,11 +117,7 @@ const FilterBar = ({
           People
         </Button>
       </Popover>
-      <Popover
-        content={planetContent}
-        title={<FilterHeader title="Planet" />}
-        placement="bottom"
-      >
+      <Popover content={planetContent} title="Planet" placement="bottom">
         <Button
           icon={<FontAwesomeIcon icon="leaf" />}
           onClick={() => {
@@ -152,18 +143,10 @@ const FilterBar = ({
           Planet
         </Button>
       </Popover>
-      <Popover
-        content={localContent}
-        title={<FilterHeader title="Local" />}
-        placement="bottom"
-      >
+      <Popover content={localContent} title="Local" placement="bottom">
         <Button icon={<FontAwesomeIcon icon="map-marker-alt" />}>Local</Button>
       </Popover>
-      <Popover
-        content={priceContent}
-        title={<FilterHeader title="Price" />}
-        placement="bottom"
-      >
+      <Popover content={priceContent} title="Price" placement="bottom">
         <Button
           icon={<FontAwesomeIcon icon="dollar-sign" />}
           onClick={() => {
