@@ -49,7 +49,11 @@ const Result = ({
           <h2>{company ? company : "-"}</h2>
           <div style={{ display: "flex" }}>
             {madeIn &&
-              madeIn.map((place) => <Tag color="#f7946a">Made in {place}</Tag>)}
+              madeIn.map((place, i) => (
+                <Tag color="#f7946a" key={i}>
+                  Made in {place}
+                </Tag>
+              ))}
             {price && <Tag color="#E65213">{price}</Tag>}
           </div>
         </ResultHeader>
