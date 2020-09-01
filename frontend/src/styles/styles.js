@@ -150,7 +150,7 @@ export const SearchTitle = styled.h1`
 `;
 
 export const Logo = styled.img`
-  height: 40px;
+  height: 28px;
 `;
 
 export const SearchContainer = styled.div`
