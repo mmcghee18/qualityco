@@ -16,7 +16,15 @@ import {
   PopoverWrapper,
 } from "../../styles/styles.js";
 
-const Result = ({ company, website, tags, price, image, description }) => {
+const Result = ({
+  company,
+  website,
+  tags,
+  price,
+  image,
+  description,
+  madeIn,
+}) => {
   const popoverContent = tags ? (
     <PopoverWrapper>
       {tags.map(({ tag }, i) => (
@@ -39,7 +47,11 @@ const Result = ({ company, website, tags, price, image, description }) => {
       <ResultInfo>
         <ResultHeader>
           <h2>{company ? company : "-"}</h2>
-          {price && <Tag color="#E65213">{price}</Tag>}
+          <div style={{ display: "flex" }}>
+            {madeIn &&
+              madeIn.map((place) => <Tag color="#f7946a">Made in {place}</Tag>)}
+            {price && <Tag color="#E65213">{price}</Tag>}
+          </div>
         </ResultHeader>
 
         <Description>

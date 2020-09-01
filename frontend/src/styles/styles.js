@@ -239,7 +239,7 @@ export const Suggestion = styled.span`
 export const ResultContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 20px;
+  margin: 30px;
   width: 100%;
   max-width: 1000px;
   height: 200px;
