@@ -116,12 +116,13 @@ const Products = ({
         <Dropdown
           overlay={
             <Menu>
-              {categoryOptions.map((option, i) => (
+              {["All categories", ...categoryOptions].map((option, i) => (
                 <Menu.Item
                   key={i}
                   onClick={() => {
                     setPageNumber(1);
-                    setCategory(option);
+                    if (option === "All categories") setCategory(null);
+                    else setCategory(option);
                     setLoading(true);
                   }}
                 >
