@@ -4,6 +4,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import {
   ResultContainer,
+  ResultImageLink,
   ResultHeader,
   ResultImage,
   ResultInfo,
@@ -36,14 +37,9 @@ const Result = ({
 
   return (
     <ResultContainer>
-      <a
-        href={website}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ flex: 1 }}
-      >
+      <ResultImageLink href={website} target="_blank" rel="noopener noreferrer">
         <ResultImage imageUrl={image} />
-      </a>
+      </ResultImageLink>
       <ResultInfo>
         <ResultHeader>
           <h2>{company ? company : "-"}</h2>

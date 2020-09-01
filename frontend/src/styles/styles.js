@@ -256,6 +256,14 @@ export const ResultContainer = styled.div`
   }
 `;
 
+export const ResultImageLink = styled.a`
+  flex: 1;
+
+  @media ${devices.mobile} {
+    width: 100%;
+  }
+`;
+
 export const ResultImage = styled.div`
   flex: 1;
   height: 100%;
