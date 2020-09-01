@@ -4,8 +4,9 @@ import _ from "lodash";
 import { withRouter } from "react-router-dom";
 import {
   SearchResultsWrapper,
-  SearchFilterBar,
+  CategorySearchHeader,
   FiltersButton,
+  BrowseAllTitle,
 } from "../../styles/styles.js";
 import FilterBar from "./Filters/FilterBar.jsx";
 import ResultsList from "./ResultsList.jsx";
@@ -99,7 +100,16 @@ const SearchResults = ({
 
   return (
     <SearchResultsWrapper>
-      <FiltersButton onClick={() => setShowDrawer(true)}>Filters</FiltersButton>
+      <CategorySearchHeader>
+        <FiltersButton onClick={() => setShowDrawer(true)}>
+          Filters
+        </FiltersButton>
+        {searchTerm && (
+          <BrowseAllTitle noMargin={true}>
+            Search for "{searchTerm}"
+          </BrowseAllTitle>
+        )}
+      </CategorySearchHeader>
 
       <FilterBar
         tags={tags}
