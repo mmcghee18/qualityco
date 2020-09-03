@@ -2,9 +2,9 @@ const request = require("supertest");
 const app = require("../src/app");
 const _ = require("lodash");
 
-describe("GET /api/tags", () => {
+describe("GET /api/productTags", () => {
   it("get all possible tags", async (done) => {
-    const response = await request(app).get("/api/tags");
+    const response = await request(app).get("/api/productTags");
     const tags = response.body.tags;
 
     expect(response.status).toBe(200);

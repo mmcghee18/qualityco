@@ -391,12 +391,12 @@ export const SearchFilterBar = styled.div`
   align-items: center;
 `;
 
-export const ProductsPopover = styled.div`
+export const CategoriesPopover = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 400px;
-  height: 400px;
+  max-height: 400px;
   flex-wrap: wrap;
   overflow: scroll;
 `;

@@ -2,8 +2,9 @@ const express = require("express");
 
 const products = require("./products");
 const services = require("./services");
-const tags = require("./tags");
-const categories = require("./categories");
+const productTags = require("./productTags");
+const productCategories = require("./productCategories");
+const serviceCategories = require("./serviceCategories");
 
 const router = express.Router();
 
@@ -15,7 +16,8 @@ router.get("/", (req, res) => {
 
 router.use("/products", products);
 router.use("/services", services);
-router.use("/tags", tags);
-router.use("/categories", categories);
+router.use("/productTags", productTags);
+router.use("/productCategories", productCategories);
+router.use("/serviceCategories", serviceCategories);
 
 module.exports = router;

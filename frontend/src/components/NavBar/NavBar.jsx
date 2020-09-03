@@ -10,7 +10,7 @@ import {
   LinksInDrawer,
   LogoLink,
   MenuIcon,
-  ProductsPopover,
+  CategoriesPopover,
   CategoryLabel,
 } from "../../styles/styles";
 import logo from "../../logos/full-logo.png";
@@ -25,11 +25,12 @@ const NavBar = ({
   setLoading,
 }) => {
   const [productCategories, setProductCategories] = useState([]);
+  const [serviceCategories, setServiceCategories] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
   const [expandBar, setExpandBar] = useState(false);
 
   const productsPopoverContent = productCategories && (
-    <ProductsPopover>
+    <CategoriesPopover>
       {productCategories.map(({ category }) => (
         <CategoryLabel
           key={category}
@@ -42,7 +43,23 @@ const NavBar = ({
           {category}
         </CategoryLabel>
       ))}
-    </ProductsPopover>
+    </CategoriesPopover>
+  );
+  const servicesPopoverContent = serviceCategories && (
+    <CategoriesPopover>
+      {serviceCategories.map(({ category }) => (
+        <CategoryLabel
+          key={category}
+          to="/services"
+          onClick={() => {
+            setLoading(true);
+            setCategory(category);
+          }}
+        >
+          {category}
+        </CategoryLabel>
+      ))}
+    </CategoriesPopover>
   );
 
   useEffect(() => {
@@ -51,12 +68,18 @@ const NavBar = ({
         process.env.NODE_ENV === "production"
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
-      const apiUrl = `${baseUrl}/api/categories`;
+      const productCategoriesUrl = `${baseUrl}/api/productCategories`;
+      const serviceCategoriesUrl = `${baseUrl}/api/serviceCategories`;
 
-      await fetch(apiUrl)
+      await fetch(productCategoriesUrl)
         .then((response) => response.json())
         .then((data) => {
           setProductCategories(data.categories);
+        });
+      await fetch(serviceCategoriesUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setServiceCategories(data.categories);
         });
     };
     callApi();
@@ -93,7 +116,10 @@ const NavBar = ({
         <Popover content={productsPopoverContent}>
           <NavLink to="/products">Products</NavLink>
         </Popover>
-        <NavLink to="/services">Services</NavLink>
+        <Popover content={servicesPopoverContent}>
+          <NavLink to="/services">Services</NavLink>
+        </Popover>
+
         <NavLink to="/">Our Mission</NavLink>
       </Links>
 
