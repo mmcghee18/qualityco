@@ -44,6 +44,8 @@ const FilterBar = ({
     callApi();
   }, []);
 
+  console.log({ tagOptions });
+
   const peopleTags = tagOptions
     ? tagOptions.filter((tag) => tag.type === "People")
     : [];

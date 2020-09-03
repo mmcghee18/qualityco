@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
   );
   const tags = [];
 
-  base("Tags")
+  base("Tags (Products)")
     .select({
       pageSize: 10,
       view: "Grid view",
