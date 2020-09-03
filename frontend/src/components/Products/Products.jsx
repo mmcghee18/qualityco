@@ -9,21 +9,14 @@ import {
   BrowseAllTitle,
   CategoryDropdown,
 } from "../../styles/styles.js";
-import { Menu, Dropdown, Button } from "antd";
+import { Menu, Dropdown } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import FilterBar from "../SearchResults/Filters/FilterBar.jsx";
 import ResultsList from "../SearchResults/ResultsList.jsx";
 
 let abortController = new AbortController();
 
-const Products = ({
-  location,
-  history,
-  category,
-  setCategory,
-  loading,
-  setLoading,
-}) => {
+const Products = ({ history, category, setCategory, loading, setLoading }) => {
   const [tags, setTags] = useState([]);
   const [price, setPrice] = useState([]);
   const [places, setPlaces] = useState([]);
@@ -40,13 +33,14 @@ const Products = ({
     setPageNumber(1);
   }, [category]);
 
+  // Get category options
   useEffect(() => {
     const callApi = async () => {
       const baseUrl =
         process.env.NODE_ENV === "production"
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
-      const apiUrl = `${baseUrl}/api/categories`;
+      const apiUrl = `${baseUrl}/api/productCategories`;
 
       await fetch(apiUrl)
         .then((response) => response.json())

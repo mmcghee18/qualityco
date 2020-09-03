@@ -6,15 +6,32 @@ const { getSpellingSuggestions, getSynonyms } = require("./helpers.js");
 
 const router = express.Router();
 
+const getCategoryInfo = (id) => {
+  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    "appop5JmfRum8l0LN"
+  );
+  return new Promise((resolve, reject) => {
+    base("Categories (Services)").find(id, function (err, record) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(_.pick(record.fields, ["Category"]));
+    });
+  });
+};
+
 router.get("/", (req, res) => {
   var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
   // Extract query params
   const searchTerm = req.query.q ? pluralize.singular(req.query.q) : null;
-  const tags = req.query.tags ? JSON.parse(req.query.tags) : null;
   const pageNumber = req.query.page ? parseInt(req.query.page) : null;
   const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : null;
+  const category = req.query.category ? req.query.category : null;
+
+  // What we will return at the end
   const response = [];
   let totalNumberOfRecords = 0;
 
@@ -49,13 +66,12 @@ router.get("/", (req, res) => {
         .join(", ")})`
     : null;
 
-  const tagFormula = tags
-    ? `AND(${tags
-        .map((tag) => `FIND(LOWER("${tag}"), LOWER(ARRAYJOIN(Tags, ","))) > 0`)
-        .join(", ")})`
+  const categoryFormula = category
+    ? `FIND("${category}", ARRAYJOIN(Categories, ","))`
     : null;
 
-  const formula = `AND(${[finalSearchFormula, tagFormula]
+  // The ultimate formula
+  const formula = `AND(${[finalSearchFormula, categoryFormula]
     .filter((f) => f)
     .join(", ")})`;
 
@@ -86,9 +102,28 @@ router.get("/", (req, res) => {
         currentPage += 1;
         fetchNextPage();
       },
-      function done(err) {
+      async function done(err) {
+        // Hydrate with category info
+        let hydratedResponse = [];
+
+        for (const record of response) {
+          if (record["categories"]) {
+            let categories = [];
+            for (const categoryId of record["categories"]) {
+              const categoryInfo = await getCategoryInfo(categoryId);
+              const lowercaseCategoryInfo = _.mapKeys(
+                categoryInfo,
+                (value, key) => key.toLowerCase()
+              );
+              categories.push(lowercaseCategoryInfo);
+            }
+            _.set(record, "categories", categories);
+          }
+          hydratedResponse.push(record);
+        }
+
         res.json({
-          records: response,
+          records: hydratedResponse,
           totalNumberOfRecords,
           spellingSuggestions,
         });

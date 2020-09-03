@@ -33,7 +33,7 @@ const FilterBar = ({
         process.env.NODE_ENV === "production"
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
-      const apiUrl = `${baseUrl}/api/tags`;
+      const apiUrl = `${baseUrl}/api/productTags`;
 
       await fetch(apiUrl)
         .then((response) => response.json())

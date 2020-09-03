@@ -16,7 +16,7 @@ const getTagInfo = (id) => {
     "appop5JmfRum8l0LN"
   );
   return new Promise((resolve, reject) => {
-    base("Tags").find(id, function (err, record) {
+    base("Tags (Products)").find(id, function (err, record) {
       if (err) {
         reject(err);
         return;

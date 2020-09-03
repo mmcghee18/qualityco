@@ -54,6 +54,14 @@ function App() {
               setLoading={setLoading}
             />
           </Route>
+          <Route exact path="/services">
+            <Services
+              category={category}
+              setCategory={setCategory}
+              loading={loading}
+              setLoading={setLoading}
+            />
+          </Route>
         </Switch>
       </div>
     </Router>
