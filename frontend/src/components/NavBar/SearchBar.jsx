@@ -59,7 +59,7 @@ const SearchBar = ({
               history.push("/search");
             }
           }}
-          style={{ width: "60%", borderRadius: "5px" }}
+          style={{ width: "60%", borderRadius: "5px", maxWidth: "700px" }}
         />
       </Tooltip>
     </>
