@@ -24,6 +24,7 @@ const ResultsList = ({
     setPageSize(size);
     setLoading(true);
   };
+  console.log({ items });
 
   const spinIcon = (
     <LoadingOutlined style={{ fontSize: 60, marginTop: 60 }} spin />

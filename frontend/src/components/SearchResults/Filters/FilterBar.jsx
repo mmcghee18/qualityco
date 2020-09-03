@@ -25,6 +25,7 @@ const FilterBar = ({
   setStages,
 }) => {
   const [tagOptions, setTagOptions] = useState(null);
+  const [locationOptions, setLocationOptions] = useState(null);
   const priceOptions = ["$", "$$", "$$$", "$$$$"];
 
   useEffect(() => {
@@ -33,12 +34,20 @@ const FilterBar = ({
         process.env.NODE_ENV === "production"
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
-      const apiUrl = `${baseUrl}/api/productTags`;
+      const tagOptionsUrl = `${baseUrl}/api/productTags`;
+      const locationOptionsUrl = `${baseUrl}/api/locations`;
 
-      await fetch(apiUrl)
+      await fetch(tagOptionsUrl)
         .then((response) => response.json())
         .then((data) => {
           setTagOptions(data.tags.map((tag) => _.pick(tag, ["tag", "type"])));
+        });
+      await fetch(locationOptionsUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setLocationOptions(
+            _.sortBy(data.locations, (d) => d.location).map((l) => l.location)
+          );
         });
     };
     callApi();
@@ -80,6 +89,7 @@ const FilterBar = ({
   );
   const locationContent = (
     <Location
+      locationOptions={locationOptions}
       places={places}
       setPlaces={setPlaces}
       stages={stages}
@@ -203,6 +213,7 @@ const FilterBar = ({
           planetContent={planetContent}
           locationContent={
             <Location
+              locationOptions={locationOptions}
               places={places}
               setPlaces={setPlaces}
               stages={stages}

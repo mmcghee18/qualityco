@@ -12,7 +12,7 @@ const {
 const router = express.Router();
 
 const getTagInfo = (id) => {
-  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
   return new Promise((resolve, reject) => {
@@ -26,7 +26,7 @@ const getTagInfo = (id) => {
   });
 };
 const getCategoryInfo = (id) => {
-  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
   return new Promise((resolve, reject) => {
@@ -39,9 +39,23 @@ const getCategoryInfo = (id) => {
     });
   });
 };
+const getLocationInfo = (id) => {
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    "appop5JmfRum8l0LN"
+  );
+  return new Promise((resolve, reject) => {
+    base("Locations").find(id, function (err, record) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(_.pick(record.fields, ["Location"]));
+    });
+  });
+};
 
 router.get("/", (req, res) => {
-  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
   // Extract query params
@@ -192,7 +206,7 @@ router.get("/", (req, res) => {
         fetchNextPage();
       },
       async function done(err) {
-        // Hydrate with tag and category info
+        // Hydrate with tag, category, location info
         let hydratedResponse = [];
         for (const record of response) {
           if (record["tags"]) {
@@ -217,6 +231,30 @@ router.get("/", (req, res) => {
               categories.push(lowercaseCategoryInfo);
             }
             _.set(record, "categories", categories);
+          }
+          if (record["designed in"]) {
+            let designLocations = [];
+            for (const locationId of record["designed in"]) {
+              const locationInfo = await getLocationInfo(locationId);
+              const lowercaseLocationInfo = _.mapKeys(
+                locationInfo,
+                (value, key) => key.toLowerCase()
+              );
+              designLocations.push(lowercaseLocationInfo);
+            }
+            _.set(record, "designed in", designLocations);
+          }
+          if (record["made in"]) {
+            let madeLocations = [];
+            for (const locationId of record["made in"]) {
+              const locationInfo = await getLocationInfo(locationId);
+              const lowercaseLocationInfo = _.mapKeys(
+                locationInfo,
+                (value, key) => key.toLowerCase()
+              );
+              madeLocations.push(lowercaseLocationInfo);
+            }
+            _.set(record, "made in", madeLocations);
           }
           hydratedResponse.push(record);
         }

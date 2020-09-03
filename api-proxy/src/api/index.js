@@ -5,6 +5,7 @@ const services = require("./services");
 const productTags = require("./productTags");
 const productCategories = require("./productCategories");
 const serviceCategories = require("./serviceCategories");
+const locations = require("./locations");
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.use("/services", services);
 router.use("/productTags", productTags);
 router.use("/productCategories", productCategories);
 router.use("/serviceCategories", serviceCategories);
+router.use("/locations", locations);
 
 module.exports = router;

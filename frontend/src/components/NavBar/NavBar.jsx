@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import _ from "lodash";
 import CollapsableSearchBar from "./CollapsableSearchBar.jsx";
 import {
   TopBar,
@@ -31,7 +32,7 @@ const NavBar = ({
 
   const productsPopoverContent = productCategories && (
     <CategoriesPopover>
-      {productCategories.map(({ category }) => (
+      {productCategories.map((category) => (
         <CategoryLabel
           key={category}
           to="/products"
@@ -47,7 +48,7 @@ const NavBar = ({
   );
   const servicesPopoverContent = serviceCategories && (
     <CategoriesPopover>
-      {serviceCategories.map(({ category }) => (
+      {serviceCategories.map((category) => (
         <CategoryLabel
           key={category}
           to="/services"
@@ -74,12 +75,12 @@ const NavBar = ({
       await fetch(productCategoriesUrl)
         .then((response) => response.json())
         .then((data) => {
-          setProductCategories(data.categories);
+          setProductCategories(data.categories.map((c) => c.category));
         });
       await fetch(serviceCategoriesUrl)
         .then((response) => response.json())
         .then((data) => {
-          setServiceCategories(data.categories);
+          setServiceCategories(data.categories.map((c) => c.category));
         });
     };
     callApi();
