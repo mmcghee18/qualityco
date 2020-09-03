@@ -120,7 +120,7 @@ router.get("/", (req, res) => {
     ? `OR(${price.map((price) => `Price="${price}"`).join(", ")})`
     : null;
 
-  const getLocalFormula = (type, states) => {
+  const getLocationFormula = (type, states) => {
     const result = states
       ? `OR(${states
           .map((state) => {
@@ -138,11 +138,11 @@ router.get("/", (req, res) => {
       : null;
     return result;
   };
-  const localFormula =
+  const locationFormula =
     designedIn || madeIn
       ? `OR(${[
-          getLocalFormula("Designed in", designedIn),
-          getLocalFormula("Made in", madeIn),
+          getLocationFormula("Designed in", designedIn),
+          getLocationFormula("Made in", madeIn),
         ]
           .filter((f) => f)
           .join(", ")})`
@@ -158,7 +158,7 @@ router.get("/", (req, res) => {
     peopleTagFormula,
     planetTagFormula,
     priceFormula,
-    localFormula,
+    locationFormula,
     categoryFormula,
   ]
     .filter((f) => f)

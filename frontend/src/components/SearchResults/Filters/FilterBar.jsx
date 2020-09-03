@@ -7,7 +7,7 @@ import AllFilters from "./AllFilters.jsx";
 import "./FilterBar.css";
 import People from "./People.jsx";
 import Planet from "./Planet.jsx";
-import Local from "./Local.jsx";
+import Location from "./Location.jsx";
 import Price from "./Price.jsx";
 
 const FilterBar = ({
@@ -78,8 +78,8 @@ const FilterBar = ({
       setLoading={setLoading}
     />
   );
-  const localContent = (
-    <Local
+  const locationContent = (
+    <Location
       places={places}
       setPlaces={setPlaces}
       stages={stages}
@@ -145,12 +145,12 @@ const FilterBar = ({
           Planet
         </FilterBarButton>
       </Popover>
-      <Popover content={localContent} title="Local" placement="bottom">
+      <Popover content={locationContent} title="Location" placement="bottom">
         <FilterBarButton
           icon={<FontAwesomeIcon icon="map-marker-alt" />}
           highlighted={places.length > 0 || stages.length > 0}
         >
-          Local
+          Location
         </FilterBarButton>
       </Popover>
       <Popover content={priceContent} title="Price" placement="bottom">
@@ -201,8 +201,8 @@ const FilterBar = ({
         <AllFilters
           peopleContent={peopleContent}
           planetContent={planetContent}
-          localContent={
-            <Local
+          locationContent={
+            <Location
               places={places}
               setPlaces={setPlaces}
               stages={stages}

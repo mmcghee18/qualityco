@@ -5,7 +5,7 @@ import _ from "lodash";
 import states from "./states.js";
 const { Option } = Select;
 
-const Local = ({
+const Location = ({
   places,
   setPlaces,
   stages,
@@ -64,4 +64,4 @@ const Local = ({
   );
 };
 
-export default Local;
+export default Location;

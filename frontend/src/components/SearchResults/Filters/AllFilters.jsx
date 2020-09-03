@@ -6,7 +6,7 @@ const { Panel } = Collapse;
 const AllFilters = ({
   peopleContent,
   planetContent,
-  localContent,
+  locationContent,
   priceContent,
   setPageNumber,
   setTags,
@@ -54,8 +54,8 @@ const AllFilters = ({
           bordered={false}
           style={{ backgroundColor: "white" }}
         >
-          <Panel header="Local" key="1">
-            {localContent}
+          <Panel header="Location" key="1">
+            {locationContent}
           </Panel>
         </Collapse>
         <Collapse
