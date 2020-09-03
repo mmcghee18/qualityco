@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FilterBarContainer } from "../../../styles/styles.js";
+import { FilterBarContainer, FilterBarButton } from "../../../styles/styles.js";
 import { Button, Popover, Drawer } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
@@ -92,8 +92,9 @@ const FilterBar = ({
   return (
     <FilterBarContainer>
       <Popover content={peopleContent} title="People" placement="bottom">
-        <Button
+        <FilterBarButton
           icon={<FontAwesomeIcon icon="heart" />}
+          highlighted={tags.filter((tag) => tag.type === "People").length > 0}
           onClick={() => {
             setPageNumber(1);
             if (
@@ -115,11 +116,12 @@ const FilterBar = ({
           }}
         >
           People
-        </Button>
+        </FilterBarButton>
       </Popover>
       <Popover content={planetContent} title="Planet" placement="bottom">
-        <Button
+        <FilterBarButton
           icon={<FontAwesomeIcon icon="leaf" />}
+          highlighted={tags.filter((tag) => tag.type === "Planet").length > 0}
           onClick={() => {
             setPageNumber(1);
             if (
@@ -141,14 +143,20 @@ const FilterBar = ({
           }}
         >
           Planet
-        </Button>
+        </FilterBarButton>
       </Popover>
       <Popover content={localContent} title="Local" placement="bottom">
-        <Button icon={<FontAwesomeIcon icon="map-marker-alt" />}>Local</Button>
+        <FilterBarButton
+          icon={<FontAwesomeIcon icon="map-marker-alt" />}
+          highlighted={places.length > 0 || stages.length > 0}
+        >
+          Local
+        </FilterBarButton>
       </Popover>
       <Popover content={priceContent} title="Price" placement="bottom">
-        <Button
+        <FilterBarButton
           icon={<FontAwesomeIcon icon="dollar-sign" />}
+          highlighted={price.length > 0}
           onClick={() => {
             setPageNumber(1);
             if (_.isEqual(price, priceOptions)) {
@@ -162,7 +170,7 @@ const FilterBar = ({
           }}
         >
           Price
-        </Button>
+        </FilterBarButton>
       </Popover>
       <div>
         <Button

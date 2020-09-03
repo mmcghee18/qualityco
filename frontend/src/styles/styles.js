@@ -187,6 +187,11 @@ export const FilterBarContainer = styled.div`
   }
 `;
 
+export const FilterBarButton = styled(Button)`
+  color: ${(props) => (props.highlighted ? "#E65213" : null)};
+  border-color: ${(props) => (props.highlighted ? "#E65213" : null)};
+`;
+
 export const FilterHeaderWrapper = styled.div`
   display: flex;
   flex-direction: row;
