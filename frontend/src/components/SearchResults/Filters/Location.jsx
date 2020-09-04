@@ -1,7 +1,6 @@
 import React from "react";
 import { FilterPopup, SwitchRow, SwitchLabel } from "../../../styles/styles.js";
 import { Switch, Select } from "antd";
-import _ from "lodash";
 const { Option } = Select;
 
 const Location = ({
