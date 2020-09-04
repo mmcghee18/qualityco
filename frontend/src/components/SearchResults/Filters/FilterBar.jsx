@@ -7,7 +7,7 @@ import AllFilters from "./AllFilters.jsx";
 import "./FilterBar.css";
 import People from "./People.jsx";
 import Planet from "./Planet.jsx";
-import Local from "./Local.jsx";
+import Location from "./Location.jsx";
 import Price from "./Price.jsx";
 
 const FilterBar = ({
@@ -25,6 +25,7 @@ const FilterBar = ({
   setStages,
 }) => {
   const [tagOptions, setTagOptions] = useState(null);
+  const [locationOptions, setLocationOptions] = useState(null);
   const priceOptions = ["$", "$$", "$$$", "$$$$"];
 
   useEffect(() => {
@@ -33,12 +34,20 @@ const FilterBar = ({
         process.env.NODE_ENV === "production"
           ? "https://qualityco-backend.herokuapp.com"
           : "http://localhost:5000";
-      const apiUrl = `${baseUrl}/api/productTags`;
+      const tagOptionsUrl = `${baseUrl}/api/productTags`;
+      const locationOptionsUrl = `${baseUrl}/api/locations`;
 
-      await fetch(apiUrl)
+      await fetch(tagOptionsUrl)
         .then((response) => response.json())
         .then((data) => {
           setTagOptions(data.tags.map((tag) => _.pick(tag, ["tag", "type"])));
+        });
+      await fetch(locationOptionsUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setLocationOptions(
+            _.sortBy(data.locations, (d) => d.location).map((l) => l.location)
+          );
         });
     };
     callApi();
@@ -78,8 +87,9 @@ const FilterBar = ({
       setLoading={setLoading}
     />
   );
-  const localContent = (
-    <Local
+  const locationContent = (
+    <Location
+      locationOptions={locationOptions}
       places={places}
       setPlaces={setPlaces}
       stages={stages}
@@ -145,12 +155,12 @@ const FilterBar = ({
           Planet
         </FilterBarButton>
       </Popover>
-      <Popover content={localContent} title="Local" placement="bottom">
+      <Popover content={locationContent} title="Location" placement="bottom">
         <FilterBarButton
           icon={<FontAwesomeIcon icon="map-marker-alt" />}
           highlighted={places.length > 0 || stages.length > 0}
         >
-          Local
+          Location
         </FilterBarButton>
       </Popover>
       <Popover content={priceContent} title="Price" placement="bottom">
@@ -201,8 +211,9 @@ const FilterBar = ({
         <AllFilters
           peopleContent={peopleContent}
           planetContent={planetContent}
-          localContent={
-            <Local
+          locationContent={
+            <Location
+              locationOptions={locationOptions}
               places={places}
               setPlaces={setPlaces}
               stages={stages}

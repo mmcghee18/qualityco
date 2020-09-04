@@ -1,7 +1,6 @@
 import React from "react";
 import { FilterPopup } from "../../../styles/styles.js";
 import { Checkbox } from "antd";
-import _ from "lodash";
 
 const Planet = ({ tags, tagOptions, setLoading, setPageNumber, setTags }) => {
   return (

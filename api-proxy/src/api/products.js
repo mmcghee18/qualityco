@@ -12,7 +12,7 @@ const {
 const router = express.Router();
 
 const getTagInfo = (id) => {
-  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
   return new Promise((resolve, reject) => {
@@ -26,7 +26,7 @@ const getTagInfo = (id) => {
   });
 };
 const getCategoryInfo = (id) => {
-  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
   return new Promise((resolve, reject) => {
@@ -39,13 +39,27 @@ const getCategoryInfo = (id) => {
     });
   });
 };
+const getLocationInfo = (id) => {
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    "appop5JmfRum8l0LN"
+  );
+  return new Promise((resolve, reject) => {
+    base("Locations").find(id, function (err, record) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(_.pick(record.fields, ["Location"]));
+    });
+  });
+};
 
 router.get("/", (req, res) => {
-  var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
   // Extract query params
-  const searchTerm = req.query.q ? pluralize.singular(req.query.q) : null; // singularize
+  const searchTerm = req.query.q ? req.query.q : null;
   const pageNumber = req.query.page ? parseInt(req.query.page) : 1;
   const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
   const category = req.query.category ? req.query.category : null;
@@ -73,21 +87,66 @@ router.get("/", (req, res) => {
   }
 
   // Building formulas
-  const searchTermFormula = searchTerm
-    ? `FIND(LOWER("${searchTerm}"), LOWER(Company)) > 0,
-    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
-    : null;
+  const getSearchFormula = (word) => {
+    const singularWord = pluralize.singular(word.toLowerCase());
+    const pluralWord = pluralize.plural(word.toLowerCase());
+    // 1. A full-word match in "Company" (singular or plural)
+    // 2. A full-word match in "Products" (singular or plural)
+    // 3. A full-word match in "Categories" (singular or plural)
+    return `
+      AND(
+        FIND("${singularWord}", LOWER(Company)) > 0,
+        OR(
+          FIND("${singularWord}", LOWER(Company)) + LEN("${singularWord}") > LEN(Company),
+          MID(LOWER(Company), FIND("${singularWord}", LOWER(Company)) + LEN("${singularWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${pluralWord}", LOWER(Company)) > 0,
+        OR(
+          FIND("${pluralWord}", LOWER(Company)) + LEN("${pluralWord}") > LEN(Company),
+          MID(LOWER(Company), FIND("${pluralWord}", LOWER(Company)) + LEN("${pluralWord}"), 1) = ",",
+          MID(LOWER(Company), FIND("${pluralWord}", LOWER(Company)) + LEN("${pluralWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${singularWord}", LOWER(ARRAYJOIN(Products, ","))) > 0,
+        OR(
+          FIND("${singularWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${singularWord}") > LEN(ARRAYJOIN(Products, ",")),
+          MID(LOWER(ARRAYJOIN(Products, ",")), FIND("${singularWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${singularWord}"), 1) = ",",
+          MID(LOWER(ARRAYJOIN(Products, ",")), FIND("${singularWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${singularWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${pluralWord}", LOWER(ARRAYJOIN(Products, ","))) > 0,
+        OR(
+          FIND("${pluralWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${pluralWord}") > LEN(ARRAYJOIN(Products, ",")),
+          MID(LOWER(ARRAYJOIN(Products, ",")), FIND("${pluralWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${pluralWord}"), 1) = ",",
+          MID(LOWER(ARRAYJOIN(Products, ",")), FIND("${pluralWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${pluralWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${singularWord}", LOWER(ARRAYJOIN(Categories, ","))) > 0,
+        OR(
+          FIND("${singularWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${singularWord}") > LEN(ARRAYJOIN(Categories, ",")),
+          MID(LOWER(ARRAYJOIN(Categories, ",")), FIND("${singularWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${singularWord}"), 1) = ",",
+          MID(LOWER(ARRAYJOIN(Categories, ",")), FIND("${singularWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${singularWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${pluralWord}", LOWER(ARRAYJOIN(Categories, ","))) > 0,
+        OR(
+          FIND("${pluralWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${pluralWord}") > LEN(ARRAYJOIN(Categories, ",")),
+          MID(LOWER(ARRAYJOIN(Categories, ",")), FIND("${pluralWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${pluralWord}"), 1) = ",",
+          MID(LOWER(ARRAYJOIN(Categories, ",")), FIND("${pluralWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${pluralWord}"), 1) = " "
+        )
+      )`;
+  };
+
+  const searchTermFormula = searchTerm ? getSearchFormula(searchTerm) : null;
   const similarWordsFormula =
     similarNouns && similarNouns.length > 0
-      ? similarNouns
-          .map(
-            (word) =>
-              `FIND(LOWER("${word}"), LOWER(Company)) > 0,
-              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
-          )
-          .join(", ")
+      ? similarNouns.map((word) => getSearchFormula(word)).join(", ")
       : null;
   const finalSearchFormula = searchTerm
     ? `OR(${[searchTermFormula, similarWordsFormula]
@@ -120,7 +179,7 @@ router.get("/", (req, res) => {
     ? `OR(${price.map((price) => `Price="${price}"`).join(", ")})`
     : null;
 
-  const getLocalFormula = (type, states) => {
+  const getLocationFormula = (type, states) => {
     const result = states
       ? `OR(${states
           .map((state) => {
@@ -138,11 +197,11 @@ router.get("/", (req, res) => {
       : null;
     return result;
   };
-  const localFormula =
+  const locationFormula =
     designedIn || madeIn
       ? `OR(${[
-          getLocalFormula("Designed in", designedIn),
-          getLocalFormula("Made in", madeIn),
+          getLocationFormula("Designed in", designedIn),
+          getLocationFormula("Made in", madeIn),
         ]
           .filter((f) => f)
           .join(", ")})`
@@ -158,7 +217,7 @@ router.get("/", (req, res) => {
     peopleTagFormula,
     planetTagFormula,
     priceFormula,
-    localFormula,
+    locationFormula,
     categoryFormula,
   ]
     .filter((f) => f)
@@ -192,7 +251,7 @@ router.get("/", (req, res) => {
         fetchNextPage();
       },
       async function done(err) {
-        // Hydrate with tag and category info
+        // Hydrate with tag, category, location info
         let hydratedResponse = [];
         for (const record of response) {
           if (record["tags"]) {
@@ -217,6 +276,30 @@ router.get("/", (req, res) => {
               categories.push(lowercaseCategoryInfo);
             }
             _.set(record, "categories", categories);
+          }
+          if (record["designed in"]) {
+            let designLocations = [];
+            for (const locationId of record["designed in"]) {
+              const locationInfo = await getLocationInfo(locationId);
+              const lowercaseLocationInfo = _.mapKeys(
+                locationInfo,
+                (value, key) => key.toLowerCase()
+              );
+              designLocations.push(lowercaseLocationInfo);
+            }
+            _.set(record, "designed in", designLocations);
+          }
+          if (record["made in"]) {
+            let madeLocations = [];
+            for (const locationId of record["made in"]) {
+              const locationInfo = await getLocationInfo(locationId);
+              const lowercaseLocationInfo = _.mapKeys(
+                locationInfo,
+                (value, key) => key.toLowerCase()
+              );
+              madeLocations.push(lowercaseLocationInfo);
+            }
+            _.set(record, "made in", madeLocations);
           }
           hydratedResponse.push(record);
         }

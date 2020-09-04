@@ -72,7 +72,11 @@ const ResultsList = ({
             <div>
               Did you mean{" "}
               <Suggestion
-                onClick={() => setSearchTerm(items.spellingSuggestions[0])}
+                onClick={() => {
+                  setSearchTerm(items.spellingSuggestions[0]);
+                  setLoading(true);
+                  setPageNumber(1);
+                }}
               >
                 {items.spellingSuggestions[0]}
               </Suggestion>

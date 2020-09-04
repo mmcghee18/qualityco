@@ -1,11 +1,10 @@
 import React from "react";
 import { FilterPopup, SwitchRow, SwitchLabel } from "../../../styles/styles.js";
 import { Switch, Select } from "antd";
-import _ from "lodash";
-import states from "./states.js";
 const { Option } = Select;
 
-const Local = ({
+const Location = ({
+  locationOptions,
   places,
   setPlaces,
   stages,
@@ -30,7 +29,7 @@ const Local = ({
     <FilterPopup overrideWidth={overrideWidth}>
       <Select
         mode="multiple"
-        placeholder="Select state(s)"
+        placeholder="Select location(s)"
         value={places}
         onChange={(value) => {
           if (stages.length > 0) setPageNumber(1);
@@ -38,11 +37,12 @@ const Local = ({
           if (stages.length > 0) setLoading(true);
         }}
       >
-        {states.map((state, i) => (
-          <Option key={i} value={state}>
-            {state}
-          </Option>
-        ))}
+        {locationOptions &&
+          locationOptions.map((state, i) => (
+            <Option key={i} value={state}>
+              {state}
+            </Option>
+          ))}
       </Select>
       <SwitchRow>
         <Switch
@@ -64,4 +64,4 @@ const Local = ({
   );
 };
 
-export default Local;
+export default Location;

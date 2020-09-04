@@ -26,7 +26,7 @@ router.get("/", (req, res) => {
     "appop5JmfRum8l0LN"
   );
   // Extract query params
-  const searchTerm = req.query.q ? pluralize.singular(req.query.q) : null;
+  const searchTerm = req.query.q ? req.query.q : null;
   const pageNumber = req.query.page ? parseInt(req.query.page) : null;
   const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : null;
   const category = req.query.category ? req.query.category : null;
@@ -44,21 +44,66 @@ router.get("/", (req, res) => {
   }
 
   // Building search formula
-  const searchTermFormula = searchTerm
-    ? `FIND(LOWER("${searchTerm}"), LOWER(Name)) > 0,
-    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-    FIND(LOWER("${searchTerm}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
-    : null;
+  const getSearchFormula = (word) => {
+    const singularWord = pluralize.singular(word.toLowerCase());
+    const pluralWord = pluralize.plural(word.toLowerCase());
+    // 1. A full-word match in "Name" (singular or plural)
+    // 2. A full-word match in "Products" (singular or plural)
+    // 3. A full-word match in "Categories" (singular or plural)
+    return `
+      AND(
+        FIND("${singularWord}", LOWER(Name)) > 0,
+        OR(
+          FIND("${singularWord}", LOWER(Name)) + LEN("${singularWord}") > LEN(Name),
+          MID(LOWER(Name), FIND("${singularWord}", LOWER(Name)) + LEN("${singularWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${pluralWord}", LOWER(Name)) > 0,
+        OR(
+          FIND("${pluralWord}", LOWER(Name)) + LEN("${pluralWord}") > LEN(Name),
+          MID(LOWER(Name), FIND("${pluralWord}", LOWER(Name)) + LEN("${pluralWord}"), 1) = ",",
+          MID(LOWER(Name), FIND("${pluralWord}", LOWER(Name)) + LEN("${pluralWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${singularWord}", LOWER(ARRAYJOIN(Products, ","))) > 0,
+        OR(
+          FIND("${singularWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${singularWord}") > LEN(ARRAYJOIN(Products, ",")),
+          MID(LOWER(ARRAYJOIN(Products, ",")), FIND("${singularWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${singularWord}"), 1) = ",",
+          MID(LOWER(ARRAYJOIN(Products, ",")), FIND("${singularWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${singularWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${pluralWord}", LOWER(ARRAYJOIN(Products, ","))) > 0,
+        OR(
+          FIND("${pluralWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${pluralWord}") > LEN(ARRAYJOIN(Products, ",")),
+          MID(LOWER(ARRAYJOIN(Products, ",")), FIND("${pluralWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${pluralWord}"), 1) = ",",
+          MID(LOWER(ARRAYJOIN(Products, ",")), FIND("${pluralWord}", LOWER(ARRAYJOIN(Products, ","))) + LEN("${pluralWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${singularWord}", LOWER(ARRAYJOIN(Categories, ","))) > 0,
+        OR(
+          FIND("${singularWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${singularWord}") > LEN(ARRAYJOIN(Categories, ",")),
+          MID(LOWER(ARRAYJOIN(Categories, ",")), FIND("${singularWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${singularWord}"), 1) = ",",
+          MID(LOWER(ARRAYJOIN(Categories, ",")), FIND("${singularWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${singularWord}"), 1) = " "
+        )
+      ),
+      AND(
+        FIND("${pluralWord}", LOWER(ARRAYJOIN(Categories, ","))) > 0,
+        OR(
+          FIND("${pluralWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${pluralWord}") > LEN(ARRAYJOIN(Categories, ",")),
+          MID(LOWER(ARRAYJOIN(Categories, ",")), FIND("${pluralWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${pluralWord}"), 1) = ",",
+          MID(LOWER(ARRAYJOIN(Categories, ",")), FIND("${pluralWord}", LOWER(ARRAYJOIN(Categories, ","))) + LEN("${pluralWord}"), 1) = " "
+        )
+      )`;
+  };
+
+  const searchTermFormula = searchTerm ? getSearchFormula(searchTerm) : null;
   const similarWordsFormula =
     similarNouns && similarNouns.length > 0
-      ? similarNouns
-          .map(
-            (word) =>
-              `FIND(LOWER("${word}"), LOWER(Name)) > 0,
-              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Products, ","))) > 0,
-              FIND(LOWER("${word}"), LOWER(ARRAYJOIN(Categories, ","))) > 0`
-          )
-          .join(", ")
+      ? similarNouns.map((word) => getSearchFormula(word)).join(", ")
       : null;
   const finalSearchFormula = searchTerm
     ? `OR(${[searchTermFormula, similarWordsFormula]
