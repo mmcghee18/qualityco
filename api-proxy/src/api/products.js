@@ -59,7 +59,7 @@ router.get("/", (req, res) => {
     "appop5JmfRum8l0LN"
   );
   // Extract query params
-  const searchTerm = req.query.q ? req.query.q : null; // singularize
+  const searchTerm = req.query.q ? req.query.q : null;
   const pageNumber = req.query.page ? parseInt(req.query.page) : 1;
   const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
   const category = req.query.category ? req.query.category : null;
