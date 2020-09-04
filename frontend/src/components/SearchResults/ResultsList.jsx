@@ -24,7 +24,6 @@ const ResultsList = ({
     setPageSize(size);
     setLoading(true);
   };
-  console.log({ items });
 
   const spinIcon = (
     <LoadingOutlined style={{ fontSize: 60, marginTop: 60 }} spin />
@@ -73,7 +72,11 @@ const ResultsList = ({
             <div>
               Did you mean{" "}
               <Suggestion
-                onClick={() => setSearchTerm(items.spellingSuggestions[0])}
+                onClick={() => {
+                  setSearchTerm(items.spellingSuggestions[0]);
+                  setLoading(true);
+                  setPageNumber(1);
+                }}
               >
                 {items.spellingSuggestions[0]}
               </Suggestion>
