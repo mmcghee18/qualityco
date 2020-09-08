@@ -3,6 +3,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { Button, Tag as AntTag, Input } from "antd";
 import { Link } from "react-router-dom";
 import { StarOutlined, MenuOutlined } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const { Search } = Input;
 
 const maxSizes = {
@@ -188,8 +189,8 @@ export const FilterBarContainer = styled.div`
 `;
 
 export const FilterBarButton = styled(Button)`
-  color: ${(props) => (props.highlighted ? "#E65213" : null)};
-  border-color: ${(props) => (props.highlighted ? "#E65213" : null)};
+  color: ${(props) => (props.highlighted ? "#ff6e00" : null)};
+  border-color: ${(props) => (props.highlighted ? "#ff6e00" : null)};
 `;
 
 export const FilterHeaderWrapper = styled.div`
@@ -457,5 +458,81 @@ export const LogoLink = styled(({ expandBar, ...otherProps }) => (
   @media ${devices.tablet} {
     margin: 0px;
     display: ${(props) => (props.expandBar ? "none" : "flex")};
+  }
+`;
+
+export const MissionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 100px;
+
+  @media ${devices.tablet} {
+    margin: 50px;
+  }
+`;
+
+export const MissionTitle = styled.h1`
+  text-align: center;
+  font-size: 2.5em;
+  margin-bottom: 50px;
+  width: 80%;
+
+  @media ${devices.mobile} {
+    font-size: 2em;
+  }
+`;
+
+export const MissionDescription = styled.div`
+  text-align: center;
+  color: #a29e9e;
+  font-size: 1.1em;
+  margin-bottom: 200px;
+  width: 70%;
+`;
+
+export const PromiseCards = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 100px;
+  width: 100%;
+
+  @media ${devices.tablet} {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+export const PromiseWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 33%;
+  margin: 20px;
+
+  @media ${devices.tablet} {
+    width: 100%;
+  }
+`;
+
+export const PromiseTitle = styled.h1`
+  @media ${devices.mobile} {
+    font-size: 1.6em;
+  }
+`;
+
+export const PromiseIcon = styled(FontAwesomeIcon)`
+  font-size: 3.5em;
+  margin-bottom: 25px;
+  margin-right: 0px !important;
+  color: #ff6e00;
+`;
+
+export const PromiseCardDescription = styled.div`
+  text-align: center;
+  color: #a29e9e;
+
+  @media ${devices.tablet} {
+    width: 70%;
   }
 `;

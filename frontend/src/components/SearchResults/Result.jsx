@@ -50,7 +50,7 @@ const Result = ({
                   Made in {location}
                 </Tag>
               ))}
-            {price && <Tag color="#E65213">{price}</Tag>}
+            {price && <Tag color="#ff6e00">{price}</Tag>}
           </div>
         </ResultHeader>
 

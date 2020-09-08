@@ -120,7 +120,7 @@ const NavBar = ({
           <NavLink to="/services">Services</NavLink>
         </Popover>
 
-        <NavLink to="/">Our Mission</NavLink>
+        <NavLink to="/mission">Our Mission</NavLink>
       </Links>
 
       {/* The version of the nav bar for tablet/mobile */}
@@ -134,7 +134,7 @@ const NavBar = ({
           <Link to="/">Home</Link>
           <Link to="/products">Products</Link>
           <Link to="/services">Services</Link>
-          <Link to="/">Our Mission</Link>
+          <Link to="/mission">Our Mission</Link>
         </LinksInDrawer>
       </Drawer>
     </TopBar>

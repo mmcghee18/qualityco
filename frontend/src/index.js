@@ -9,9 +9,18 @@ import {
   faLeaf,
   faMapMarkerAlt,
   faDollarSign,
+  faStar,
+  faHandHoldingHeart,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faHeart, faLeaf, faMapMarkerAlt, faDollarSign);
+library.add(
+  faHeart,
+  faLeaf,
+  faMapMarkerAlt,
+  faDollarSign,
+  faStar,
+  faHandHoldingHeart
+);
 
 ReactDOM.render(
   <React.StrictMode>

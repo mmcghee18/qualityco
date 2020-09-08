@@ -5,6 +5,7 @@ import Home from "./components/Home/Home.jsx";
 import SearchResults from "./components/SearchResults/SearchResults.jsx";
 import Products from "./components/Products/Products.jsx";
 import Services from "./components/Services/Services.jsx";
+import Mission from "./components/Mission/Mission.jsx";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState(null);
@@ -56,6 +57,9 @@ function App() {
               loading={loading}
               setLoading={setLoading}
             />
+          </Route>
+          <Route exact path="/mission">
+            <Mission />
           </Route>
         </Switch>
       </div>
