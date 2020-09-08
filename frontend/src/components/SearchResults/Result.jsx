@@ -33,7 +33,9 @@ const Result = ({
       ))}
     </PopoverWrapper>
   ) : null;
-  const goodLengthTags = _.filter(tags, ({ tag }) => tag.length < 30);
+  const goodLengthTags = tags
+    ? _.filter(tags, ({ tag }) => tag.length < 30)
+    : null;
 
   return (
     <ResultContainer>
@@ -76,9 +78,10 @@ const Result = ({
           {tags ? (
             <Tags>
               {/* Max 2 tags */}
-              {_.take(goodLengthTags, 2).map(({ tag }, i) => (
-                <Tag key={i}>{tag}</Tag>
-              ))}
+              {goodLengthTags &&
+                _.take(goodLengthTags, 2).map(({ tag }, i) => (
+                  <Tag key={i}>{tag}</Tag>
+                ))}
               {/* Elipsis if there are more tags to see */}
               {tags.length > 2 || goodLengthTags.length < tags.length ? (
                 <Popover content={popoverContent} placement="bottom">
