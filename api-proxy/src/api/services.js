@@ -6,6 +6,20 @@ const { getSpellingSuggestions, getSynonyms } = require("./helpers.js");
 
 const router = express.Router();
 
+const getTagInfo = (id) => {
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    "appop5JmfRum8l0LN"
+  );
+  return new Promise((resolve, reject) => {
+    base("Tags (Services)").find(id, function (err, record) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(_.pick(record.fields, ["Tag"]));
+    });
+  });
+};
 const getCategoryInfo = (id) => {
   var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
@@ -152,6 +166,17 @@ router.get("/", (req, res) => {
         let hydratedResponse = [];
 
         for (const record of response) {
+          if (record["tags"]) {
+            let tags = [];
+            for (const tagId of record["tags"]) {
+              const tagInfo = await getTagInfo(tagId);
+              const lowercaseTagInfo = _.mapKeys(tagInfo, (value, key) =>
+                key.toLowerCase()
+              );
+              tags.push(lowercaseTagInfo);
+            }
+            _.set(record, "tags", tags);
+          }
           if (record["categories"]) {
             let categories = [];
             for (const categoryId of record["categories"]) {
