@@ -16,7 +16,7 @@ const Mission = () => {
         beautiful products.
       </MissionTitle>
       <MissionDescription>
-        QualityCo is an online marketplace that connects socially-minded
+        QualityCo is a brand discovery platform that connects socially-minded
         consumers with independent brands committed to developing high-quality,
         ethically-made products. With QualityCo’s convenient platform, shoppers
         can quickly and confidently find well-made goods and purchase from

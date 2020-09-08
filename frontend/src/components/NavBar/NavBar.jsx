@@ -131,10 +131,18 @@ const NavBar = ({
         onClose={() => setShowDrawer(false)}
       >
         <LinksInDrawer>
-          <Link to="/">Home</Link>
-          <Link to="/products">Products</Link>
-          <Link to="/services">Services</Link>
-          <Link to="/mission">Our Mission</Link>
+          <Link to="/" onClick={() => setShowDrawer(false)}>
+            Home
+          </Link>
+          <Link to="/products" onClick={() => setShowDrawer(false)}>
+            Products
+          </Link>
+          <Link to="/services" onClick={() => setShowDrawer(false)}>
+            Services
+          </Link>
+          <Link to="/mission" onClick={() => setShowDrawer(false)}>
+            Our Mission
+          </Link>
         </LinksInDrawer>
       </Drawer>
     </TopBar>

@@ -182,26 +182,12 @@ const FilterBar = ({
           Price
         </FilterBarButton>
       </Popover>
-      <div>
-        <Button
-          onClick={() => setShowDrawer(true)}
-          style={{ marginRight: "3px" }}
-        >
-          All filters
-        </Button>
-        <Button
-          onClick={() => {
-            setPageNumber(1);
-            setTags([]);
-            setPrice([]);
-            setPlaces([]);
-            setStages([]);
-            setLoading(true);
-          }}
-        >
-          Clear all
-        </Button>
-      </div>
+      <Button
+        onClick={() => setShowDrawer(true)}
+        style={{ marginRight: "3px" }}
+      >
+        All filters
+      </Button>
       <Drawer
         placement="left"
         visible={showDrawer}

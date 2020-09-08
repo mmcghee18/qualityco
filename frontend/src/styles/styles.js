@@ -299,6 +299,7 @@ export const ResultInfo = styled.div`
   }
   @media ${devices.mobile} {
     margin-left: 0;
+    margin-top: 10px;
   }
 `;
 
@@ -373,6 +374,10 @@ export const FadedBottom = styled.div`
 
   @media ${devices.laptop} {
     height: 15px;
+  }
+
+  @media ${devices.mobile} {
+    display: none;
   }
 `;
 
