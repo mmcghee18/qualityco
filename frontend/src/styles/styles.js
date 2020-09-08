@@ -531,8 +531,5 @@ export const PromiseIcon = styled(FontAwesomeIcon)`
 export const PromiseCardDescription = styled.div`
   text-align: center;
   color: #a29e9e;
-
-  @media ${devices.tablet} {
-    width: 70%;
-  }
+  width: 70%;
 `;
