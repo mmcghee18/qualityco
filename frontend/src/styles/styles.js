@@ -538,3 +538,57 @@ export const PromiseCardDescription = styled.div`
   color: #a29e9e;
   width: 70%;
 `;
+
+export const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+export const PageWrapper = styled.div`
+  flex: 1 0 auto;
+`;
+
+export const FooterWrapper = styled.footer`
+  flex-shrink: 0;
+  background: rgb(255, 110, 0, 0.5);
+  width: 100%;
+  bottom: 0px;
+  padding: 30px;
+`;
+
+export const FooterTitle = styled.h1`
+  @media ${devices.tablet} {
+    font-size: 1.7em;
+  }
+  @media ${devices.mobile} {
+    font-size: 1em;
+  }
+`;
+
+export const FooterInputs = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+
+  @media ${devices.mobile} {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+export const FooterInput = styled(Input)`
+  margin-left: 10px;
+  margin-right: 10px;
+  max-width: 350px;
+
+  @media ${devices.mobile} {
+    width: 60%;
+    margin-bottom: 10px;
+  }
+`;
+
+export const FooterSubmit = styled(Button)`
+  margin-left: 10px;
+  margin-right: 10px;
+`;

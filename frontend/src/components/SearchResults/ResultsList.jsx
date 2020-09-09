@@ -30,7 +30,7 @@ const ResultsList = ({
   );
   return (
     <ListOfResults>
-      {items && items.records && items.records.length > 0 && !loading ? (
+      {items && items.records && items.records.length > 0 && !loading && (
         <>
           {items.records.map((result, i) => {
             const { company, name, website, tags, price, description } = result;
@@ -59,9 +59,8 @@ const ResultsList = ({
             />
           )}
         </>
-      ) : (
-        <Spin indicator={spinIcon} />
       )}
+      {loading && <Spin indicator={spinIcon} />}
       {items && items.records && items.records.length === 0 && !loading ? (
         <>
           <Notice

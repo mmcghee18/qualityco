@@ -71,16 +71,16 @@ const NavBar = ({
       const productCategoriesUrl = `${baseUrl}/api/productCategories`;
       const serviceCategoriesUrl = `${baseUrl}/api/serviceCategories`;
 
-      await fetch(productCategoriesUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setProductCategories(data.categories.map((c) => c.category));
-        });
-      await fetch(serviceCategoriesUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setServiceCategories(data.categories.map((c) => c.category));
-        });
+      try {
+        let productResponse = await fetch(productCategoriesUrl);
+        productResponse = await productResponse.json();
+        setProductCategories(productResponse.categories.map((c) => c.category));
+        let serviceResponse = await fetch(serviceCategoriesUrl);
+        serviceResponse = await serviceResponse.json();
+        setServiceCategories(serviceResponse.categories.map((c) => c.category));
+      } catch (err) {
+        console.error(err);
+      }
     };
     callApi();
   }, []);
@@ -114,13 +114,31 @@ const NavBar = ({
 
       <Links>
         <Popover content={productsPopoverContent}>
-          <NavLink to="/products">Products</NavLink>
+          <NavLink
+            to="/products"
+            onClick={() => {
+              setLoading(true);
+              setCategory(null);
+            }}
+          >
+            Products
+          </NavLink>
         </Popover>
         <Popover content={servicesPopoverContent}>
-          <NavLink to="/services">Services</NavLink>
+          <NavLink
+            to="/services"
+            onClick={() => {
+              setLoading(true);
+              setCategory(null);
+            }}
+          >
+            Services
+          </NavLink>
         </Popover>
 
-        <NavLink to="/mission">Our Mission</NavLink>
+        <NavLink to="/mission" onClick={() => setLoading(false)}>
+          Our Mission
+        </NavLink>
       </Links>
 
       {/* The version of the nav bar for tablet/mobile */}
@@ -131,16 +149,42 @@ const NavBar = ({
         onClose={() => setShowDrawer(false)}
       >
         <LinksInDrawer>
-          <Link to="/" onClick={() => setShowDrawer(false)}>
+          <Link
+            to="/"
+            onClick={() => {
+              setShowDrawer(false);
+              setLoading(true);
+            }}
+          >
             Home
           </Link>
-          <Link to="/products" onClick={() => setShowDrawer(false)}>
+          <Link
+            to="/products"
+            onClick={() => {
+              setCategory(null);
+              setShowDrawer(false);
+              setLoading(true);
+            }}
+          >
             Products
           </Link>
-          <Link to="/services" onClick={() => setShowDrawer(false)}>
+          <Link
+            to="/services"
+            onClick={() => {
+              setCategory(null);
+              setShowDrawer(false);
+              setLoading(true);
+            }}
+          >
             Services
           </Link>
-          <Link to="/mission" onClick={() => setShowDrawer(false)}>
+          <Link
+            to="/mission"
+            onClick={() => {
+              setShowDrawer(false);
+              setLoading(false);
+            }}
+          >
             Our Mission
           </Link>
         </LinksInDrawer>
