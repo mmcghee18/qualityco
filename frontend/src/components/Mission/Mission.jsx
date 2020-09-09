@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   MissionWrapper,
   MissionTitle,
@@ -8,7 +8,12 @@ import {
 } from "../../styles/styles.js";
 import PromiseCard from "./PromiseCard.jsx";
 
-const Mission = () => {
+const Mission = ({ setLoading }) => {
+  // Since this page doesn't make any requests and setLoading(false) afterwards
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
   return (
     <MissionWrapper>
       <MissionTitle>

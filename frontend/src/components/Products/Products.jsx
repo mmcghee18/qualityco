@@ -42,11 +42,13 @@ const Products = ({ history, category, setCategory, loading, setLoading }) => {
           : "http://localhost:5000";
       const apiUrl = `${baseUrl}/api/productCategories`;
 
-      await fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setCategoryOptions(data.categories.map((c) => c.category));
-        });
+      try {
+        let response = await fetch(apiUrl);
+        response = await response.json();
+        setCategoryOptions(response.categories.map((c) => c.category));
+      } catch (err) {
+        console.error(err);
+      }
     };
     callApi();
   }, []);

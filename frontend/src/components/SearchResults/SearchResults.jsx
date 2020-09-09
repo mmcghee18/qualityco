@@ -81,12 +81,10 @@ const SearchResults = ({
       const apiUrl = `${baseUrl}/api/${type ? type : ""}?${params}`;
 
       try {
-        await fetch(apiUrl, { signal: abortController.signal })
-          .then((response) => response.json())
-          .then((data) => {
-            setItems(data);
-            setLoading(false);
-          });
+        let response = await fetch(apiUrl, { signal: abortController.signal });
+        response = await response.json();
+        setItems(response);
+        setLoading(false);
       } catch (err) {
         if (err.name === "AbortError") {
           return;

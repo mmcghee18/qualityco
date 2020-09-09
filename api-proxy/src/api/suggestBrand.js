@@ -65,13 +65,26 @@ router.get("/", async (req, res) => {
           records.forEach((record) => {
             console.log(`Added new brand suggestion ${record.getId()}`);
           });
+
+          res.json({
+            added: true,
+            success: true,
+          });
         }
       );
     } else {
       console.log(`Brand suggestion already exists with website ${website}`);
+      res.json({
+        added: false,
+        success: true,
+      });
     }
   } catch (err) {
     console.error(err);
+    res.json({
+      added: false,
+      success: false,
+    });
   }
 });
 

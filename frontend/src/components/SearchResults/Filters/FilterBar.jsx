@@ -37,18 +37,23 @@ const FilterBar = ({
       const tagOptionsUrl = `${baseUrl}/api/productTags`;
       const locationOptionsUrl = `${baseUrl}/api/locations`;
 
-      await fetch(tagOptionsUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setTagOptions(data.tags.map((tag) => _.pick(tag, ["tag", "type"])));
-        });
-      await fetch(locationOptionsUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setLocationOptions(
-            _.sortBy(data.locations, (d) => d.location).map((l) => l.location)
-          );
-        });
+      try {
+        let tagResponse = await fetch(tagOptionsUrl);
+        tagResponse = await tagResponse.json();
+        setTagOptions(
+          tagResponse.tags.map((tag) => _.pick(tag, ["tag", "type"]))
+        );
+
+        let locationResponse = await fetch(locationOptionsUrl);
+        locationResponse = await locationResponse.json();
+        setLocationOptions(
+          _.sortBy(locationResponse.locations, (d) => d.location).map(
+            (l) => l.location
+          )
+        );
+      } catch (err) {
+        console.error(err);
+      }
     };
     callApi();
   }, []);
