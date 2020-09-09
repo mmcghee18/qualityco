@@ -3,11 +3,6 @@
 ## Backend
 This is a server that accepts requests from the frontend and pings the Airtable database for information.
 
-#### Endpoints ☎️
-```
-/api/products
-/api/services
-```
 #### Deployment 🚀
 ```
 git subtree push --prefix api-proxy heroku master
