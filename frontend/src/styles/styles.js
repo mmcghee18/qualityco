@@ -538,3 +538,27 @@ export const PromiseCardDescription = styled.div`
   color: #a29e9e;
   width: 70%;
 `;
+
+export const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+export const PageWrapper = styled.div`
+  flex: 1 0 auto;
+`;
+
+export const FooterWrapper = styled.footer`
+  flex-shrink: 0;
+  background: rgb(255, 110, 0, 0.5);
+  width: 100%;
+  bottom: 0px;
+  padding: 20px;
+`;
+
+export const FooterInputs = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+`;

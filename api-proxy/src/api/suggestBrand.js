@@ -4,15 +4,16 @@ const _ = require("lodash");
 
 const router = express.Router();
 
-const checkForDuplicate = (website) => {
+const checkForDuplicate = (name, website) => {
   const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     "appop5JmfRum8l0LN"
   );
+  const formula = `Website = "${website}"`;
   return new Promise((resolve, reject) => {
     base("Brand Submissions")
       .select({
         maxRecords: 1,
-        filterByFormula: `Website = "${website}"`,
+        filterByFormula: formula,
       })
       .eachPage(
         function page(records, fetchNextPage) {
@@ -44,7 +45,7 @@ router.get("/", async (req, res) => {
 
   // Check if it already exists
   try {
-    const alreadyExists = await checkForDuplicate(website);
+    const alreadyExists = await checkForDuplicate(name, website);
 
     if (!alreadyExists) {
       base("Brand Submissions").create(

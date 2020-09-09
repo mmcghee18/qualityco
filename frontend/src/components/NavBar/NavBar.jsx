@@ -114,13 +114,19 @@ const NavBar = ({
 
       <Links>
         <Popover content={productsPopoverContent}>
-          <NavLink to="/products">Products</NavLink>
+          <NavLink to="/products" onClick={() => setLoading(true)}>
+            Products
+          </NavLink>
         </Popover>
         <Popover content={servicesPopoverContent}>
-          <NavLink to="/services">Services</NavLink>
+          <NavLink to="/services" onClick={() => setLoading(true)}>
+            Services
+          </NavLink>
         </Popover>
 
-        <NavLink to="/mission">Our Mission</NavLink>
+        <NavLink to="/mission" onClick={() => setLoading(false)}>
+          Our Mission
+        </NavLink>
       </Links>
 
       {/* The version of the nav bar for tablet/mobile */}
@@ -131,16 +137,40 @@ const NavBar = ({
         onClose={() => setShowDrawer(false)}
       >
         <LinksInDrawer>
-          <Link to="/" onClick={() => setShowDrawer(false)}>
+          <Link
+            to="/"
+            onClick={() => {
+              setShowDrawer(false);
+              setLoading(true);
+            }}
+          >
             Home
           </Link>
-          <Link to="/products" onClick={() => setShowDrawer(false)}>
+          <Link
+            to="/products"
+            onClick={() => {
+              setShowDrawer(false);
+              setLoading(true);
+            }}
+          >
             Products
           </Link>
-          <Link to="/services" onClick={() => setShowDrawer(false)}>
+          <Link
+            to="/services"
+            onClick={() => {
+              setShowDrawer(false);
+              setLoading(true);
+            }}
+          >
             Services
           </Link>
-          <Link to="/mission" onClick={() => setShowDrawer(false)}>
+          <Link
+            to="/mission"
+            onClick={() => {
+              setShowDrawer(false);
+              setLoading(false);
+            }}
+          >
             Our Mission
           </Link>
         </LinksInDrawer>
