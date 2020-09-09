@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import queryString from "query-string";
-import { FooterWrapper, FooterInputs } from "../../styles/styles.js";
+import {
+  FooterTitle,
+  FooterWrapper,
+  FooterInputs,
+  FooterInput,
+  FooterSubmit,
+} from "../../styles/styles.js";
 import { message, Input, Button } from "antd";
 
 const Footer = () => {
@@ -48,28 +54,25 @@ const Footer = () => {
 
   return (
     <FooterWrapper>
-      <h1>Submit a brand</h1>
+      <FooterTitle>Submit a brand</FooterTitle>
       <p>Have a favorite brand we should know about? Tell us here!</p>
       <FooterInputs>
-        <Input
+        <FooterInput
           placeholder="Company name"
-          style={{ marginLeft: "10px", marginRight: "10px" }}
           value={companyName}
           onChange={(e) => setCompanyName(e.target.value)}
         />
-        <Input
+        <FooterInput
           placeholder="Company website"
-          style={{ marginLeft: "10px", marginRight: "10px" }}
           value={companyWebsite}
           onChange={(e) => setCompanyWebsite(e.target.value)}
         />
-        <Button
-          style={{ marginLeft: "10px", marginRight: "10px" }}
+        <FooterSubmit
           onClick={submitSuggestion}
           disabled={!companyName || !companyWebsite}
         >
           Submit
-        </Button>
+        </FooterSubmit>
       </FooterInputs>
     </FooterWrapper>
   );
