@@ -310,7 +310,7 @@ export const ResultHeader = styled.div`
   align-items: center;
 `;
 
-export const Tags = styled.div`
+export const TagsWrapper = styled.div`
   display: flex;
   flex-direction: row;
   width: 80%;
@@ -335,6 +335,7 @@ export const LinksAndTags = styled.div`
 
 export const Tag = styled(AntTag)`
   font-size: 1em;
+  display: ${(props) => (props.visible ? "block" : "none")};
 
   &:hover {
     cursor: ${(props) => (props.$clickable ? "pointer" : "default")};
