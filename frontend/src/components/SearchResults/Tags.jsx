@@ -70,19 +70,3 @@ const Tags = ({ company, tags }) => {
 };
 
 export default Tags;
-
-// {tags ? (
-//   <Tags>
-//     {/* Max 2 tags */}
-//     {goodLengthTags &&
-//       _.take(goodLengthTags, 2).map(({ tag }, i) => (
-//         <Tag key={i}>{tag}</Tag>
-//       ))}
-//     {/* Elipsis if there are more tags to see */}
-//     {tags.length > 2 || goodLengthTags.length < tags.length ? (
-//       <Popover content={popoverContent} placement="bottom">
-//         <Tag $clickable={true}>...</Tag>
-//       </Popover>
-//     ) : null}
-//   </Tags>
-// ) : null}
