@@ -551,12 +551,20 @@ export const PageWrapper = styled.div`
   flex: 1 0 auto;
 `;
 
-export const FooterWrapper = styled.footer`
-  flex-shrink: 0;
+export const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 50px;
   background: rgb(255, 110, 0, 0.5);
+  align-items: center;
+
+  flex-shrink: 0;
   width: 100%;
   bottom: 0px;
-  padding: 30px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const FooterTitle = styled.h1`

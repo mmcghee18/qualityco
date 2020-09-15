@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MainContainer, PageWrapper } from "./styles/styles.js";
+import { MainContainer, PageWrapper, FooterWrapper } from "./styles/styles.js";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
 import Home from "./components/Home/Home.jsx";
@@ -15,6 +15,7 @@ function App() {
   const [type, setType] = useState("products");
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   return (
     <Router>
@@ -80,7 +81,15 @@ function App() {
           </Route>
         </Switch>
 
-        {!loading && <Footer />}
+        <Footer
+          drawerVisible={drawerVisible}
+          setDrawerVisible={setDrawerVisible}
+        />
+        {!loading && (
+          <FooterWrapper onClick={() => setDrawerVisible(true)}>
+            Submit a brand
+          </FooterWrapper>
+        )}
       </MainContainer>
     </Router>
   );

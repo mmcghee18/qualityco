@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import queryString from "query-string";
 import {
   FooterTitle,
-  FooterWrapper,
   FooterInputs,
   FooterInput,
   FooterSubmit,
 } from "../../styles/styles.js";
-import { message, Input, Button } from "antd";
+import { message, Drawer } from "antd";
 
-const Footer = () => {
+const Footer = ({ drawerVisible, setDrawerVisible }) => {
   const [companyName, setCompanyName] = useState("");
   const [companyWebsite, setCompanyWebsite] = useState("");
 
@@ -45,6 +44,7 @@ const Footer = () => {
         });
       }
 
+      setDrawerVisible(false);
       setCompanyName("");
       setCompanyWebsite("");
     } catch (err) {
@@ -53,28 +53,37 @@ const Footer = () => {
   };
 
   return (
-    <FooterWrapper>
-      <FooterTitle>Submit a brand</FooterTitle>
-      <p>Have a favorite brand we should know about? Tell us here!</p>
-      <FooterInputs>
-        <FooterInput
-          placeholder="Company name"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-        />
-        <FooterInput
-          placeholder="Company website"
-          value={companyWebsite}
-          onChange={(e) => setCompanyWebsite(e.target.value)}
-        />
-        <FooterSubmit
-          onClick={submitSuggestion}
-          disabled={!companyName || !companyWebsite}
-        >
-          Submit
-        </FooterSubmit>
-      </FooterInputs>
-    </FooterWrapper>
+    <Drawer
+      title={null}
+      placement="bottom"
+      closable={false}
+      onClose={() => setDrawerVisible(false)}
+      visible={drawerVisible}
+      drawerStyle={{ background: "rgb(255, 110, 0, 0.5)" }}
+    >
+      <div>
+        <FooterTitle>Submit a brand</FooterTitle>
+        <p>Have a favorite brand we should know about? Tell us here!</p>
+        <FooterInputs>
+          <FooterInput
+            placeholder="Company name"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+          />
+          <FooterInput
+            placeholder="Company website"
+            value={companyWebsite}
+            onChange={(e) => setCompanyWebsite(e.target.value)}
+          />
+          <FooterSubmit
+            onClick={submitSuggestion}
+            disabled={!companyName || !companyWebsite}
+          >
+            Submit
+          </FooterSubmit>
+        </FooterInputs>
+      </div>
+    </Drawer>
   );
 };
 
