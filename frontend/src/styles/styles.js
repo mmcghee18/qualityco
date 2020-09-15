@@ -59,6 +59,7 @@ export const TopBar = styled.div`
 
   @media ${devices.tablet} {
     justify-content: center;
+    min-height: 70px;
   }
 `;
 
