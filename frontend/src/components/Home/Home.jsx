@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { SearchContainer, SearchTitle } from "../../styles/styles.js";
 import SearchBar from "../NavBar/SearchBar.jsx";
 
-const Home = ({ setSearchTerm, type, setType, setLoading }) => {
+const Home = ({ setSearchTerm, type, setType, setLoading, setHome }) => {
   // Since this page doesn't make any requests and setLoading(false) afterwards
   useEffect(() => {
+    setHome(true);
     setLoading(false);
   }, []);
 

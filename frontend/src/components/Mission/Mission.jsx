@@ -8,10 +8,11 @@ import {
 } from "../../styles/styles.js";
 import PromiseCard from "./PromiseCard.jsx";
 
-const Mission = ({ setLoading }) => {
+const Mission = ({ setLoading, setHome }) => {
   // Since this page doesn't make any requests and setLoading(false) afterwards
   useEffect(() => {
     setLoading(false);
+    setHome(false);
   }, []);
 
   return (

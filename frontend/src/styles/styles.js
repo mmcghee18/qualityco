@@ -544,7 +544,7 @@ export const PromiseCardDescription = styled.div`
 export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: ${(props) => (props.homepage ? "100%" : "auto")};
 `;
 
 export const PageWrapper = styled.div`

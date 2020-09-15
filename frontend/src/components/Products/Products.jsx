@@ -16,7 +16,14 @@ import ResultsList from "../SearchResults/ResultsList.jsx";
 
 let abortController = new AbortController();
 
-const Products = ({ history, category, setCategory, loading, setLoading }) => {
+const Products = ({
+  history,
+  category,
+  setCategory,
+  loading,
+  setLoading,
+  setHome,
+}) => {
   const [tags, setTags] = useState([]);
   const [price, setPrice] = useState([]);
   const [places, setPlaces] = useState([]);
@@ -32,6 +39,10 @@ const Products = ({ history, category, setCategory, loading, setLoading }) => {
   useEffect(() => {
     setPageNumber(1);
   }, [category]);
+
+  useEffect(() => {
+    setHome(false);
+  }, []);
 
   // Get category options
   useEffect(() => {

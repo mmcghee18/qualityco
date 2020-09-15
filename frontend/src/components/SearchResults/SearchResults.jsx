@@ -21,6 +21,7 @@ const SearchResults = ({
   type,
   loading,
   setLoading,
+  setHome,
 }) => {
   const [tags, setTags] = useState([]);
   const [price, setPrice] = useState([]);
@@ -47,6 +48,8 @@ const SearchResults = ({
     if (searchTermBeforeRefresh) {
       setSearchTerm(searchTermBeforeRefresh);
     }
+
+    setHome(false);
   }, []);
 
   useEffect(() => {

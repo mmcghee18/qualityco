@@ -10,6 +10,7 @@ import Mission from "./components/Mission/Mission.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 
 function App() {
+  const [home, setHome] = useState(false);
   const [searchTerm, setSearchTerm] = useState(null);
   const [type, setType] = useState("products");
   const [category, setCategory] = useState(null);
@@ -17,7 +18,7 @@ function App() {
 
   return (
     <Router>
-      <MainContainer>
+      <MainContainer homepage={home}>
         <NavBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -34,6 +35,7 @@ function App() {
                 type={type}
                 setType={setType}
                 setLoading={setLoading}
+                setHome={setHome}
               />
             </PageWrapper>
           </Route>
@@ -45,6 +47,7 @@ function App() {
                 type={type}
                 loading={loading}
                 setLoading={setLoading}
+                setHome={setHome}
               />
             </PageWrapper>
           </Route>
@@ -55,6 +58,7 @@ function App() {
                 setCategory={setCategory}
                 loading={loading}
                 setLoading={setLoading}
+                setHome={setHome}
               />
             </PageWrapper>
           </Route>
@@ -65,12 +69,13 @@ function App() {
                 setCategory={setCategory}
                 loading={loading}
                 setLoading={setLoading}
+                setHome={setHome}
               />
             </PageWrapper>
           </Route>
           <Route exact path="/mission">
             <PageWrapper>
-              <Mission setLoading={setLoading} />
+              <Mission setLoading={setLoading} setHome={setHome} />
             </PageWrapper>
           </Route>
         </Switch>
