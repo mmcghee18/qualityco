@@ -12,19 +12,15 @@
     width: 100%;
     position: static;
     right: 0px;
-    font-size: 16px;
-  }
-  .ant-input-search .ant-input-affix-wrapper {
-    font-size: 16px;
   }
 }
 
 @media screen and (max-width: 480px) {
   .ant-input {
-    font-size: 0.9em !important;
+    font-size: 16px !important;
   }
   .ant-select {
-    font-size: 0.9em !important;
+    font-size: 16px !important;
   }
   /* Give the button its size=small styles */
   .ant-input-search .ant-input-affix-wrapper {

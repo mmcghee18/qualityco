@@ -146,7 +146,7 @@ export const SearchTitle = styled.h1`
     font-size: 1.7em;
   }
   @media ${devices.mobile} {
-    font-size: 1em;
+    font-size: 1.2em;
     margin-bottom: 55px;
   }
 `;
@@ -564,7 +564,7 @@ export const FooterTitle = styled.h1`
     font-size: 1.7em;
   }
   @media ${devices.mobile} {
-    font-size: 1em;
+    font-size: 1.2em;
   }
 `;
 
@@ -593,4 +593,8 @@ export const FooterInput = styled(Input)`
 export const FooterSubmit = styled(Button)`
   margin-left: 10px;
   margin-right: 10px;
+
+  @media ${devices.mobile} {
+    font-size: 16px;
+  }
 `;
