@@ -35,11 +35,15 @@ const Result = ({
           <div style={{ display: "flex" }}>
             {madeIn &&
               madeIn.map(({ location }, i) => (
-                <Tag color="#f7946a" key={i}>
+                <Tag color="#f7946a" key={i} visible={true}>
                   Made in {location}
                 </Tag>
               ))}
-            {price && <Tag color="#ff6e00">{price}</Tag>}
+            {price && (
+              <Tag color="#ff6e00" visible={true}>
+                {price}
+              </Tag>
+            )}
           </div>
         </ResultHeader>
 
