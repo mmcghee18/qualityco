@@ -60,6 +60,8 @@ const Result = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ textDecoration: "underline", marginRight: "5px" }}
+                className="shop-link"
+                id={company}
               >
                 Shop now
               </a>
