@@ -24,7 +24,6 @@ const Result = ({
   description,
   madeIn,
 }) => {
-  console.log("hi");
   return (
     <ResultContainer>
       <ResultImageLink href={website} target="_blank" rel="noopener noreferrer">
